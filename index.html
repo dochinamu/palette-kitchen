@@ -233,6 +233,9 @@
   /* 요리 모드 */
   .cook { display: flex; flex-direction: column; gap: 14px; }
   .cook-top { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+  .backlink { align-self: flex-start; display: inline-flex; align-items: center; gap: 4px; min-height: 40px; padding: 0 4px; border: 0; background: none; color: var(--green); font-weight: 600; font-size: 14px; cursor: pointer; }
+  .backlink:hover { text-decoration: underline; }
+  .cart-back { margin-bottom: 10px; }
   .cook-title { font-family: var(--f-display); font-weight: 700; font-size: 24px; }
   .bar { height: 8px; border-radius: 999px; background: #ece5d3; overflow: hidden; }
   .bar span { display: block; height: 100%; background: var(--tomato); border-radius: 999px; transition: width .35s ease; }
@@ -591,7 +594,6 @@
           <button class="tab" role="tab" id="tab-0" aria-controls="panel-0" aria-selected="true"><span>01</span>레시피 담기</button>
           <button class="tab" role="tab" id="tab-1" aria-controls="panel-1" aria-selected="false" tabindex="-1"><span>02</span>레시피북 넘겨 보기</button>
           <button class="tab" role="tab" id="tab-3" aria-controls="panel-3" aria-selected="false" tabindex="-1"><span>03</span>장바구니<b class="tcount" id="demo-tcount" aria-label="장바구니 재료 수"></b></button>
-          <button class="tab" role="tab" id="tab-2" aria-controls="panel-2" aria-selected="false" tabindex="-1"><span>04</span>천천히 만들기</button>
         </div>
 
         <div id="panel-0" class="panel" role="tabpanel" aria-labelledby="tab-0">
@@ -620,6 +622,7 @@
             </div>
             <div id="demo-page"></div>
           </div>
+          <div id="demo-cook" hidden></div>
           <div class="cart-bar">
             <button type="button" class="cart-open" id="demo-open-cart">
               <svg class="doodle" viewBox="0 0 200 150" aria-hidden="true"><use href="#d-basket"/></svg>
@@ -628,14 +631,10 @@
           </div>
         </div>
 
-        <div id="panel-2" class="panel" role="tabpanel" aria-labelledby="tab-2" hidden>
-          <div id="demo-cook"></div>
-        </div>
-
         <div id="panel-3" class="panel" role="tabpanel" aria-labelledby="tab-3" hidden>
+          <div class="cart-back"><button type="button" class="backlink" id="demo-cart-back"></button></div>
           <div id="demo-cart-empty" class="empty-msg">
             레시피북에서 재료를 담으면 여기 장바구니에 모여요.
-            <div style="margin-top:12px"><button class="pill" id="demo-go-book" type="button">레시피북 펼치기</button></div>
           </div>
           <div id="demo-cart-wrap" class="grid2" hidden>
             <div class="box basket-box">
@@ -880,21 +879,31 @@
 
     // 탭
     // tabs[k]는 panel-k와 짝, 화면 순서(키보드 이동)는 tabOrder를 따라요
-    var tabs = [0, 1, 2, 3].map(function (k) { return document.getElementById("tab-" + k); });
-    var tabOrder = Array.prototype.slice.call(document.querySelectorAll("#wm-demo .tab")).map(function (t) { return tabs.indexOf(t); });
+    // 탭 id 숫자 = 패널 번호 (0 담기, 1 레시피북·요리 모드, 3 장바구니)
+    var tabIds = Array.prototype.slice.call(document.querySelectorAll("#wm-demo .tab")).map(function (t) { return +t.id.replace("tab-", ""); });
     function selectTab(i, focus) {
-      tabs.forEach(function (t, k) { var on = k === i; t.setAttribute("aria-selected", on ? "true" : "false"); t.tabIndex = on ? 0 : -1; document.getElementById("panel-" + k).hidden = !on; });
-      if (focus) tabs[i].focus();
-      if (i === 1) renderPage(false);
-      if (i === 2) renderCook();
+      tabIds.forEach(function (k) { var t = document.getElementById("tab-" + k), on = k === i; t.setAttribute("aria-selected", on ? "true" : "false"); t.tabIndex = on ? 0 : -1; document.getElementById("panel-" + k).hidden = !on; });
+      if (focus) document.getElementById("tab-" + i).focus();
+      if (i === 1) renderBook();
       if (i === 3) renderCart();
     }
-    tabs.forEach(function (t, i) {
-      t.addEventListener("click", function () { selectTab(i); });
+    tabIds.forEach(function (k) {
+      var t = document.getElementById("tab-" + k);
+      t.addEventListener("click", function () { selectTab(k); });
       t.addEventListener("keydown", function (e) {
-        if (e.key === "ArrowRight" || e.key === "ArrowLeft") { e.preventDefault(); var pos = tabOrder.indexOf(i); selectTab(tabOrder[(pos + (e.key === "ArrowRight" ? 1 : tabOrder.length - 1)) % tabOrder.length], true); }
+        if (e.key === "ArrowRight" || e.key === "ArrowLeft") { e.preventDefault(); var pos = tabIds.indexOf(k); selectTab(tabIds[(pos + (e.key === "ArrowRight" ? 1 : tabIds.length - 1)) % tabIds.length], true); }
       });
     });
+    // 02 안에서 레시피 장 ↔ 요리 모드 전환
+    function renderBook() {
+      var cooking = !!(st.cook && st.cookOn);
+      document.querySelector("#panel-1 .viewer").hidden = cooking;
+      document.getElementById("demo-cook").hidden = !cooking;
+      if (cooking) renderCook(); else renderPage(false);
+    }
+    function showTop() { var d = document.getElementById("wm-demo"); if (d.getBoundingClientRect().top < 0) d.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" }); }
+    function startCook(r) { st.cook = { rid: r.id, i: -1 }; st.cookOn = true; selectTab(1); showTop(); focusIn(".next"); }
+    function leaveCook(reset) { st.cookOn = false; if (reset) st.cook = null; selectTab(1); showTop(); }
 
     // 01 레시피 담기
     function renderShares() {
@@ -920,7 +929,7 @@
         b.appendChild(el("span", "toc-t", r.title)); b.appendChild(el("span", "toc-dots")); b.appendChild(el("span", "toc-p", "p." + (i + 1)));
         b.addEventListener("click", function () {
           st.likedOnly = false; document.getElementById("demo-liked-only").setAttribute("aria-pressed", "false");
-          st.page = i; selectTab(1, true);
+          st.page = i; st.cookOn = false; selectTab(1, true);
         });
         li.appendChild(b); ol.appendChild(li);
       });
@@ -957,7 +966,7 @@
       var go = el("button", "go", "요리 모드로 만들기"); go.type = "button";
       go.addEventListener("click", function () {
         if (window.WM) WM.track("demo_cook", { recipe: r.id });
-        st.cook = { rid: r.id, i: -1 }; selectTab(2, true);
+        startCook(r);
       });
       a.appendChild(lk); a.appendChild(go); b.appendChild(a);
       inn.appendChild(b); wrapE.appendChild(inn); box.appendChild(wrapE);
@@ -976,16 +985,14 @@
       else if (dx > 50 && st.page > 0) { st.page--; renderPage(true); }
     });
 
-    // 천천히 만들기 (화면에선 04)
+    // 천천히 만들기 (02 안의 요리 모드)
     function renderCook() {
       var box = document.getElementById("demo-cook"); box.textContent = "";
-      if (!st.cook) {
-        var m = el("div", "empty-msg"); m.appendChild(document.createTextNode("02에서 오늘의 한 장을 골라 '요리 모드로 만들기'를 눌러 보세요."));
-        var bt = el("button", "pill", "레시피북 펼치기"); bt.type = "button"; bt.style.marginTop = "12px"; bt.style.display = "flex";
-        bt.addEventListener("click", function () { selectTab(1, true); }); m.appendChild(bt); box.appendChild(m); return;
-      }
+      if (!st.cook) return;
       var r = findR(st.cook.rid), i = st.cook.i, n = r.steps.length;
       var c = el("div", "cook");
+      var bk = el("button", "backlink", "‹ 레시피 장으로"); bk.type = "button";
+      bk.addEventListener("click", function () { leaveCook(false); }); c.appendChild(bk);
       var top = el("div", "cook-top"); top.appendChild(el("p", "cook-title", r.title));
       top.appendChild(el("span", "eb", i < 0 ? "준비" : i >= n ? "완성" : "요리 모드 · " + (i + 1) + " / " + n)); c.appendChild(top);
       var bar = el("div", "bar"); var f = el("span"); f.style.width = (Math.max(0, Math.min(i + 1, n)) / n * 100) + "%"; bar.appendChild(f); c.appendChild(bar);
@@ -1009,7 +1016,7 @@
         lk.addEventListener("click", function () { r.liked = !r.liked; lk.setAttribute("aria-pressed", r.liked ? "true" : "false"); });
         dc.appendChild(lk);
         var back = el("button", "pill", "레시피북으로 돌아가기"); back.type = "button";
-        back.addEventListener("click", function () { selectTab(1, true); }); dc.appendChild(back);
+        back.addEventListener("click", function () { leaveCook(true); }); dc.appendChild(back);
         c.appendChild(dc);
       } else {
         var s = r.steps[i];
@@ -1053,6 +1060,8 @@
       wrap.appendChild(ul); return wrap;
     }
     function renderCart() {
+      var cb = document.getElementById("demo-cart-back");
+      cb.textContent = st.cook && st.cookOn ? "‹ 요리 모드로 돌아가기" : "‹ 레시피북으로 돌아가기";
       var has = st.cart.length > 0;
       document.getElementById("demo-cart-empty").hidden = has;
       document.getElementById("demo-cart-wrap").hidden = !has;
@@ -1087,7 +1096,7 @@
     document.getElementById("demo-open-cart").addEventListener("click", function () {
       selectTab(3, true); document.getElementById("wm-demo").scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
     });
-    document.getElementById("demo-go-book").addEventListener("click", function () { selectTab(1, true); });
+    document.getElementById("demo-cart-back").addEventListener("click", function () { selectTab(1, true); showTop(); });
 
     function focusIn(sel) { var n = document.querySelector("#demo-cook " + sel); if (n) n.focus({ preventScroll: true }); }
 
