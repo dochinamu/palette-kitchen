@@ -154,7 +154,7 @@
   /* 예시 데모 */
   .demo { position: relative; margin-top: 48px; padding: 22px 16px 20px; border-radius: 10px; background: var(--paper); box-shadow: 0 10px 26px rgba(60,70,40,.14); }
   .demo-badge { position: absolute; top: 16px; right: 16px; padding: 3px 9px; border: 1px solid var(--line); border-radius: 999px; background: var(--sheet); font-family: var(--f-label); font-size: 12px; color: var(--ink-soft); }
-  .tabs { display: flex; gap: 6px; overflow-x: auto; margin-right: 44px; padding: 2px 2px 4px; scrollbar-width: none; }
+  .tabs { display: flex; gap: 6px; overflow-x: auto; padding: 2px 2px 4px; scrollbar-width: none; }
   .tabs::-webkit-scrollbar { display: none; }
   .tab { flex: none; min-height: 44px; padding: 0 14px; border: 1px solid rgba(31,42,28,.22); border-radius: 999px; background: var(--sheet); font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap; }
   .tab span { font-family: var(--f-label); font-weight: 400; margin-right: 4px; }
@@ -589,14 +589,13 @@
       </ol>
 
       <div id="wm-demo" class="demo" data-reveal aria-label="예시 데모">
-        <span class="demo-badge">예시</span>
         <div class="tabs" role="tablist" aria-label="예시 단계">
-          <button class="tab" role="tab" id="tab-0" aria-controls="panel-0" aria-selected="true"><span>01</span>레시피 담기</button>
-          <button class="tab" role="tab" id="tab-1" aria-controls="panel-1" aria-selected="false" tabindex="-1"><span>02</span>레시피북 넘겨 보기</button>
+          <button class="tab" role="tab" id="tab-0" aria-controls="panel-0" aria-selected="false" tabindex="-1"><span>01</span>레시피 담기</button>
+          <button class="tab" role="tab" id="tab-1" aria-controls="panel-1" aria-selected="true"><span>02</span>레시피북 넘겨 보기</button>
           <button class="tab" role="tab" id="tab-3" aria-controls="panel-3" aria-selected="false" tabindex="-1"><span>03</span>장바구니<b class="tcount" id="demo-tcount" aria-label="장바구니 재료 수"></b></button>
         </div>
 
-        <div id="panel-0" class="panel" role="tabpanel" aria-labelledby="tab-0">
+        <div id="panel-0" class="panel" role="tabpanel" aria-labelledby="tab-0" hidden>
           <div class="grid2">
             <div class="box">
               <div class="box-h"><b>다른 앱에서 본 레시피</b></div>
@@ -610,7 +609,7 @@
           </div>
         </div>
 
-        <div id="panel-1" class="panel" role="tabpanel" aria-labelledby="tab-1" hidden>
+        <div id="panel-1" class="panel" role="tabpanel" aria-labelledby="tab-1">
           <div class="viewer">
             <div class="viewer-bar">
               <button class="chip" id="demo-liked-only" aria-pressed="false">맛있었던 것만</button>
@@ -1100,7 +1099,7 @@
 
     function focusIn(sel) { var n = document.querySelector("#demo-cook " + sel); if (n) n.focus({ preventScroll: true }); }
 
-    renderShares(); renderToc(); updateCount(false);
+    renderShares(); renderToc(); updateCount(false); selectTab(1);
   })();
 </script>
 
