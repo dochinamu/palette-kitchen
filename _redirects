@@ -1,0 +1,9 @@
+# 홍보 채널별 짧은 주소 → utm 붙은 주소로 이동 (Threads 등에서 ?utm= 이 잘릴 때 사용)
+/thread1     /?utm=thread1     302
+/thread2     /?utm=thread2     302
+/thread3     /?utm=thread3     302
+/threads     /?utm=threads     302
+/baking      /?utm=baking      302
+/everytime   /?utm=everytime   302
+/insta       /?utm=insta       302
+/openchat    /?utm=openchat    302

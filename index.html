@@ -4,13 +4,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>나를 위한 한 끼, 나만의 레시피북 | 팔레트키친</title>
-    <meta name="description" content="어디서 본 레시피든 공유하면 레시피 한 장으로 정리돼요. 오늘은 그중 한 장을 펼쳐 천천히 만들어 보세요." />
+    <meta name="description" content="어디서 본 레시피든 공유하면 레시피 한 장으로 정리돼요. 오늘은 그중 먹고 싶은 메뉴를 골라 천천히 만들어 보세요." />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="팔레트키친" />
     <meta property="og:locale" content="ko_KR" />
     <meta property="og:url" content="https://palette-kitchen.netlify.app/" />
     <meta property="og:title" content="나를 위한 한 끼, 나만의 레시피북" />
-    <meta property="og:description" content="어디서 본 레시피든 공유하면 레시피 한 장으로 정리돼요. 오늘은 그중 한 장을 펼쳐 천천히 만들어 보세요." />
+    <meta property="og:description" content="어디서 본 레시피든 공유하면 레시피 한 장으로 정리돼요. 오늘은 그중 먹고 싶은 메뉴를 골라 천천히 만들어 보세요." />
     <meta property="og:image" content="https://palette-kitchen.netlify.app/img/og-image.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
@@ -508,7 +508,7 @@
       <div class="hero">
         <div class="hero-copy">
           <h1 id="wm-hero-title" class="disp t1" aria-label="나를 위한 한 끼, 나만의 레시피북">나를 위한 한 끼,<br>나만의 <span aria-hidden="true"><span class="cut">레</span><span class="cut">시</span><span class="cut">피</span><span class="cut">북</span></span></h1>
-          <p id="wm-hero-sub" class="lead">어디서 본 레시피든 공유하면 레시피 한 장으로 정리돼요. 오늘은 그중 한 장을 펼쳐 천천히 만들어 보세요.</p>
+          <p id="wm-hero-sub" class="lead">어디서 본 레시피든 공유하면 레시피 한 장으로 정리돼요. 오늘은 그중 먹고 싶은 메뉴를 골라 천천히 만들어 보세요.</p>
           <button id="cta_primary" type="button" class="sbtn-main">먼저 만나 보기</button>
         </div>
         <div class="book gingham-red" aria-hidden="true">
@@ -522,7 +522,7 @@
                 <svg class="doily" viewBox="0 0 100 100" aria-hidden="true"><use href="#d-doily"/></svg>
                 <svg class="doodle" viewBox="0 0 100 100"><use href="#d-tomegg"/></svg>
               </div>
-              <span class="cap">오늘의 한 장</span>
+              <span class="cap">오늘의 메뉴</span>
             </div>
             <div class="bpage right">
               <h3>토마토 달걀볶음</h3>
@@ -552,7 +552,7 @@
           <li>매일 저녁 메뉴를 고르는 게 생각보다 힘들어요.</li>
           <li>요리가 즐거움이 아니라 숙제처럼 느껴질 때가 있어요.</li>
         </ul>
-        <p class="closing"><span class="tape"></span>오늘은 한 장만 펼쳐 보세요. 나를 위해 차린 한 끼는 생각보다 근사해요.</p>
+        <p class="closing"><span class="tape"></span>오늘은 메뉴 하나만 골라 보세요. 나를 위해 차린 한 끼는 생각보다 근사해요.</p>
       </div>
     </div>
   </section>
@@ -566,12 +566,12 @@
           <svg class="doodle" viewBox="0 0 100 100" aria-hidden="true"><use href="#d-book"/></svg>
           <span class="no">1</span>
           <h3>레시피 담기</h3>
-          <p>어디에서든 마음에 드는 레시피를 보면 공유하세요. 재료와 순서가 정리된 레시피 한 장이 레시피북에 꽂혀요.</p>
+          <p>어디에서든 마음에 드는 레시피를 보면 공유하세요. 재료와 순서가 정리된 레시피 한 장이 레시피북에 추가돼요.</p>
         </li>
         <li class="chapter" data-reveal>
           <svg class="doodle" viewBox="0 0 100 100" aria-hidden="true"><use href="#d-tomegg"/></svg>
           <span class="no">2</span>
-          <h3>오늘의 한 장 고르기</h3>
+          <h3>오늘의 메뉴 고르기</h3>
           <p>레시피북을 넘기며 오늘 먹고 싶은 걸 골라요. 맛있었던 레시피에 표시해 두면 다음에 다시 찾기 쉬워요.</p>
         </li>
         <li class="chapter" data-reveal>
@@ -913,7 +913,7 @@
         var t = el("span", "tile"); t.appendChild(doodle(r.d)); li.appendChild(t);
         var g = el("span", "grow"); g.appendChild(el("span", "src", r.src)); g.appendChild(el("b", null, r.title)); li.appendChild(g);
         var done = r.kind === "mine";
-        var b = el("button", "pill" + (done ? " is-done" : ""), done ? "꽂혔어요" : "공유하기"); b.type = "button";
+        var b = el("button", "pill" + (done ? " is-done" : ""), done ? "추가됐어요" : "공유하기"); b.type = "button";
         if (done) b.disabled = true;
         b.addEventListener("click", function () { r.kind = "mine"; renderShares(); renderToc(r.id); });
         li.appendChild(b); ul.appendChild(li);
