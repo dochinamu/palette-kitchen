@@ -329,6 +329,12 @@
   .consent ul { padding-bottom: 8px; }
   .done-title { font-family: var(--f-display); font-weight: 700; font-size: 24px; line-height: 1.35; }
   .done-title:focus { outline: none; }
+  .survey { margin-top: 22px; padding-top: 18px; border-top: 1px dashed var(--line); display: grid; gap: 18px; }
+  .survey .q { font-weight: 600; font-size: 15px; }
+  .survey .q small { margin-left: 4px; font-weight: 400; color: var(--ink-soft); font-size: 13px; }
+  .survey .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .survey .chip { min-height: 44px; }
+  .survey .input { height: 48px; margin-top: 10px; }
 
   footer { background: var(--ink); color: var(--sheet); padding-block: 34px 42px; }
   .foot-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px; }
@@ -713,6 +719,28 @@
         <div data-wm-state="done" hidden>
           <h3 id="wm-done-title" class="done-title" tabindex="-1">신청이 완료됐어요</h3>
           <p style="margin-top:10px">지금 출시를 준비하고 있어요. 출시되면 남겨 주신 주소로 가장 먼저 알려 드릴게요.</p>
+          <div class="survey">
+            <div role="group" aria-labelledby="wm-q-cook">
+              <p id="wm-q-cook" class="q">일주일에 집에서 몇 번 요리하세요?</p>
+              <div class="chips">
+                <button type="button" class="chip wm-q" data-q="cook_freq" aria-pressed="false">거의 안 해요</button>
+                <button type="button" class="chip wm-q" data-q="cook_freq" aria-pressed="false">1~2번</button>
+                <button type="button" class="chip wm-q" data-q="cook_freq" aria-pressed="false">3번 이상</button>
+              </div>
+            </div>
+            <div role="group" aria-labelledby="wm-q-save">
+              <p id="wm-q-save" class="q">레시피는 주로 어디에 저장하세요?<small>여러 개 골라도 돼요</small></p>
+              <div class="chips">
+                <button type="button" class="chip wm-q" data-q="save_where" data-multi="1" aria-pressed="false">인스타</button>
+                <button type="button" class="chip wm-q" data-q="save_where" data-multi="1" aria-pressed="false">유튜브</button>
+                <button type="button" class="chip wm-q" data-q="save_where" data-multi="1" aria-pressed="false">블로그</button>
+                <button type="button" class="chip wm-q" data-q="save_where" data-multi="1" data-etc="1" aria-pressed="false" aria-controls="wm-save-etc">기타</button>
+                <button type="button" class="chip wm-q" data-q="save_where" data-multi="1" data-none="1" aria-pressed="false">따로 저장 안 해요</button>
+              </div>
+              <input id="wm-save-etc" class="input" type="text" maxlength="60" placeholder="어디에 저장하시는지 적어 주세요" aria-label="기타 저장 위치" hidden>
+            </div>
+            <p class="wm-q-thanks note" aria-live="polite" hidden>답해 주셔서 고마워요.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -810,7 +838,7 @@
         return;
       }
       var $btn = $(this).attr("aria-busy", "true");
-      var finalData = JSON.stringify({ id: getUVfromCookie(), email: email, advice: advice });
+      var finalData = JSON.stringify({ id: (window.WM.submitId = getUVfromCookie()), email: email, advice: advice }); // 설문 답을 같은 줄에 붙이려고 기억
       axios.get(addr + "?action=insert&table=tab_final&data=" + encodeURIComponent(finalData))
         .then(function () {
           $btn.removeAttr("aria-busy");
@@ -826,6 +854,40 @@
     $("#submit-email").on("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); $("#submit").trigger("click"); } });
     $("#submit-email").on("input", function () { $("#wm-email-error").text(DEFAULT_ERROR).prop("hidden", true); $(this).removeAttr("aria-invalid"); });
     $("#wm-consent").on("change", function () { if (this.checked) $("#wm-consent-error").prop("hidden", true); });
+
+    // 신청 뒤 설문: 답을 이메일과 같은 줄(tab_final)에 저장. 저장 위치는 여러 개 선택
+    var lastEtc = "";
+    $(".wm-q").on("click", function () {
+      var $b = $(this), q = $b.data("q"), $group = $(".wm-q[data-q='" + q + "']"), value;
+      if ($b.data("multi")) {
+        var on = $b.attr("aria-pressed") !== "true";
+        $b.attr("aria-pressed", on ? "true" : "false");
+        if (on && $b.data("none")) $group.not($b).attr("aria-pressed", "false");
+        if (on && !$b.data("none")) $group.filter("[data-none]").attr("aria-pressed", "false");
+        value = $group.filter("[aria-pressed='true']").map(function () { return $(this).text().trim(); }).get().join(", ");
+      } else {
+        $group.attr("aria-pressed", "false"); $b.attr("aria-pressed", "true");
+        value = $b.text().trim();
+      }
+      if (q === "save_where") {
+        var etcOn = $group.filter("[data-etc]").attr("aria-pressed") === "true";
+        $("#wm-save-etc").prop("hidden", !etcOn);
+        if (etcOn && $b.data("etc")) $("#wm-save-etc").trigger("focus");
+      }
+      var ans = {}; ans[q] = value;
+      // 기타를 해제하면 적어 둔 내용도 지운다
+      if (q === "save_where" && $("#wm-save-etc").prop("hidden") && lastEtc) { $("#wm-save-etc").val(""); lastEtc = ""; ans.save_where_etc = ""; }
+      axios.get(addr + "?action=update&table=tab_final&id=" + encodeURIComponent(window.WM.submitId || getUVfromCookie()) + "&data=" + encodeURIComponent(JSON.stringify(ans))).catch(function () {});
+      WM.track("survey_answer", ans);
+      $(".wm-q-thanks").prop("hidden", false);
+    });
+    // 기타 칸에 적은 내용은 입력을 마치면(칸을 벗어나거나 Enter) 같은 줄의 save_where_etc 열에 저장
+    $("#wm-save-etc").on("change", function () {
+      var v = $.trim($(this).val()); if (v === lastEtc) return; lastEtc = v;
+      var ans = { save_where_etc: v };
+      axios.get(addr + "?action=update&table=tab_final&id=" + encodeURIComponent(window.WM.submitId || getUVfromCookie()) + "&data=" + encodeURIComponent(JSON.stringify(ans))).catch(function () {});
+      WM.track("survey_answer", ans);
+    }).on("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); $(this).trigger("change").trigger("blur"); } });
   });
 </script>
 
@@ -1098,6 +1160,29 @@
     document.getElementById("demo-cart-back").addEventListener("click", function () { selectTab(1, true); showTop(); });
 
     function focusIn(sel) { var n = document.querySelector("#demo-cook " + sel); if (n) n.focus({ preventScroll: true }); }
+
+    // 데모 안의 버튼 클릭 → Apps Script의 demo_pick 시트 (방문자 id, 시각, 단계, 버튼)
+    function tabName(t) {
+      var c = t.cloneNode(true); var b = c.querySelector(".tcount"); if (b) b.remove();
+      var n = c.querySelector("span"); var num = n ? n.textContent.trim() : ""; if (n) n.remove();
+      return (num ? num + " " : "") + c.textContent.replace(/\s+/g, " ").trim();
+    }
+    document.getElementById("wm-demo").addEventListener("click", function (e) {
+      if (!e.isTrusted || !window.WM || !window.axios) return;
+      var btn = e.target.closest("button, a");
+      if (!btn || !this.contains(btn)) return;
+      var tab = btn.closest(".tab"), panel = btn.closest(".panel");
+      var stepTab = tab || (panel && document.getElementById(panel.getAttribute("aria-labelledby")));
+      var label = (btn.getAttribute("aria-label") || btn.textContent || "").replace(/\s+/g, " ").trim();
+      var row = {
+        id: typeof getUVfromCookie === "function" ? getUVfromCookie() : "",
+        time_stamp: typeof getTimeStamp === "function" ? getTimeStamp() : new Date().toISOString(),
+        step: tab ? "탭 이동" : (stepTab ? tabName(stepTab) : "") + (btn.closest("#demo-cook") ? " · 요리 모드" : ""),
+        button: tab ? tabName(tab) : label,
+        utm: WM.utm || ""
+      };
+      try { axios.get(WM.endpoint + "?action=insert&table=demo_pick&data=" + encodeURIComponent(JSON.stringify(row))).catch(function () {}); } catch (err) {}
+    }, true); // 캡처 단계: 버튼이 다시 그려지기 전에, 누르기 전 상태로 기록
 
     renderShares(); renderToc(); updateCount(false); selectTab(1);
   })();
