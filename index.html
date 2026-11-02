@@ -145,7 +145,7 @@
   .chapters { display: grid; grid-template-columns: minmax(0,1fr); gap: 14px; margin-top: 36px; }
   .chapter { position: relative; padding: 30px 22px 24px; border-radius: 4px; background: var(--sheet); box-shadow: 0 8px 20px rgba(60,70,40,.12); min-width: 0; }
   .chapter::before { content: ""; position: absolute; top: -10px; left: 22px; width: 64px; height: 20px; border-radius: 4px 4px 0 0; background: var(--tc, var(--pink)); }
-  .chapter:nth-child(2) { --tc: var(--butter); } .chapter:nth-child(3) { --tc: #cfe0bd; }
+  .chapter:nth-child(2) { --tc: var(--butter); } .chapter:nth-child(3) { --tc: #cfe0bd; } .chapter:nth-child(4) { --tc: #f1d2b8; }
   .chapter .no { font-family: var(--f-display); font-size: 15px; color: var(--tomato); }
   .chapter h3 { margin-top: 6px; font-family: var(--f-display); font-weight: 700; font-size: 21px; line-height: 1.35; }
   .chapter p { margin-top: 10px; font-size: 16px; }
@@ -352,7 +352,7 @@
     .bpage { min-height: 300px; padding: 24px 22px; }
     .bpage.right h3 { font-size: 26px; }
     .bpage.right li { font-size: 18px; }
-    .chapters { grid-template-columns: repeat(3, minmax(0,1fr)); gap: 16px; }
+    .chapters { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 16px; }
     .demo { padding: 30px 28px; }
     .grid2 { grid-template-columns: minmax(0,1.2fr) minmax(0,1fr); }
     .rpage-in { grid-template-columns: minmax(0,.9fr) minmax(0,1.1fr); }
@@ -360,6 +360,7 @@
     .final-card { padding: 36px 32px 30px; }
   }
   @media (min-width: 1100px) {
+    .chapters { grid-template-columns: repeat(4, minmax(0,1fr)); }
     .wrap { padding-left: max(56px, env(safe-area-inset-left, 0px)); padding-right: max(56px, env(safe-area-inset-right, 0px)); }
     .section { padding-block: 120px; }
     .t1 { font-size: 62px; } .t2 { font-size: 46px; }
@@ -571,10 +572,16 @@
           <p>레시피북을 넘기며 오늘 먹고 싶은 걸 골라요. 맛있었던 레시피에 표시해 두면 다음에 다시 찾기 쉬워요.</p>
         </li>
         <li class="chapter" data-reveal>
-          <svg class="doodle" viewBox="0 0 100 100" aria-hidden="true"><use href="#s-pan"/></svg>
+          <svg class="doodle" viewBox="0 0 200 150" aria-hidden="true"><use href="#d-basket"/></svg>
           <span class="no">3</span>
+          <h3>재료 장보기</h3>
+          <p>고른 레시피에서 필요한 재료만 장바구니에 담아요. 담은 재료는 레시피별로 정리되고, 쿠팡이나 컬리에서 바로 살 수 있어요.</p>
+        </li>
+        <li class="chapter" data-reveal>
+          <svg class="doodle" viewBox="0 0 100 100" aria-hidden="true"><use href="#s-pan"/></svg>
+          <span class="no">4</span>
           <h3>천천히 만들기</h3>
-          <p>요리 모드에서 단계마다 그림과 걸리는 시간을 보며 차근차근 만들어요. 필요한 재료는 바로 장 볼 수 있어요.</p>
+          <p>요리 모드에서 단계마다 그림과 걸리는 시간을 보며 차근차근 만들어요.</p>
         </li>
       </ol>
 
@@ -583,8 +590,8 @@
         <div class="tabs" role="tablist" aria-label="예시 단계">
           <button class="tab" role="tab" id="tab-0" aria-controls="panel-0" aria-selected="true"><span>01</span>레시피 담기</button>
           <button class="tab" role="tab" id="tab-1" aria-controls="panel-1" aria-selected="false" tabindex="-1"><span>02</span>레시피북 넘겨 보기</button>
-          <button class="tab" role="tab" id="tab-2" aria-controls="panel-2" aria-selected="false" tabindex="-1"><span>03</span>천천히 만들기</button>
-          <button class="tab" role="tab" id="tab-3" aria-controls="panel-3" aria-selected="false" tabindex="-1"><span>04</span>장바구니<b class="tcount" id="demo-tcount" aria-label="장바구니 재료 수"></b></button>
+          <button class="tab" role="tab" id="tab-3" aria-controls="panel-3" aria-selected="false" tabindex="-1"><span>03</span>장바구니<b class="tcount" id="demo-tcount" aria-label="장바구니 재료 수"></b></button>
+          <button class="tab" role="tab" id="tab-2" aria-controls="panel-2" aria-selected="false" tabindex="-1"><span>04</span>천천히 만들기</button>
         </div>
 
         <div id="panel-0" class="panel" role="tabpanel" aria-labelledby="tab-0">
@@ -872,7 +879,9 @@
     function heart() { var s = svgEl("svg", { viewBox: "0 0 24 24", "aria-hidden": "true" }); s.appendChild(svgEl("path", { d: "M12 20.5s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.4a4.3 4.3 0 0 1 7.5 2.9c0 5.6-7.5 10.2-7.5 10.2z", fill: "none", stroke: "currentColor", "stroke-width": 2 })); return s; }
 
     // 탭
-    var tabs = Array.prototype.slice.call(document.querySelectorAll("#wm-demo .tab"));
+    // tabs[k]는 panel-k와 짝, 화면 순서(키보드 이동)는 tabOrder를 따라요
+    var tabs = [0, 1, 2, 3].map(function (k) { return document.getElementById("tab-" + k); });
+    var tabOrder = Array.prototype.slice.call(document.querySelectorAll("#wm-demo .tab")).map(function (t) { return tabs.indexOf(t); });
     function selectTab(i, focus) {
       tabs.forEach(function (t, k) { var on = k === i; t.setAttribute("aria-selected", on ? "true" : "false"); t.tabIndex = on ? 0 : -1; document.getElementById("panel-" + k).hidden = !on; });
       if (focus) tabs[i].focus();
@@ -883,7 +892,7 @@
     tabs.forEach(function (t, i) {
       t.addEventListener("click", function () { selectTab(i); });
       t.addEventListener("keydown", function (e) {
-        if (e.key === "ArrowRight" || e.key === "ArrowLeft") { e.preventDefault(); selectTab((i + (e.key === "ArrowRight" ? 1 : tabs.length - 1)) % tabs.length, true); }
+        if (e.key === "ArrowRight" || e.key === "ArrowLeft") { e.preventDefault(); var pos = tabOrder.indexOf(i); selectTab(tabOrder[(pos + (e.key === "ArrowRight" ? 1 : tabOrder.length - 1)) % tabOrder.length], true); }
       });
     });
 
@@ -967,7 +976,7 @@
       else if (dx > 50 && st.page > 0) { st.page--; renderPage(true); }
     });
 
-    // 03 천천히 만들기
+    // 천천히 만들기 (화면에선 04)
     function renderCook() {
       var box = document.getElementById("demo-cook"); box.textContent = "";
       if (!st.cook) {
