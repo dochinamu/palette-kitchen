@@ -1,0 +1,1090 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>나를 위한 한 끼, 나만의 레시피북 | 팔레트키친</title>
+    <meta name="description" content="어디서 본 레시피든 공유하면 레시피 한 장으로 정리돼요. 오늘은 그중 한 장을 펼쳐 천천히 만들어 보세요." />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="팔레트키친" />
+    <meta property="og:locale" content="ko_KR" />
+    <meta property="og:url" content="https://palette-kitchen.netlify.app/" />
+    <meta property="og:title" content="나를 위한 한 끼, 나만의 레시피북" />
+    <meta property="og:description" content="어디서 본 레시피든 공유하면 레시피 한 장으로 정리돼요. 오늘은 그중 한 장을 펼쳐 천천히 만들어 보세요." />
+    <meta property="og:image" content="https://palette-kitchen.netlify.app/img/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link href="img/favicon.svg" rel="icon" type="image/svg+xml" />
+    <link href="img/apple-touch-icon.png" rel="apple-touch-icon" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;600;700&family=Gaegu:wght@400;700&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+  /* 배치: 한 권의 레시피북. 히어로는 펼친 책, 섹션은 책장처럼, 예시는 넘겨 보는 책 */
+  :root {
+    --paper: #fbf6ec;      /* 크림 종이 */
+    --sheet: #fffdf7;      /* 레시피 한 장 */
+    --kraft: #d9483d;      /* 표지: 빨간 깅엄 */
+    --kraft-dark: #a8352d;
+    --gingham: rgba(217,72,61,.42);
+    --sage: #a9bf95;       /* 초록 깅엄 */
+    --sage-soft: rgba(110,140,90,.28);
+    --ink: #3a2e28;        /* 따뜻한 갈색 잉크 */
+    --ink-soft: #7a6a5e;
+    --green: #56704a;      /* 버튼: 세이지 그린 */
+    --green-hover: #475f3d;
+    --tomato: #d9483d;     /* 책갈피·도장 */
+    --butter: #f3e2a6;
+    --pink: #f2c9c2;
+    --line: #e8dccb;
+    --error: #b42318; --ok: #2f6b3a;
+    --c-tomato: #d8432f; --c-cobalt: #2c48b5; --c-leaf: #4e9a3a; --c-plum: #7d4fb3; --c-orange: #ef9a1d; --c-pink: #e0569a;
+    --f-display: "Gowun Batang", "Nanum Myeongjo", serif;
+    --f-body: "Pretendard", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    --f-hand: "Gaegu", "Nanum Pen Script", cursive;
+    --f-label: "DM Mono", ui-monospace, monospace;
+    color-scheme: light;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: var(--f-body); font-size: 16px; line-height: 1.7;
+    word-break: keep-all; overflow-wrap: break-word; -webkit-font-smoothing: antialiased;
+  }
+  body::after {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 50; opacity: .4; mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .4  0 0 0 0 .35  0 0 0 0 .25  0 0 0 .09 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+  h1, h2, h3, h4, p, figure { margin: 0; }
+  ul, ol { margin: 0; padding: 0; list-style: none; }
+  button, input, textarea { font: inherit; color: var(--ink); }
+  [hidden] { display: none !important; }
+  :focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+
+  .wrap { max-width: 1160px; margin: 0 auto; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
+  .section { padding-block: 76px; position: relative; overflow-x: clip; }
+  .disp { font-family: var(--f-display); font-weight: 700; letter-spacing: -0.02em; text-wrap: balance; }
+  .t1 { font-size: 34px; line-height: 1.25; }
+  .t2 { font-size: 28px; line-height: 1.3; }
+  .lead { font-size: 17px; line-height: 1.7; color: var(--ink-soft); max-width: 30em; }
+  .hand { font-family: var(--f-hand); font-weight: 700; }
+  .eb { font-family: var(--f-label); font-size: 12px; letter-spacing: .08em; color: var(--ink-soft); }
+  .note { font-size: 14px; color: var(--ink-soft); line-height: 1.6; }
+
+  .sbtn-main {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 56px; padding: 0 34px;
+    border: 0; border-radius: 999px; background: var(--green); color: var(--sheet); font-weight: 600; font-size: 16px; cursor: pointer;
+    transition: background-color .15s ease, transform .05s ease;
+  }
+  .sbtn-main:hover { background: var(--green-hover); }
+  .sbtn-main:active { transform: translateY(1px); }
+  .sbtn-main[aria-busy="true"] { opacity: .7; cursor: progress; }
+
+  .doodle use { filter: url(#crayon); }
+  .tape { position: absolute; width: 84px; height: 24px; top: -11px; left: 50%; margin-left: -42px; transform: rotate(-3deg); background: rgba(246,231,168,.8);
+    clip-path: polygon(0 8%, 8% 0, 16% 10%, 26% 2%, 38% 9%, 50% 1%, 62% 8%, 74% 0, 86% 9%, 100% 4%, 100% 92%, 90% 100%, 78% 91%, 64% 99%, 50% 92%, 36% 100%, 22% 92%, 10% 100%, 0 94%); }
+  /* 깅엄 체크 · 도일리 · 단추 · 오려 붙인 글자 */
+  .gingham-red { background-color: #fff6f2; background-image: linear-gradient(90deg, var(--gingham) 50%, transparent 50%), linear-gradient(var(--gingham) 50%, transparent 50%); background-size: 22px 22px; }
+  .gingham-green { background-color: #f6f8f0; background-image: linear-gradient(90deg, var(--sage-soft) 50%, transparent 50%), linear-gradient(var(--sage-soft) 50%, transparent 50%); background-size: 26px 26px; }
+  .doily { position: absolute; display: block; filter: drop-shadow(0 1px 1px rgba(0,0,0,.08)); }
+  .button-deco { position: absolute; width: 26px; height: 26px; border-radius: 50%; background: radial-gradient(circle at 38% 38%, rgba(0,0,0,.35) 0 2px, transparent 2.5px), radial-gradient(circle at 62% 38%, rgba(0,0,0,.35) 0 2px, transparent 2.5px), radial-gradient(circle at 38% 62%, rgba(0,0,0,.35) 0 2px, transparent 2.5px), radial-gradient(circle at 62% 62%, rgba(0,0,0,.35) 0 2px, transparent 2.5px), var(--bc, var(--sage)); box-shadow: inset 0 0 0 3px rgba(0,0,0,.12), 0 2px 3px rgba(0,0,0,.15); }
+  .cut { display: inline-block; padding: 0 .08em; margin: 0 .02em; line-height: 1.15; box-shadow: 0 2px 0 rgba(0,0,0,.08); }
+  .cut:nth-child(1) { background: var(--pink); transform: rotate(-4deg); }
+  .cut:nth-child(2) { background: var(--butter); transform: rotate(3deg); font-family: var(--f-body); font-weight: 800; }
+  .cut:nth-child(3) { background: #cfe0bd; transform: rotate(-2deg); }
+  .cut:nth-child(4) { background: var(--tomato); color: #fff; transform: rotate(4deg); font-family: var(--f-body); font-weight: 800; }
+  .sheet { position: relative; background: var(--sheet); border-radius: 3px; box-shadow: 0 1px 0 rgba(0,0,0,.05), 0 12px 30px rgba(60,45,20,.1); }
+
+  /* 히어로 */
+  #wm-hero { padding-block: 0 64px; background: linear-gradient(var(--paper), var(--paper)) padding-box; }
+  #wm-hero::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 10px; }
+  .nav { display: flex; align-items: center; justify-content: space-between; height: 60px; }
+  .brand { font-family: var(--f-display); font-weight: 700; font-size: 19px; }
+  .navlinks { display: none; gap: 28px; }
+  .navlinks a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 6px; color: var(--ink); text-decoration: none; }
+  .hero { display: grid; grid-template-columns: minmax(0,1fr); gap: 40px; padding-top: 20px; text-align: center; justify-items: center; }
+  .hero-copy { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+  .hero-copy .sbtn-main { margin-top: 6px; width: 100%; max-width: 340px; }
+
+  /* 펼친 레시피북 */
+  .book { position: relative; box-sizing: border-box; width: calc(100% - 28px); max-width: 420px; margin: 0 22px 0 6px; padding: 12px; border-radius: 10px; box-shadow: 0 18px 40px rgba(90,40,30,.22), inset 0 0 0 2px var(--kraft-dark); }
+  .tabs-edge { position: absolute; right: -22px; top: 18px; display: flex; flex-direction: column; gap: 4px; }
+  .tabs-edge span { width: 22px; padding: 8px 0; border-radius: 0 6px 6px 0; writing-mode: vertical-rl; font-family: var(--f-hand); font-weight: 700; font-size: 13px; text-align: center; color: var(--ink); box-shadow: 1px 1px 0 rgba(0,0,0,.08); }
+  .book-in { display: grid; grid-template-columns: 1fr 1fr; background: var(--sheet); border-radius: 4px; position: relative; overflow: hidden; }
+  .book-in::after { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: 30px; margin-left: -15px; background: linear-gradient(90deg, transparent, rgba(80,60,30,.16), transparent); pointer-events: none; }
+  .bpage { padding: 18px 16px 20px; min-height: 230px; text-align: left; }
+  .bpage.left { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; overflow: hidden; }
+  .bpage.left > svg.doodle, .bpage.left .cap { position: relative; z-index: 1; }
+  .bpage.left svg.doodle { width: 78%; max-width: 150px; height: auto; }
+  .bpage .cap { font-family: var(--f-hand); font-weight: 700; font-size: 20px; }
+  .bpage.right { background: repeating-linear-gradient(180deg, var(--sheet) 0 25px, #ece5d3 25px 26px); }
+  .bpage.right h3 { font-family: var(--f-hand); font-size: 22px; line-height: 26px; }
+  .bpage.right li { font-family: var(--f-hand); font-size: 16px; line-height: 26px; color: #3b3b33; }
+  .bpage.right .serv { font-family: var(--f-label); font-size: 11px; color: var(--ink-soft); line-height: 26px; }
+  .ribbon { position: absolute; top: -6px; right: 9%; width: 14px; height: 70px; background: var(--green); clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 82%, 0 100%); z-index: 2; }
+  .book .fl { position: absolute; width: 56px; height: 56px; }
+  .book .fl.a { left: -18px; bottom: -22px; transform: rotate(-14deg); }
+  .book .fl.b { right: -14px; top: -22px; width: 46px; height: 46px; }
+
+  /* 공감: 한 장의 줄 노트 */
+  .story { display: grid; grid-template-columns: minmax(0,1fr); gap: 28px; }
+  .story-page { padding: 30px 22px 26px 46px; background:
+      linear-gradient(90deg, transparent 0 30px, rgba(224,83,58,.35) 30px 31px, transparent 31px),
+      repeating-linear-gradient(180deg, var(--sheet) 0 43px, #ece5d3 43px 44px); }
+  .story-page li { position: relative; font-size: 16px; line-height: 22px; padding: 11px 0; min-height: 44px; box-sizing: border-box; }
+  .story-page li::before { content: ""; position: absolute; left: -24px; top: 15px; width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--c, var(--tomato)); filter: url(#crayon); }
+  .story-page li:nth-child(2) { --c: var(--c-cobalt); } .story-page li:nth-child(3) { --c: var(--c-leaf); }
+  .story-page li:nth-child(4) { --c: var(--c-plum); } .story-page li:nth-child(5) { --c: var(--c-orange); } .story-page li:nth-child(6) { --c: var(--c-pink); }
+  .closing { position: relative; margin-top: 18px; padding: 22px 22px 20px; background: var(--pink); border-radius: 4px; transform: rotate(-.8deg); font-family: var(--f-display); font-weight: 700; font-size: 19px; line-height: 1.55; }
+
+  /* 이용 방법 */
+  #wm-how { background-color: #f6f8f0; background-image: linear-gradient(90deg, var(--sage-soft) 50%, transparent 50%), linear-gradient(var(--sage-soft) 50%, transparent 50%); background-size: 26px 26px; }
+  #wm-how .how-head h2 { display: inline-block; padding: 6px 22px 8px; background: var(--sheet); border-radius: 4px; box-shadow: 0 2px 0 rgba(0,0,0,.06); }
+  .how-head { text-align: center; }
+  .chapters { display: grid; grid-template-columns: minmax(0,1fr); gap: 14px; margin-top: 36px; }
+  .chapter { position: relative; padding: 30px 22px 24px; border-radius: 4px; background: var(--sheet); box-shadow: 0 8px 20px rgba(60,70,40,.12); min-width: 0; }
+  .chapter::before { content: ""; position: absolute; top: -10px; left: 22px; width: 64px; height: 20px; border-radius: 4px 4px 0 0; background: var(--tc, var(--pink)); }
+  .chapter:nth-child(2) { --tc: var(--butter); } .chapter:nth-child(3) { --tc: #cfe0bd; }
+  .chapter .no { font-family: var(--f-display); font-size: 15px; color: var(--tomato); }
+  .chapter h3 { margin-top: 6px; font-family: var(--f-display); font-weight: 700; font-size: 21px; line-height: 1.35; }
+  .chapter p { margin-top: 10px; font-size: 16px; }
+  .chapter svg { position: absolute; right: 16px; top: 16px; width: 50px; height: 50px; }
+
+  /* 예시 데모 */
+  .demo { position: relative; margin-top: 48px; padding: 22px 16px 20px; border-radius: 10px; background: var(--paper); box-shadow: 0 10px 26px rgba(60,70,40,.14); }
+  .demo-badge { position: absolute; top: 16px; right: 16px; padding: 3px 9px; border: 1px solid var(--line); border-radius: 999px; background: var(--sheet); font-family: var(--f-label); font-size: 12px; color: var(--ink-soft); }
+  .tabs { display: flex; gap: 6px; overflow-x: auto; margin-right: 44px; padding: 2px 2px 4px; scrollbar-width: none; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab { flex: none; min-height: 44px; padding: 0 14px; border: 1px solid rgba(31,42,28,.22); border-radius: 999px; background: var(--sheet); font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+  .tab span { font-family: var(--f-label); font-weight: 400; margin-right: 4px; }
+  .tab[aria-selected="true"] { background: var(--green); border-color: var(--green); color: var(--sheet); }
+  .panel { margin-top: 18px; }
+  .grid2 { display: grid; grid-template-columns: minmax(0,1fr); gap: 16px; align-items: start; }
+  .box { padding: 18px; border-radius: 10px; background: var(--sheet); border: 1px solid var(--line); min-width: 0; }
+  .box-h { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
+  .box-h b { font-family: var(--f-display); font-size: 17px; }
+  .count { font-family: var(--f-label); font-size: 12px; color: var(--ink-soft); }
+  .row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px dashed var(--line); }
+  .row:first-child { border-top: 0; }
+  .tile { flex: none; width: 48px; height: 48px; border-radius: 10px; background: #f4eedf; display: grid; place-items: center; }
+  .tile svg { width: 36px; height: 36px; }
+  .grow { flex: 1; min-width: 0; }
+  .grow b { display: block; font-weight: 600; }
+  .src { font-family: var(--f-label); font-size: 12px; color: var(--ink-soft); }
+  .pill { flex: none; min-height: 40px; padding: 0 14px; border: 1.5px solid var(--green); border-radius: 999px; background: var(--sheet); color: var(--green); font-weight: 600; font-size: 14px; cursor: pointer; white-space: nowrap; }
+  .pill:hover { background: #eef2e8; }
+  .pill.is-done { border-color: var(--line); color: var(--ink-soft); background: #f3efe4; cursor: default; }
+  .toc-h { font-size: 22px; margin: 2px 0 4px; color: var(--tomato); }
+  .toc li { border-top: 1px dashed var(--line); }
+  .toc li:first-child { border-top: 0; }
+  .toc-item { display: flex; align-items: baseline; gap: 8px; width: 100%; min-height: 48px; padding: 10px 2px; border: 0; background: none; cursor: pointer; text-align: left; color: var(--ink); }
+  .toc-item:hover .toc-t { color: var(--tomato); }
+  .toc-t { font-family: var(--f-display); font-weight: 700; font-size: 17px; }
+  .toc-dots { flex: 1; min-width: 20px; border-bottom: 2px dotted #d8cbb6; transform: translateY(-4px); }
+  .toc-p { font-family: var(--f-label); font-size: 12px; color: var(--ink-soft); }
+  .shelf { display: flex; align-items: flex-end; gap: 6px; height: 120px; padding: 0 6px 10px; border-bottom: 6px solid #b08a63; }
+  .spine { width: 26px; border-radius: 3px 3px 0 0; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 6px; color: #fff; font-family: var(--f-hand); font-size: 13px; writing-mode: vertical-rl; letter-spacing: 1px; box-shadow: inset -3px 0 0 rgba(0,0,0,.12); }
+  .spine.new { animation: slidein .6s cubic-bezier(.3,1.4,.5,1) both; }
+  @keyframes slidein { from { transform: translateY(-50px) rotate(-8deg); opacity: 0; } to { transform: none; opacity: 1; } }
+  .box .pill.wide { width: 100%; margin-top: 14px; }
+
+  /* 넘겨 보는 레시피북 */
+  .viewer { display: flex; flex-direction: column; gap: 12px; }
+  .viewer-bar { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+  .chip { min-height: 40px; padding: 0 14px; border: 1.5px solid var(--green); border-radius: 999px; background: var(--sheet); color: var(--green); font-weight: 600; font-size: 14px; cursor: pointer; }
+  .chip[aria-pressed="true"] { background: var(--green); color: var(--sheet); }
+  .pager { display: flex; align-items: center; gap: 8px; }
+  .arrow { width: 44px; height: 44px; border-radius: 999px; border: 1.5px solid var(--green); background: var(--sheet); color: var(--green); font-size: 18px; cursor: pointer; display: grid; place-items: center; padding: 0; }
+  .arrow:disabled { opacity: .3; cursor: default; }
+  .pageno { font-family: var(--f-label); font-size: 13px; color: var(--ink-soft); min-width: 44px; text-align: center; }
+  .rpage { position: relative; display: grid; grid-template-columns: minmax(0,1fr); background-color: #fff6f2; background-image: linear-gradient(90deg, var(--gingham) 50%, transparent 50%), linear-gradient(var(--gingham) 50%, transparent 50%); background-size: 18px 18px; padding: 10px; border-radius: 8px; box-shadow: 0 10px 26px rgba(70,50,20,.18); perspective: 1400px; }
+  .rpage-in { display: grid; grid-template-columns: minmax(0,1fr); background: var(--sheet); border-radius: 3px; overflow: hidden; transform-origin: left center; }
+  .rpage-in.turn { animation: turn .5s ease both; }
+  @keyframes turn { from { transform: rotateY(-22deg); opacity: .3; } to { transform: none; opacity: 1; } }
+  .rp-pic { position: relative; display: grid; place-items: center; min-height: 170px; background: #f6f1e4; overflow: hidden; }
+  .plate { position: relative; display: grid; place-items: center; aspect-ratio: 1; }
+  .plate > .doily { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .plate > .doodle { position: relative; z-index: 1; width: 78% !important; max-width: none !important; height: auto; transform: translateY(var(--dy, -8%)); }
+  .bpage.left .plate { width: 82%; max-width: 180px; }
+  .rp-pic .plate { width: 64%; max-width: 230px; }
+  .rp-pic > svg.doodle { position: relative; z-index: 1; }
+  .rp-pic svg.doodle { width: 46%; max-width: 160px; height: auto; }
+  .rp-pic .liked { position: absolute; top: 10px; right: 10px; padding: 2px 10px; border: 1.5px solid var(--tomato); border-radius: 999px; color: var(--tomato); font-family: var(--f-hand); font-weight: 700; font-size: 16px; background: var(--sheet); transform: rotate(4deg); }
+  .rp-body { padding: 18px 18px 20px; display: flex; flex-direction: column; gap: 14px; }
+  .rp-title { font-family: var(--f-display); font-weight: 700; font-size: 26px; line-height: 1.25; }
+  .rp-meta { font-size: 13px; color: var(--ink-soft); margin-top: 4px; }
+  .rp-body h4 { font-family: var(--f-label); font-weight: 400; font-size: 12px; letter-spacing: .08em; color: var(--ink-soft); margin-bottom: 6px; }
+  .ings { display: flex; flex-wrap: wrap; gap: 6px; }
+  .ings li { padding: 3px 10px; border-radius: 999px; background: #f3efe4; font-size: 14px; }
+  .steps { counter-reset: st; }
+  .steps li { counter-increment: st; display: grid; grid-template-columns: 24px minmax(0,1fr); gap: 8px; padding: 7px 0; border-top: 1px dashed var(--line); font-size: 15px; line-height: 1.5; }
+  .steps li:first-child { border-top: 0; }
+  .steps li::before { content: counter(st); font-family: var(--f-display); font-weight: 700; color: var(--tomato); }
+  .steps small { margin-left: 4px; color: var(--ink-soft); font-size: 12px; white-space: nowrap; }
+  .acts { display: flex; gap: 8px; }
+  .like { flex: none; display: inline-flex; align-items: center; gap: 5px; min-height: 44px; padding: 0 14px; border: 1px solid var(--line); border-radius: 999px; background: var(--sheet); color: var(--ink-soft); font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+  .like svg { width: 15px; height: 15px; }
+  .like[aria-pressed="true"] { border-color: var(--tomato); color: var(--tomato); background: #fff1ec; }
+  .like[aria-pressed="true"] svg path { fill: var(--tomato); }
+  .go { flex: 1; min-width: 0; min-height: 44px; border: 0; border-radius: 999px; background: var(--green); color: var(--sheet); font-size: 15px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+  .empty-msg { padding: 18px; border: 1px dashed var(--line); border-radius: 10px; color: var(--ink-soft); font-size: 14px; background: var(--sheet); }
+
+  /* 요리 모드 */
+  .cook { display: flex; flex-direction: column; gap: 14px; }
+  .cook-top { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+  .cook-title { font-family: var(--f-display); font-weight: 700; font-size: 24px; }
+  .bar { height: 8px; border-radius: 999px; background: #ece5d3; overflow: hidden; }
+  .bar span { display: block; height: 100%; background: var(--tomato); border-radius: 999px; transition: width .35s ease; }
+  .cook-pic { position: relative; aspect-ratio: 16 / 9; border-radius: 10px; background: var(--sheet); border: 1px solid var(--line); display: grid; place-items: center; overflow: hidden; }
+  .cook-pic > svg { width: 44%; max-height: 86%; height: auto; }
+  .cook-time { position: absolute; left: 10px; top: 10px; display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 999px; background: var(--green); color: var(--sheet); font-size: 13px; font-weight: 600; }
+  .cook-time svg { width: 15px; height: 15px; }
+  .cook-step { padding: 18px 20px; border-radius: 10px; background: #eef3e6; font-size: 19px; font-weight: 600; line-height: 1.5; min-height: 4.5em; }
+  .cook-step b { display: block; margin-bottom: 4px; font-family: var(--f-display); font-size: 14px; color: var(--tomato); }
+  .ghost { flex: 1; min-height: 48px; border: 1.5px solid var(--green); border-radius: 999px; background: var(--sheet); color: var(--green); font-weight: 600; font-size: 15px; cursor: pointer; }
+  .ghost:disabled { opacity: .35; cursor: default; }
+  .next { flex: 1.4; min-height: 48px; border: 0; border-radius: 999px; background: var(--green); color: var(--sheet); font-weight: 600; font-size: 15px; cursor: pointer; }
+  details.prep { border: 1px solid var(--line); border-radius: 10px; background: var(--sheet); padding: 0 14px; }
+  details.prep summary { display: flex; align-items: center; justify-content: space-between; min-height: 48px; cursor: pointer; font-weight: 600; list-style: none; }
+  details.prep summary::-webkit-details-marker { display: none; }
+  .prep-row { display: flex; align-items: center; gap: 4px; min-height: 44px; border-top: 1px dashed var(--line); font-size: 15px; }
+  .shop { display: inline-flex; align-items: center; min-height: 40px; padding: 0 8px; color: var(--ink-soft); font-size: 13px; text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 4px; }
+  .shop:hover { color: var(--ink); text-decoration-color: var(--ink); }
+  .sep { width: 1px; height: 12px; background: var(--line); }
+  .done-card { text-align: center; padding: 26px 18px; border-radius: 10px; background: #eef3e6; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .done-card svg.big { width: 90px; height: 90px; }
+
+  /* 재료 담기 · 장바구니 */
+  .h4row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .h4row h4 { margin: 0; }
+  .add-all { min-height: 36px; padding: 0 6px; border: 0; background: none; font-size: 13px; font-weight: 600; color: var(--green); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+  .ing-list li { border-top: 1px dashed var(--line); }
+  .ing-list li:first-child { border-top: 0; }
+  .ing-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 46px; font-size: 15px; }
+  .ing-add { flex: none; min-height: 34px; padding: 0 12px; border: 1.5px solid var(--green); border-radius: 999px; background: var(--sheet); color: var(--green); font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+  .ing-add[aria-pressed="true"] { background: var(--green); color: var(--sheet); }
+  .tab .tcount { display: inline-flex; align-items: center; justify-content: center; min-width: 22px; height: 22px; margin-left: 6px; padding: 0 6px; border-radius: 999px; background: var(--tomato); color: #fff; font-family: var(--f-label); font-size: 12px; font-weight: 400; }
+  .tab .tcount:empty { display: none; }
+  .bump .tcount, .cart-open.bump b { animation: bump .5s ease; }
+  @keyframes bump { 0% { transform: scale(1); } 35% { transform: scale(1.45) rotate(-8deg); } 100% { transform: scale(1); } }
+  .cart-bar { position: sticky; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); z-index: 5; display: flex; justify-content: center; margin-top: 16px; pointer-events: none; }
+  .cart-open { pointer-events: auto; display: inline-flex; align-items: center; gap: 8px; min-height: 52px; padding: 0 22px 0 16px; border: 0; border-radius: 999px; background: var(--green); color: var(--sheet); font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 8px 22px rgba(40,50,30,.25); }
+  .cart-open svg { width: 30px; height: 24px; }
+  .cart-open b { display: inline-flex; align-items: center; justify-content: center; min-width: 24px; height: 24px; padding: 0 7px; border-radius: 999px; background: var(--tomato); color: #fff; font-family: var(--f-label); font-size: 13px; font-weight: 400; }
+  .basket-box { display: flex; flex-direction: column; align-items: center; gap: 8px; background-color: #fff6f2; background-image: linear-gradient(90deg, rgba(217,72,61,.14) 50%, transparent 50%), linear-gradient(rgba(217,72,61,.14) 50%, transparent 50%); background-size: 22px 22px; }
+  .basket-stage { position: relative; width: 100%; max-width: 300px; aspect-ratio: 4 / 3; }
+  .basket-items { position: absolute; left: 14%; right: 14%; top: 8%; height: 46%; display: flex; flex-wrap: wrap-reverse; align-content: flex-start; justify-content: center; gap: 4px; overflow: hidden; }
+  .bitem { padding: 3px 9px; border-radius: 999px; background: var(--sheet); font-family: var(--f-hand); font-weight: 700; font-size: 16px; line-height: 1.2; box-shadow: 0 1px 0 rgba(0,0,0,.08); transform: rotate(var(--r, 0deg)); }
+  .bitem.drop { animation: drop .55s cubic-bezier(.3,1.4,.5,1) both; }
+  @keyframes drop { from { opacity: 0; transform: translateY(-60px) rotate(-20deg); } to { opacity: 1; transform: rotate(var(--r, 0deg)); } }
+  .basket-stage svg.basket { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 72%; }
+  .basket-total { font-size: 22px; padding: 2px 12px; background: var(--sheet); border-radius: 999px; }
+  .cart-group + .cart-group { margin-top: 14px; }
+  .cart-group h5 { margin: 0 0 4px; font-family: var(--f-display); font-weight: 700; font-size: 17px; }
+  .cart-item { display: flex; align-items: center; gap: 4px; min-height: 48px; padding: 2px 2px 2px 4px; border-bottom: 1px dashed var(--line); font-size: 15px; }
+  .cart-item::before { content: ""; flex: none; width: 8px; height: 8px; margin-right: 8px; border-radius: 999px; background: var(--tomato); }
+  .cart-item .grow b { font-weight: 600; }
+  .buy { flex: none; display: inline-flex; align-items: center; }
+  .rm { flex: none; width: 36px; height: 36px; padding: 0; border: 0; border-radius: 999px; background: none; color: var(--ink-soft); font-size: 20px; cursor: pointer; }
+  .rm:hover { background: #f3efe4; }
+
+  /* FAQ */
+  .faq-grid { display: grid; grid-template-columns: minmax(0,1fr); gap: 28px; }
+  .faqbox { background: var(--sheet); border: 1px solid var(--line); border-radius: 10px; padding: 4px 22px; }
+  .faqbox details + details { border-top: 1px dashed var(--line); }
+  .faqbox summary { display: flex; justify-content: space-between; align-items: center; gap: 14px; min-height: 64px; padding: 16px 0; list-style: none; cursor: pointer; font-weight: 600; font-size: 17px; }
+  .faqbox summary::-webkit-details-marker { display: none; }
+  .pm { flex: none; font-family: var(--f-display); font-size: 22px; color: var(--tomato); }
+  .pm .m, details[open] .pm .p { display: none; }
+  details[open] .pm .m { display: inline; }
+  .faqbox details p { padding-bottom: 18px; color: var(--ink-soft); }
+
+  /* 신청 */
+  #wm-final { background-color: #fff6f2; background-image: linear-gradient(90deg, rgba(217,72,61,.16) 50%, transparent 50%), linear-gradient(rgba(217,72,61,.16) 50%, transparent 50%); background-size: 26px 26px; }
+  #wm-final .final-copy { padding: 22px; background: var(--sheet); border-radius: 4px; box-shadow: 0 2px 0 rgba(0,0,0,.06); }
+  .final { display: grid; grid-template-columns: minmax(0,1fr); gap: 28px; align-items: start; }
+  .final-copy p { margin-top: 12px; }
+  .final-card { padding: 32px 22px 26px; }
+  .field-label { display: block; margin: 0 0 8px 4px; font-weight: 600; font-size: 15px; }
+  .input, .textarea { display: block; width: 100%; box-sizing: border-box; border: 1.5px solid var(--ink); background: var(--sheet); font-size: 16px; }
+  .input { height: 56px; padding: 0 22px; border-radius: 999px; }
+  .textarea { min-height: 88px; padding: 14px 18px; border-radius: 14px; resize: vertical; }
+  .input::placeholder, .textarea::placeholder { color: var(--ink-soft); opacity: 1; }
+  .input[aria-invalid="true"] { border-color: var(--error); }
+  .error { margin: 8px 0 0 18px; font-size: 14px; color: var(--error); }
+  .final-card .sbtn-main { width: 100%; margin-top: 18px; }
+  .final-card .note { margin-top: 12px; }
+  .consent { margin-top: 16px; padding: 10px 16px 6px; border-radius: 12px; background: #f3efe4; font-size: 14px; }
+  .consent > label { display: flex; align-items: center; gap: 10px; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .consent input { flex: none; width: 20px; height: 20px; margin: 0; accent-color: var(--green); }
+  .consent summary { display: inline-flex; align-items: center; min-height: 44px; cursor: pointer; color: var(--ink-soft); text-decoration: underline; text-underline-offset: 3px; list-style: none; }
+  .consent summary::-webkit-details-marker { display: none; }
+  .consent ul, .policy-body { color: var(--ink-soft); }
+  .consent li, .policy-body li { position: relative; padding-left: 12px; }
+  .consent li::before, .policy-body li::before { content: "·"; position: absolute; left: 0; }
+  .consent ul { padding-bottom: 8px; }
+  .done-title { font-family: var(--f-display); font-weight: 700; font-size: 24px; line-height: 1.35; }
+  .done-title:focus { outline: none; }
+
+  footer { background: var(--ink); color: var(--sheet); padding-block: 34px 42px; }
+  .foot-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px; }
+  footer .brand { color: var(--sheet); }
+  .policy summary { display: inline-flex; align-items: center; min-height: 44px; cursor: pointer; color: var(--sheet); text-decoration: underline; text-underline-offset: 3px; font-size: 14px; list-style: none; }
+  .policy summary::-webkit-details-marker { display: none; }
+  .policy-body { margin-top: 8px; max-width: 44em; font-size: 14px; line-height: 1.75; color: #d6d9cf !important; }
+
+  /* 스크롤 등장 (첫 화면 아래만, 움직임 줄이기 제외) */
+  .is-pre { opacity: 0; transform: translateY(22px); }
+  .reveal-on [data-reveal] { transition: opacity .7s ease, transform .8s cubic-bezier(.2,.8,.2,1); }
+  .fade-in { animation: rise .45s ease both; }
+  @keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+  @media (min-width: 768px) {
+    .wrap { padding-left: max(40px, env(safe-area-inset-left, 0px)); padding-right: max(40px, env(safe-area-inset-right, 0px)); }
+    .section { padding-block: 100px; }
+    .t1 { font-size: 50px; } .t2 { font-size: 38px; }
+    .lead { font-size: 19px; }
+    body { font-size: 17px; }
+    .nav { height: 76px; } .navlinks { display: flex; }
+    .hero-copy .sbtn-main { width: auto; min-width: 220px; height: 62px; }
+    .book { max-width: 540px; }
+    .bpage { min-height: 300px; padding: 24px 22px; }
+    .bpage.right h3 { font-size: 26px; }
+    .bpage.right li { font-size: 18px; }
+    .chapters { grid-template-columns: repeat(3, minmax(0,1fr)); gap: 16px; }
+    .demo { padding: 30px 28px; }
+    .grid2 { grid-template-columns: minmax(0,1.2fr) minmax(0,1fr); }
+    .rpage-in { grid-template-columns: minmax(0,.9fr) minmax(0,1.1fr); }
+    .rp-pic { min-height: 100%; }
+    .final-card { padding: 36px 32px 30px; }
+  }
+  @media (min-width: 1100px) {
+    .wrap { padding-left: max(56px, env(safe-area-inset-left, 0px)); padding-right: max(56px, env(safe-area-inset-right, 0px)); }
+    .section { padding-block: 120px; }
+    .t1 { font-size: 62px; } .t2 { font-size: 46px; }
+    body { font-size: 18px; }
+    .hero { grid-template-columns: minmax(0,1fr) minmax(0,1.05fr); gap: 56px; text-align: left; justify-items: stretch; align-items: center; padding-top: 48px; }
+    .hero-copy { align-items: flex-start; }
+    .book { justify-self: end; transform: rotate(1.5deg); }
+    .story { grid-template-columns: minmax(0,.8fr) minmax(0,1.2fr); gap: 64px; align-items: start; }
+    .story-head { position: sticky; top: 48px; }
+    .demo { padding: 40px; margin-top: 64px; }
+    .faq-grid { grid-template-columns: minmax(0,.8fr) minmax(0,1.2fr); gap: 64px; align-items: start; }
+    .final { grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 72px; align-items: center; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { transition: none !important; animation: none !important; }
+  }
+</style>
+  </head>
+  <body>
+
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <filter id="crayon" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="1.1" numOctaves="2" seed="4" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="2.6" xChannelSelector="R" yChannelSelector="G" result="d"/>
+      <feTurbulence type="fractalNoise" baseFrequency="2.4" numOctaves="1" seed="9" result="grain"/>
+      <feColorMatrix in="grain" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1.6 1.25" result="mask"/>
+      <feComposite in="d" in2="mask" operator="in"/>
+    </filter>
+    <symbol id="d-tomegg" viewBox="0 0 100 100">
+      <ellipse cx="50" cy="66" rx="40" ry="16" fill="#fffdf6" stroke="#cfc7b0" stroke-width="3"/>
+      <path d="M26 60c4-12 18-16 26-8 8-8 22-4 24 8-6 8-44 8-50 0z" fill="#f6d35a" stroke="#e2b23a" stroke-width="3"/>
+      <circle cx="38" cy="56" r="7" fill="var(--c-tomato)"/><circle cx="58" cy="54" r="8" fill="var(--c-tomato)"/><circle cx="50" cy="62" r="6" fill="#e86a4f"/>
+      <path d="M44 48l4 4M64 50l-3 3" stroke="var(--c-leaf)" stroke-width="3" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="d-bowl" viewBox="0 0 100 100">
+      <path d="M30 46c6-12 34-12 40 0" fill="#e9663f" stroke="#c94d2c" stroke-width="3"/>
+      <path d="M38 40c4-4 8-4 10 0M52 38c4-4 8-3 10 1" fill="none" stroke="#f6d35a" stroke-width="3" stroke-linecap="round"/>
+      <path d="M16 48h68c-2 20-16 32-34 32S18 68 16 48z" fill="var(--c-cobalt)" stroke="var(--c-cobalt)" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M26 58c8 4 40 4 48 0" fill="none" stroke="#fffdf6" stroke-width="3" stroke-linecap="round"/>
+      <path d="M40 82h20" stroke="var(--c-cobalt)" stroke-width="5" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="d-eggrice" viewBox="0 0 100 100">
+      <path d="M16 50h68c-2 18-16 30-34 30S18 68 16 50z" fill="#f0e6d0" stroke="#bdb59f" stroke-width="3"/>
+      <path d="M22 50c6-10 50-10 56 0" fill="#fffdf6" stroke="#cfc7b0" stroke-width="3"/>
+      <circle cx="50" cy="44" r="10" fill="var(--c-orange)" stroke="var(--c-orange)" stroke-width="2"/>
+      <path d="M30 46c3-3 6 2 9-1M62 46c3-3 6 2 9-1" fill="none" stroke="var(--c-leaf)" stroke-width="3" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="d-stew" viewBox="0 0 100 100">
+      <path d="M18 44h64v24c0 10-8 16-18 16H36c-10 0-18-6-18-16z" fill="#3a3a3a" stroke="#222" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M22 46c10 6 46 6 56 0" fill="none" stroke="#c98a3c" stroke-width="6" stroke-linecap="round"/>
+      <path d="M36 52l6 4M54 50l4 5M44 48l2 3" stroke="var(--c-leaf)" stroke-width="3" stroke-linecap="round"/>
+      <path d="M36 32c-4-6 4-8 0-14M50 32c-4-6 4-8 0-14M64 32c-4-6 4-8 0-14" fill="none" stroke="#9aa3ad" stroke-width="3" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="d-tofu" viewBox="0 0 100 100">
+      <path d="M22 40 50 26l30 12v30L50 82 22 68z" fill="#fffaf0" stroke="#cbbf9f" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M22 40 50 54l30-16M50 54v28" fill="none" stroke="#cbbf9f" stroke-width="3"/>
+      <path d="M30 60l12 6M58 66l12-6" stroke="var(--c-orange)" stroke-width="4" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="d-pasta" viewBox="0 0 100 100">
+      <ellipse cx="50" cy="62" rx="38" ry="18" fill="#fffdf6" stroke="#cfc7b0" stroke-width="3"/>
+      <path d="M28 58c8-10 18 8 26-2s16 6 20-2M30 64c8-8 16 6 24-2s16 4 20-2" fill="none" stroke="#e8c870" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="40" cy="54" r="5" fill="var(--c-leaf)"/><circle cx="60" cy="58" r="5" fill="#3f8a2e"/>
+    </symbol>
+    <symbol id="d-carrot" viewBox="0 0 100 100">
+      <path d="M28 76 70 32c6-5 12 2 7 8L36 82c-7 5-13 0-8-6z" fill="var(--c-orange)" stroke="var(--c-orange)" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M74 34c2-10 8-16 14-18M76 36c8-4 14-4 18 0M73 33c-2-8 0-14 4-18" fill="none" stroke="var(--c-leaf)" stroke-width="4" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="d-burst" viewBox="0 0 100 100">
+      <g stroke="var(--c-tomato)" stroke-width="5" stroke-linecap="round" fill="none"><path d="M50 14v18M50 68v18M14 50h18M68 50h18M25 25l12 12M63 63l12 12M75 25 63 37M37 63 25 75"/></g>
+      <circle cx="50" cy="50" r="5" fill="var(--c-tomato)"/>
+    </symbol>
+    <symbol id="d-book" viewBox="0 0 100 100">
+      <path d="M14 26c14-6 26-6 36 4 10-10 22-10 36-4v50c-14-6-26-6-36 4-10-10-22-10-36-4z" fill="#fffdf6" stroke="var(--c-plum)" stroke-width="3.5" stroke-linejoin="round"/>
+      <path d="M50 30v50" stroke="var(--c-plum)" stroke-width="3"/>
+      <path d="M22 40c8-2 14-2 20 2M22 50c8-2 14-2 20 2M58 42c6-4 12-4 20-2M58 52c6-4 12-4 20-2" fill="none" stroke="#c9bfe0" stroke-width="3" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="s-cut" viewBox="0 0 100 100">
+      <rect x="14" y="44" width="72" height="38" rx="8" fill="#e6c08c" stroke="#b98a52" stroke-width="3"/>
+      <path d="M30 58h12M48 62h10M64 56h8" stroke="var(--c-leaf)" stroke-width="5" stroke-linecap="round"/>
+      <path d="M40 20 74 46" stroke="#9aa3ad" stroke-width="9" stroke-linecap="round"/><path d="M74 46l10 8" stroke="#6b4a2b" stroke-width="7" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="s-mix" viewBox="0 0 100 100">
+      <path d="M14 50h72c-2 20-16 32-36 32S16 70 14 50z" fill="var(--c-cobalt)" stroke="var(--c-cobalt)" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M22 50c8-8 48-8 56 0" fill="#f3d58a" stroke="#d9b45a" stroke-width="3"/>
+      <path d="M58 16 46 50" stroke="var(--c-plum)" stroke-width="5" stroke-linecap="round"/><ellipse cx="44" cy="52" rx="7" ry="4" fill="var(--c-plum)"/>
+    </symbol>
+    <symbol id="s-pan" viewBox="0 0 100 100">
+      <ellipse cx="42" cy="58" rx="30" ry="20" fill="#3a3a3a" stroke="#222" stroke-width="3"/>
+      <path d="M70 54h24" stroke="#6b4a2b" stroke-width="8" stroke-linecap="round"/>
+      <ellipse cx="34" cy="56" rx="9" ry="6" fill="#e9b25b"/><ellipse cx="50" cy="60" rx="9" ry="6" fill="#e9b25b"/>
+      <path d="M30 30c-4-6 4-8 0-14M44 30c-4-6 4-8 0-14M58 30c-4-6 4-8 0-14" fill="none" stroke="var(--c-tomato)" stroke-width="3" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="s-pot" viewBox="0 0 100 100">
+      <path d="M20 44h60v28c0 8-6 14-14 14H34c-8 0-14-6-14-14z" fill="var(--c-tomato)" stroke="var(--c-tomato)" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M14 46h10M76 46h10M22 40h56" stroke="#8a2c1a" stroke-width="5" stroke-linecap="round"/>
+      <path d="M36 30c-5-6 5-9 0-16M50 30c-5-6 5-9 0-16M64 30c-5-6 5-9 0-16" fill="none" stroke="#9aa3ad" stroke-width="3.5" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="s-shape" viewBox="0 0 100 100">
+      <ellipse cx="50" cy="72" rx="38" ry="12" fill="#fffdf6" stroke="#cfc7b0" stroke-width="3"/>
+      <circle cx="34" cy="64" r="10" fill="#e9c58e" stroke="#c99a5a" stroke-width="3"/><circle cx="56" cy="62" r="10" fill="#e9c58e" stroke="#c99a5a" stroke-width="3"/>
+      <circle cx="72" cy="40" r="10" fill="#e9c58e" stroke="#c99a5a" stroke-width="3"/>
+    </symbol>
+    <symbol id="s-plate" viewBox="0 0 100 100">
+      <circle cx="50" cy="56" r="32" fill="#fffdf6" stroke="#cfc7b0" stroke-width="3"/><circle cx="50" cy="56" r="20" fill="none" stroke="#e7e1cf" stroke-width="3"/>
+      <path d="M40 52h20v10H40z" fill="#e9b25b" stroke="#c4874a" stroke-width="2.5"/>
+      <path d="M88 26v44M84 26v14c0 4 8 4 8 0V26" fill="none" stroke="var(--c-plum)" stroke-width="3" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="s-squeeze" viewBox="0 0 100 100">
+      <path d="M24 30c10-8 42-8 52 0l-6 34c-2 10-38 10-40 0z" fill="#f4f0e4" stroke="#bdb59f" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M44 76c-3 5-3 8 1 8s5-3 1-8l-1-3zM58 80c-3 5-3 8 1 8s5-3 1-8l-1-3z" fill="#8cc2f0" stroke="#4a8fd0" stroke-width="2"/>
+    </symbol>
+    <symbol id="s-boil" viewBox="0 0 100 100">
+      <path d="M22 46h56v26c0 8-6 14-14 14H36c-8 0-14-6-14-14z" fill="#9aa3ad" stroke="#7d8690" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M28 52c8 4 36 4 44 0" fill="none" stroke="#8cc2f0" stroke-width="5" stroke-linecap="round"/>
+      <path d="M40 42c4-8 12-8 16 0" fill="none" stroke="#e8c870" stroke-width="4" stroke-linecap="round"/>
+      <path d="M38 30c-4-6 4-8 0-14M54 30c-4-6 4-8 0-14" fill="none" stroke="#bfc6cc" stroke-width="3" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="d-doily" viewBox="0 0 100 100"><path d="M96.00 50.00 A5.05 5.05 0 0 1 94.99 59.56 A5.05 5.05 0 0 1 92.02 68.71 A5.05 5.05 0 0 1 87.21 77.04 A5.05 5.05 0 0 1 80.78 84.18 A5.05 5.05 0 0 1 73.00 89.84 A5.05 5.05 0 0 1 64.21 93.75 A5.05 5.05 0 0 1 54.81 95.75 A5.05 5.05 0 0 1 45.19 95.75 A5.05 5.05 0 0 1 35.79 93.75 A5.05 5.05 0 0 1 27.00 89.84 A5.05 5.05 0 0 1 19.22 84.18 A5.05 5.05 0 0 1 12.79 77.04 A5.05 5.05 0 0 1 7.98 68.71 A5.05 5.05 0 0 1 5.01 59.56 A5.05 5.05 0 0 1 4.00 50.00 A5.05 5.05 0 0 1 5.01 40.44 A5.05 5.05 0 0 1 7.98 31.29 A5.05 5.05 0 0 1 12.79 22.96 A5.05 5.05 0 0 1 19.22 15.82 A5.05 5.05 0 0 1 27.00 10.16 A5.05 5.05 0 0 1 35.79 6.25 A5.05 5.05 0 0 1 45.19 4.25 A5.05 5.05 0 0 1 54.81 4.25 A5.05 5.05 0 0 1 64.21 6.25 A5.05 5.05 0 0 1 73.00 10.16 A5.05 5.05 0 0 1 80.78 15.82 A5.05 5.05 0 0 1 87.21 22.96 A5.05 5.05 0 0 1 92.02 31.29 A5.05 5.05 0 0 1 94.99 40.44 A5.05 5.05 0 0 1 96.00 50.00Z" fill="#ffffff" stroke="#e6ddd0" stroke-width=".8"/><circle cx="50" cy="50" r="42" fill="none" stroke="#efe7da" stroke-width=".8" stroke-dasharray="1.5 2"/><g fill="#f3ece0"><circle cx="88.0" cy="50.0" r="2.4"/><circle cx="86.7" cy="59.8" r="2.4"/><circle cx="82.9" cy="69.0" r="2.4"/><circle cx="76.9" cy="76.9" r="2.4"/><circle cx="69.0" cy="82.9" r="2.4"/><circle cx="59.8" cy="86.7" r="2.4"/><circle cx="50.0" cy="88.0" r="2.4"/><circle cx="40.2" cy="86.7" r="2.4"/><circle cx="31.0" cy="82.9" r="2.4"/><circle cx="23.1" cy="76.9" r="2.4"/><circle cx="17.1" cy="69.0" r="2.4"/><circle cx="13.3" cy="59.8" r="2.4"/><circle cx="12.0" cy="50.0" r="2.4"/><circle cx="13.3" cy="40.2" r="2.4"/><circle cx="17.1" cy="31.0" r="2.4"/><circle cx="23.1" cy="23.1" r="2.4"/><circle cx="31.0" cy="17.1" r="2.4"/><circle cx="40.2" cy="13.3" r="2.4"/><circle cx="50.0" cy="12.0" r="2.4"/><circle cx="59.8" cy="13.3" r="2.4"/><circle cx="69.0" cy="17.1" r="2.4"/><circle cx="76.9" cy="23.1" r="2.4"/><circle cx="82.9" cy="31.0" r="2.4"/><circle cx="86.7" cy="40.2" r="2.4"/><circle cx="79.7" cy="53.9" r="2.2"/><circle cx="76.6" cy="63.8" r="2.2"/><circle cx="70.3" cy="72.1" r="2.2"/><circle cx="61.5" cy="77.7" r="2.2"/><circle cx="51.3" cy="80.0" r="2.2"/><circle cx="41.0" cy="78.6" r="2.2"/><circle cx="31.8" cy="73.8" r="2.2"/><circle cx="24.7" cy="66.1" r="2.2"/><circle cx="20.7" cy="56.5" r="2.2"/><circle cx="20.3" cy="46.1" r="2.2"/><circle cx="23.4" cy="36.2" r="2.2"/><circle cx="29.7" cy="27.9" r="2.2"/><circle cx="38.5" cy="22.3" r="2.2"/><circle cx="48.7" cy="20.0" r="2.2"/><circle cx="59.0" cy="21.4" r="2.2"/><circle cx="68.2" cy="26.2" r="2.2"/><circle cx="75.3" cy="33.9" r="2.2"/><circle cx="79.3" cy="43.5" r="2.2"/><circle cx="71.0" cy="50.0" r="2.4"/><circle cx="68.2" cy="60.5" r="2.4"/><circle cx="60.5" cy="68.2" r="2.4"/><circle cx="50.0" cy="71.0" r="2.4"/><circle cx="39.5" cy="68.2" r="2.4"/><circle cx="31.8" cy="60.5" r="2.4"/><circle cx="29.0" cy="50.0" r="2.4"/><circle cx="31.8" cy="39.5" r="2.4"/><circle cx="39.5" cy="31.8" r="2.4"/><circle cx="50.0" cy="29.0" r="2.4"/><circle cx="60.5" cy="31.8" r="2.4"/><circle cx="68.2" cy="39.5" r="2.4"/></g><circle cx="50" cy="50" r="14" fill="none" stroke="#efe7da" stroke-width=".8"/></symbol>
+    <symbol id="d-basket" viewBox="0 0 200 150">
+      <path d="M58 54C58 18 142 18 142 54" fill="none" stroke="#a5652a" stroke-width="7" stroke-linecap="round"/>
+      <path d="M18 56h164l-18 84H36z" fill="#d9a05b" stroke="#a5652a" stroke-width="5" stroke-linejoin="round"/>
+      <path d="M30 78h140M34 98h132M38 118h124" stroke="#a5652a" stroke-width="4" stroke-linecap="round"/>
+      <path d="M62 58l8 80M100 58v80M138 58l-8 80" stroke="#b97a3b" stroke-width="4" stroke-linecap="round"/>
+      <path d="M12 50h176v12H12z" fill="#c4874a" stroke="#a5652a" stroke-width="4" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="13" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 9v4l3 2M9 2h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  </defs>
+</svg>
+
+<main id="wm-main" data-layout="solo" data-hero="a">
+
+  <!-- 1. 히어로 (A) -->
+  <section id="wm-hero" aria-labelledby="wm-hero-title">
+    <div class="wrap">
+      <nav class="nav" aria-label="페이지 안 이동">
+        <span class="brand">팔레트키친</span>
+        <div class="navlinks"><a href="#wm-how">사용법</a><a href="#wm-faq">자주 묻는 질문</a></div>
+      </nav>
+      <div class="hero">
+        <div class="hero-copy">
+          <h1 id="wm-hero-title" class="disp t1" aria-label="나를 위한 한 끼, 나만의 레시피북">나를 위한 한 끼,<br>나만의 <span aria-hidden="true"><span class="cut">레</span><span class="cut">시</span><span class="cut">피</span><span class="cut">북</span></span></h1>
+          <p id="wm-hero-sub" class="lead">어디서 본 레시피든 공유하면 레시피 한 장으로 정리돼요. 오늘은 그중 한 장을 펼쳐 천천히 만들어 보세요.</p>
+          <button id="cta_primary" type="button" class="sbtn-main">먼저 만나 보기</button>
+        </div>
+        <div class="book gingham-red" aria-hidden="true">
+          <span class="ribbon"></span>
+          <div class="tabs-edge"><span style="background:var(--pink)">밥</span><span style="background:var(--butter)">국</span><span style="background:#cfe0bd">반찬</span><span style="background:#e9d3b8">간식</span></div>
+          <span class="button-deco" style="left:-10px;top:30%;--bc:#cfe0bd"></span>
+          <span class="button-deco" style="left:-8px;top:44%;--bc:var(--butter)"></span>
+          <div class="book-in">
+            <div class="bpage left">
+              <div class="plate" style="--dy:-14%">
+                <svg class="doily" viewBox="0 0 100 100" aria-hidden="true"><use href="#d-doily"/></svg>
+                <svg class="doodle" viewBox="0 0 100 100"><use href="#d-tomegg"/></svg>
+              </div>
+              <span class="cap">오늘의 한 장</span>
+            </div>
+            <div class="bpage right">
+              <h3>토마토 달걀볶음</h3>
+              <p class="serv">1인분 · 15분</p>
+              <ul><li>1. 달걀을 부드럽게 익혀요</li><li>2. 토마토를 볶아요</li><li>3. 달걀을 넣고 간해요</li></ul>
+            </div>
+          </div>
+          <svg class="doodle fl a" viewBox="0 0 100 100"><use href="#d-carrot"/></svg>
+          <svg class="doodle fl b" viewBox="0 0 100 100"><use href="#d-burst"/></svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. 공감 -->
+  <section id="wm-story" class="section" aria-labelledby="wm-story-title">
+    <div class="wrap story">
+      <div class="story-head" data-reveal>
+        <h2 id="wm-story-title" class="disp t2">혼자 먹는 밥도,<br>제대로 차려 먹고 싶을 때</h2>
+      </div>
+      <div data-reveal>
+        <ul class="story-page sheet">
+          <li>퇴근하고 오면 결국 배달 앱부터 열게 돼요.</li>
+          <li>저장해 둔 레시피는 많은데, 막상 만들려고 하면 어디 있는지 안 보여요.</li>
+          <li>요리하면서 보기엔 영상을 몇 번이고 돌려 봐야 해서 불편해요.</li>
+          <li>혼자 먹으니까 대충 때우는 날이 늘어요.</li>
+          <li>매일 저녁 메뉴를 고르는 게 생각보다 힘들어요.</li>
+          <li>요리가 즐거움이 아니라 숙제처럼 느껴질 때가 있어요.</li>
+        </ul>
+        <p class="closing"><span class="tape"></span>오늘은 한 장만 펼쳐 보세요. 나를 위해 차린 한 끼는 생각보다 근사해요.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. 이용 방법 + 예시 -->
+  <section id="wm-how" class="section" aria-labelledby="wm-how-title">
+    <div class="wrap">
+      <div class="how-head" data-reveal><h2 id="wm-how-title" class="disp t2">이용 방법</h2></div>
+      <ol class="chapters">
+        <li class="chapter" data-reveal>
+          <svg class="doodle" viewBox="0 0 100 100" aria-hidden="true"><use href="#d-book"/></svg>
+          <span class="no">1</span>
+          <h3>레시피 담기</h3>
+          <p>어디에서든 마음에 드는 레시피를 보면 공유하세요. 재료와 순서가 정리된 레시피 한 장이 레시피북에 꽂혀요.</p>
+        </li>
+        <li class="chapter" data-reveal>
+          <svg class="doodle" viewBox="0 0 100 100" aria-hidden="true"><use href="#d-tomegg"/></svg>
+          <span class="no">2</span>
+          <h3>오늘의 한 장 고르기</h3>
+          <p>레시피북을 넘기며 오늘 먹고 싶은 걸 골라요. 맛있었던 레시피에 표시해 두면 다음에 다시 찾기 쉬워요.</p>
+        </li>
+        <li class="chapter" data-reveal>
+          <svg class="doodle" viewBox="0 0 100 100" aria-hidden="true"><use href="#s-pan"/></svg>
+          <span class="no">3</span>
+          <h3>천천히 만들기</h3>
+          <p>요리 모드에서 단계마다 그림과 걸리는 시간을 보며 차근차근 만들어요. 필요한 재료는 바로 장 볼 수 있어요.</p>
+        </li>
+      </ol>
+
+      <div id="wm-demo" class="demo" data-reveal aria-label="예시 데모">
+        <span class="demo-badge">예시</span>
+        <div class="tabs" role="tablist" aria-label="예시 단계">
+          <button class="tab" role="tab" id="tab-0" aria-controls="panel-0" aria-selected="true"><span>01</span>레시피 담기</button>
+          <button class="tab" role="tab" id="tab-1" aria-controls="panel-1" aria-selected="false" tabindex="-1"><span>02</span>레시피북 넘겨 보기</button>
+          <button class="tab" role="tab" id="tab-2" aria-controls="panel-2" aria-selected="false" tabindex="-1"><span>03</span>천천히 만들기</button>
+          <button class="tab" role="tab" id="tab-3" aria-controls="panel-3" aria-selected="false" tabindex="-1"><span>04</span>장바구니<b class="tcount" id="demo-tcount" aria-label="장바구니 재료 수"></b></button>
+        </div>
+
+        <div id="panel-0" class="panel" role="tabpanel" aria-labelledby="tab-0">
+          <div class="grid2">
+            <div class="box">
+              <div class="box-h"><b>다른 앱에서 본 레시피</b></div>
+              <ul id="demo-shares"></ul>
+            </div>
+            <div class="box">
+              <div class="box-h"><b>내 레시피북</b><span class="count" id="demo-book-count"></span></div>
+              <p class="toc-h hand">목차</p>
+              <ol class="toc" id="demo-toc" aria-live="polite"></ol>
+            </div>
+          </div>
+        </div>
+
+        <div id="panel-1" class="panel" role="tabpanel" aria-labelledby="tab-1" hidden>
+          <div class="viewer">
+            <div class="viewer-bar">
+              <button class="chip" id="demo-liked-only" aria-pressed="false">맛있었던 것만</button>
+              <div class="pager">
+                <button class="arrow" id="demo-prev" aria-label="이전 장">‹</button>
+                <span class="pageno" id="demo-pageno" aria-live="polite"></span>
+                <button class="arrow" id="demo-next" aria-label="다음 장">›</button>
+              </div>
+            </div>
+            <div id="demo-page"></div>
+          </div>
+          <div class="cart-bar">
+            <button type="button" class="cart-open" id="demo-open-cart">
+              <svg class="doodle" viewBox="0 0 200 150" aria-hidden="true"><use href="#d-basket"/></svg>
+              장바구니 열기 <b id="demo-bar-count">0</b>
+            </button>
+          </div>
+        </div>
+
+        <div id="panel-2" class="panel" role="tabpanel" aria-labelledby="tab-2" hidden>
+          <div id="demo-cook"></div>
+        </div>
+
+        <div id="panel-3" class="panel" role="tabpanel" aria-labelledby="tab-3" hidden>
+          <div id="demo-cart-empty" class="empty-msg">
+            레시피북에서 재료를 담으면 여기 장바구니에 모여요.
+            <div style="margin-top:12px"><button class="pill" id="demo-go-book" type="button">레시피북 펼치기</button></div>
+          </div>
+          <div id="demo-cart-wrap" class="grid2" hidden>
+            <div class="box basket-box">
+              <div class="basket-stage" aria-hidden="true">
+                <div class="basket-items" id="basket-items"></div>
+                <svg class="doodle basket" viewBox="0 0 200 150" preserveAspectRatio="xMidYMax meet"><use href="#d-basket"/></svg>
+              </div>
+              <p class="basket-total hand" id="basket-total"></p>
+            </div>
+            <div class="box">
+              <div class="box-h"><b>장 볼 재료</b><span class="count" id="demo-cart-count"></span></div>
+              <div id="demo-cart" aria-live="polite"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. FAQ -->
+  <section id="wm-faq" class="section" aria-labelledby="wm-faq-title">
+    <div class="wrap faq-grid">
+      <div data-reveal><h2 id="wm-faq-title" class="disp t2">자주 묻는 질문</h2></div>
+      <div class="faqbox" data-reveal>
+        <details>
+          <summary>요리를 잘 못해도 괜찮을까요?<span class="pm" aria-hidden="true"><span class="p">+</span><span class="m">−</span></span></summary>
+          <p>네. 요리 모드에서 한 단계씩 그림과 시간을 보며 따라 할 수 있어요.</p>
+        </details>
+        <details>
+          <summary>어디서 본 레시피든 담을 수 있나요?<span class="pm" aria-hidden="true"><span class="p">+</span><span class="m">−</span></span></summary>
+          <p>네. 보던 앱에서 공유 버튼을 누르거나 캡처를 올리면 바로 담겨요. 담긴 레시피는 재료와 순서로 보기 좋게 정리돼요.</p>
+        </details>
+        <details>
+          <summary>레시피북은 어떻게 보이나요?<span class="pm" aria-hidden="true"><span class="p">+</span><span class="m">−</span></span></summary>
+          <p>담은 레시피가 한 장씩 넘겨 보는 책처럼 모여요. 맛있었던 레시피는 따로 모아 볼 수 있어요.</p>
+        </details>
+        <details>
+          <summary>장보기도 같이 할 수 있나요?<span class="pm" aria-hidden="true"><span class="p">+</span><span class="m">−</span></span></summary>
+          <p>네. 메뉴를 고르면 필요한 재료가 한눈에 정리되고, 바로 살 수 있는 곳으로 이어져요.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. 신청 · 6. 신청 뒤 안내 -->
+  <section id="wm-final" class="section" aria-labelledby="wm-final-title">
+    <div class="wrap final">
+      <div class="final-copy" data-reveal>
+        <h2 id="wm-final-title" class="disp t2">지금 출시를 준비하고 있어요</h2>
+        <p class="lead">이메일을 남겨 주시면 출시 소식을 가장 먼저 보내 드릴게요.</p>
+      </div>
+      <div class="final-card sheet" data-reveal>
+        <span class="tape"></span>
+        <div data-wm-state="form">
+          <label for="submit-email" class="field-label">이메일 주소</label>
+          <input id="submit-email" class="input" type="email" inputmode="email" autocomplete="email" placeholder="이메일 주소" aria-describedby="wm-email-note">
+          <p id="wm-email-error" class="error" role="alert" hidden>이메일 주소를 다시 확인해 주세요.</p>
+          <label for="submit-advice" class="field-label" style="margin-top:16px">서비스에 바라는 점 (선택)</label>
+          <textarea id="submit-advice" class="textarea" rows="3" placeholder="자유롭게 남겨 주세요"></textarea>
+          <div class="consent">
+            <label for="wm-consent"><input id="wm-consent" type="checkbox"><span>[필수] 개인정보 수집·이용에 동의해요</span></label>
+            <details>
+              <summary>자세히 보기</summary>
+              <ul>
+                <li>수집 목적: 출시 알림 발송, 서비스 수요 조사</li>
+                <li>수집 항목: 이메일, 의견(선택), 방문 기록(IP, 쿠키 ID, 기기 정보, 유입 경로)</li>
+                <li>보유·이용 기간: 출시 알림 발송을 마치거나 동의를 철회하면 바로 파기해요</li>
+                <li>보관 위치: Google LLC의 스프레드시트(국외 서버)</li>
+                <li>동의하지 않을 수 있어요. 동의하지 않으면 출시 알림을 받을 수 없어요.</li>
+              </ul>
+            </details>
+          </div>
+          <p id="wm-consent-error" class="error" role="alert" hidden>개인정보 수집·이용에 동의해 주세요.</p>
+          <button id="submit" type="button" class="sbtn-main">출시 알림 신청</button>
+          <p id="wm-email-note" class="note">이메일은 출시 소식을 보내는 데만 써요. 원하지 않으면 언제든 수신을 그만둘 수 있어요.</p>
+        </div>
+        <div data-wm-state="done" hidden>
+          <h3 id="wm-done-title" class="done-title" tabindex="-1">신청이 완료됐어요</h3>
+          <p style="margin-top:10px">지금 출시를 준비하고 있어요. 출시되면 남겨 주신 주소로 가장 먼저 알려 드릴게요.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot-row">
+    <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+      <span class="brand">팔레트키친</span>
+      <span style="font-size:14px;color:#d6d9cf">문의: <a href="mailto:3e_0nz0ne@naver.com" style="color:inherit;text-decoration:underline">3e_0nz0ne@naver.com</a></span>
+    </div>
+    <details class="policy">
+      <summary>개인정보 처리방침</summary>
+      <ul class="policy-body">
+        <li>수집 목적: 출시 알림 발송, 서비스 수요 조사</li>
+        <li>수집 항목: 이메일, 의견(선택), 방문 기록(IP, 쿠키 ID, 기기 정보, 유입 경로)</li>
+        <li>보유·이용 기간: 출시 알림 발송을 마치거나 동의를 철회하면 바로 파기해요</li>
+        <li>보관 위치: Google LLC의 스프레드시트(국외 서버)</li>
+        <li>동의를 거부할 권리가 있으며, 거부하면 출시 알림을 받을 수 없어요</li>
+        <li>문의·동의 철회: 3e_0nz0ne@naver.com</li>
+      </ul>
+    </details>
+  </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.7/axios.min.js"></script>
+
+<!-- 기록: 방문(visitors) · 이메일(tab_final) · 이벤트(events). 1인 가구 버전 전용 Apps Script -->
+<script>
+  var ip = "null";
+  function getIP(json) { try { ip = json.ip; } catch (e) { ip = "unknown"; } }
+</script>
+<script src="https://jsonip.com?format=jsonp&callback=getIP"></script>
+<script>
+  (function () {
+    var ENDPOINT = "https://script.google.com/macros/s/AKfycbxxMI2OujFlSkrcpd9YqOn9G_2k4wUFaOUelzi_1Fv-U1UoMqjduiycwutVXGYEu59c/exec";
+    var params = new URLSearchParams(location.search);
+    var WM = { endpoint: ENDPOINT, layout: "solo", hero: "a", utm: params.get("utm") || params.get("utm_source"), utm_source: params.get("utm_source") || params.get("utm"), utm_campaign: params.get("utm_campaign") };
+    WM.track = function (name, props) {
+      var payload = Object.assign({ event: name, layout_variant: WM.layout, headline_variant: WM.hero, utm: WM.utm, utm_source: WM.utm_source, utm_campaign: WM.utm_campaign }, props || {});
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push(payload);
+      try {
+        var row = Object.assign({ id: getUVfromCookie(), time_stamp: getTimeStamp() }, payload);
+        if (window.axios) axios.get(WM.endpoint + "?action=insert&table=events&data=" + encodeURIComponent(JSON.stringify(row))).catch(function () {});
+      } catch (e) {}
+    };
+    WM.showState = function (state) {
+      document.querySelectorAll("[data-wm-state]").forEach(function (el) { el.hidden = el.getAttribute("data-wm-state") !== state; });
+      if (state === "done") { var t = document.getElementById("wm-done-title"); if (t) t.focus(); }
+    };
+    window.WM = WM;
+  })();
+
+  var mobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? "mobile" : "desktop";
+  var utm = new URLSearchParams(location.search).get("utm") || new URLSearchParams(location.search).get("utm_source");
+  function padValue(v) { return v < 10 ? "0" + v : v; }
+  function getTimeStamp() {
+    var d = new Date();
+    return d.getFullYear() + "-" + padValue(d.getMonth() + 1) + "-" + padValue(d.getDate()) + " " + padValue(d.getHours()) + ":" + padValue(d.getMinutes()) + ":" + padValue(d.getSeconds());
+  }
+  function getCookieValue(name) { var v = "; " + document.cookie; var p = v.split("; " + name + "="); if (p.length === 2) return p.pop().split(";").shift(); }
+  function setCookieValue(name, value, days) {
+    var exp = ""; if (days) { var d = new Date(); d.setTime(d.getTime() + days * 864e5); exp = "; expires=" + d.toUTCString(); }
+    document.cookie = name + "=" + (value || "") + exp + "; path=/";
+  }
+  function getUVfromCookie() {
+    var hash = Math.random().toString(36).substring(2, 8).toUpperCase();
+    var ex = getCookieValue("user"); if (!ex) { setCookieValue("user", hash, 180); return hash; } return ex;
+  }
+
+  $(function () {
+    var addr = window.WM.endpoint;
+    var DEFAULT_ERROR = "이메일 주소를 다시 확인해 주세요.";
+    var data = JSON.stringify({ id: getUVfromCookie(), landingUrl: window.location.href, ip: ip, referer: document.referrer, time_stamp: getTimeStamp(), utm: utm, device: mobile });
+    axios.get(addr + "?action=insert&table=visitors&data=" + encodeURIComponent(data)).catch(function () {});
+    WM.track("page_view");
+
+    $("#cta_primary").on("click", function () { WM.track("hero_cta_click", { position: "hero" }); });
+
+    $("#submit").on("click", function () {
+      var email = $("#submit-email").val();
+      var advice = $("#submit-advice").val();
+      var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+      if (email == "" || !re.test(email)) {
+        $("#wm-email-error").text(DEFAULT_ERROR).prop("hidden", false);
+        $("#submit-email").attr("aria-invalid", "true").trigger("focus");
+        return;
+      }
+      if (!$("#wm-consent").is(":checked")) {
+        $("#wm-consent-error").prop("hidden", false);
+        $("#wm-consent").trigger("focus");
+        return;
+      }
+      var $btn = $(this).attr("aria-busy", "true");
+      var finalData = JSON.stringify({ id: getUVfromCookie(), email: email, advice: advice });
+      axios.get(addr + "?action=insert&table=tab_final&data=" + encodeURIComponent(finalData))
+        .then(function () {
+          $btn.removeAttr("aria-busy");
+          WM.track("waitlist_submit");
+          WM.showState("done");
+          $("#submit-email").val(""); $("#submit-advice").val("");
+        })
+        .catch(function () {
+          $btn.removeAttr("aria-busy");
+          $("#wm-email-error").text("잠시 후 다시 시도해 주세요.").prop("hidden", false);
+        });
+    });
+    $("#submit-email").on("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); $("#submit").trigger("click"); } });
+    $("#submit-email").on("input", function () { $("#wm-email-error").text(DEFAULT_ERROR).prop("hidden", true); $(this).removeAttr("aria-invalid"); });
+    $("#wm-consent").on("change", function () { if (this.checked) $("#wm-consent-error").prop("hidden", true); });
+  });
+</script>
+
+<!-- 스크롤 등장 · 예시 데모 -->
+<script>
+  (function () {
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (!reduce && "IntersectionObserver" in window) {
+      var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.remove("is-pre"); io.unobserve(e.target); } }); }, { rootMargin: "0px 0px -8% 0px", threshold: 0.1 });
+      document.querySelectorAll("[data-reveal]").forEach(function (el) { if (el.getBoundingClientRect().top > window.innerHeight) { el.classList.add("is-pre"); io.observe(el); } });
+      document.querySelectorAll(".chapters").forEach(function (g) { Array.prototype.forEach.call(g.children, function (c, i) { c.style.transitionDelay = (i * 90) + "ms"; }); });
+      requestAnimationFrame(function () { document.documentElement.classList.add("reveal-on"); });
+    }
+
+    // 메인 버튼: 페이지 안 신청 칸으로
+    document.getElementById("cta_primary").addEventListener("click", function () {
+      document.getElementById("wm-final").scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+      setTimeout(function () { document.getElementById("submit-email").focus({ preventScroll: true }); }, reduce ? 0 : 500);
+    });
+
+    // 가상의 1인분 레시피
+    var SRC = "@example_recipe";
+    function S(t, sec, ic) { return { t: t, sec: sec, ic: "s-" + ic }; }
+    var R = [
+      { id: "tomegg", dy: "-14%", title: "토마토 달걀볶음", d: "d-tomegg", kind: "mine", liked: true, color: "#d9483d",
+        ings: ["토마토 1개", "달걀 2개", "대파 조금", "소금"],
+        steps: [S("달걀을 풀어 소금 한 꼬집을 넣어요.", 60, "mix"), S("팬에 달걀을 부드럽게 익혀 덜어 둬요.", 90, "pan"), S("토마토를 한입 크기로 썰어요.", 60, "cut"), S("토마토를 즙이 나올 때까지 볶아요.", 180, "pan"), S("달걀과 대파를 넣고 한 번 더 볶아 담아요.", 60, "plate")] },
+      { id: "tofu", dy: "-4%", title: "두부 스테이크", d: "d-tofu", kind: "mine", liked: false, color: "#c9a27c",
+        ings: ["두부 반 모", "다진 고기 50g", "달걀 1개", "간장"],
+        steps: [S("두부를 면포로 감싸 물기를 꼭 짜요.", 60, "squeeze"), S("다진 고기, 달걀을 넣고 고루 섞어요.", 120, "mix"), S("손바닥만 하게 두 개로 빚어요.", 120, "shape"), S("약불에서 앞뒤로 노릇하게 구워요.", 420, "pan"), S("간장을 살짝 둘러 접시에 담아요.", 60, "plate")] },
+      { id: "kimchirice", dy: "-12%", title: "참치 김치볶음밥", d: "d-bowl", kind: "share", src: "영상 링크", liked: false, color: "#7f9a6c",
+        ings: ["밥 한 공기", "김치 반 컵", "참치 반 캔", "달걀 1개"],
+        steps: [S("김치를 잘게 썰어요.", 60, "cut"), S("팬에 김치를 먼저 볶아요.", 180, "pan"), S("참치와 밥을 넣고 고루 볶아요.", 180, "pan"), S("달걀 프라이를 따로 부쳐요.", 120, "pan"), S("볶음밥 위에 달걀을 올려요.", 30, "plate")] },
+      { id: "eggrice", dy: "-14%", title: "버터 간장 계란밥", d: "d-eggrice", kind: "share", src: "캡처", liked: false, color: "#e5a96b",
+        ings: ["밥 한 공기", "달걀 1개", "버터 한 조각", "간장"],
+        steps: [S("따뜻한 밥을 그릇에 담아요.", 30, "plate"), S("달걀 프라이를 반숙으로 부쳐요.", 150, "pan"), S("밥 위에 버터를 올려 녹여요.", 30, "plate"), S("달걀을 얹고 간장을 둘러요.", 30, "plate"), S("노른자를 터뜨려 비벼 먹어요.", 30, "mix")] },
+      { id: "stew", dy: "-12%", title: "애호박 된장찌개", d: "d-stew", kind: "mine", liked: false, color: "#d98c86",
+        ings: ["애호박 1/3개", "두부 1/4모", "된장 1큰술", "대파"],
+        steps: [S("애호박과 두부를 깍둑 썰어요.", 120, "cut"), S("냄비에 물을 붓고 된장을 풀어요.", 60, "mix"), S("물이 끓으면 애호박을 넣어요.", 300, "boil"), S("두부를 넣고 한소끔 끓여요.", 180, "pot"), S("대파를 올려 마무리해요.", 30, "pot")] },
+    ];
+    var st = { mine: [], page: 0, likedOnly: false, cook: null, cart: [] };
+    function findR(id) { return R.find(function (r) { return r.id === id; }); }
+    function book() { return R.filter(function (r) { return r.kind === "mine" && (!st.likedOnly || r.liked); }); }
+    function fmt(sec) { return sec < 60 ? "약 " + sec + "초" : "약 " + Math.round(sec / 60) + "분"; }
+    function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+    function svgEl(tag, attrs) { var n = document.createElementNS("http://www.w3.org/2000/svg", tag); Object.keys(attrs).forEach(function (k) { n.setAttribute(k, attrs[k]); }); return n; }
+    function doodle(id) { var s = svgEl("svg", { viewBox: "0 0 100 100", "class": "doodle", "aria-hidden": "true" }); s.appendChild(svgEl("use", { href: "#" + id })); return s; }
+    function heart() { var s = svgEl("svg", { viewBox: "0 0 24 24", "aria-hidden": "true" }); s.appendChild(svgEl("path", { d: "M12 20.5s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.4a4.3 4.3 0 0 1 7.5 2.9c0 5.6-7.5 10.2-7.5 10.2z", fill: "none", stroke: "currentColor", "stroke-width": 2 })); return s; }
+
+    // 탭
+    var tabs = Array.prototype.slice.call(document.querySelectorAll("#wm-demo .tab"));
+    function selectTab(i, focus) {
+      tabs.forEach(function (t, k) { var on = k === i; t.setAttribute("aria-selected", on ? "true" : "false"); t.tabIndex = on ? 0 : -1; document.getElementById("panel-" + k).hidden = !on; });
+      if (focus) tabs[i].focus();
+      if (i === 1) renderPage(false);
+      if (i === 2) renderCook();
+      if (i === 3) renderCart();
+    }
+    tabs.forEach(function (t, i) {
+      t.addEventListener("click", function () { selectTab(i); });
+      t.addEventListener("keydown", function (e) {
+        if (e.key === "ArrowRight" || e.key === "ArrowLeft") { e.preventDefault(); selectTab((i + (e.key === "ArrowRight" ? 1 : tabs.length - 1)) % tabs.length, true); }
+      });
+    });
+
+    // 01 레시피 담기
+    function renderShares() {
+      var ul = document.getElementById("demo-shares"); ul.textContent = "";
+      R.filter(function (r) { return r.src; }).forEach(function (r) {
+        var li = el("li", "row");
+        var t = el("span", "tile"); t.appendChild(doodle(r.d)); li.appendChild(t);
+        var g = el("span", "grow"); g.appendChild(el("span", "src", r.src)); g.appendChild(el("b", null, r.title)); li.appendChild(g);
+        var done = r.kind === "mine";
+        var b = el("button", "pill" + (done ? " is-done" : ""), done ? "꽂혔어요" : "공유하기"); b.type = "button";
+        if (done) b.disabled = true;
+        b.addEventListener("click", function () { r.kind = "mine"; renderShares(); renderToc(r.id); });
+        li.appendChild(b); ul.appendChild(li);
+      });
+    }
+    function renderToc(newId) {
+      var ol = document.getElementById("demo-toc"); ol.textContent = "";
+      var mine = R.filter(function (r) { return r.kind === "mine"; });
+      document.getElementById("demo-book-count").textContent = mine.length + "장";
+      mine.forEach(function (r, i) {
+        var li = el("li", r.id === newId && !reduce ? "fade-in" : null);
+        var b = el("button", "toc-item"); b.type = "button"; b.setAttribute("aria-label", r.title + " 펼쳐 보기");
+        b.appendChild(el("span", "toc-t", r.title)); b.appendChild(el("span", "toc-dots")); b.appendChild(el("span", "toc-p", "p." + (i + 1)));
+        b.addEventListener("click", function () {
+          st.likedOnly = false; document.getElementById("demo-liked-only").setAttribute("aria-pressed", "false");
+          st.page = i; selectTab(1, true);
+        });
+        li.appendChild(b); ol.appendChild(li);
+      });
+    }
+
+    // 02 레시피북 넘겨 보기
+    function renderPage(turn) {
+      var list = book(); var box = document.getElementById("demo-page"); box.textContent = "";
+      var prev = document.getElementById("demo-prev"), next = document.getElementById("demo-next");
+      if (!list.length) {
+        box.appendChild(el("p", "empty-msg", "아직 맛있었다고 표시한 레시피가 없어요. 레시피 아래 하트를 눌러 보세요."));
+        document.getElementById("demo-pageno").textContent = "0 / 0"; prev.disabled = next.disabled = true; return;
+      }
+      if (st.page > list.length - 1) st.page = list.length - 1;
+      if (st.page < 0) st.page = 0;
+      var r = list[st.page];
+      document.getElementById("demo-pageno").textContent = (st.page + 1) + " / " + list.length;
+      prev.disabled = st.page === 0; next.disabled = st.page === list.length - 1;
+      var wrapE = el("div", "rpage"); var inn = el("div", "rpage-in" + (turn && !reduce ? " turn" : ""));
+      var pic = el("div", "rp-pic"); var dl = svgEl("svg", { viewBox: "0 0 100 100", "class": "doily", "aria-hidden": "true" }); dl.appendChild(svgEl("use", { href: "#d-doily" })); var plate = el("div", "plate"); plate.style.setProperty("--dy", r.dy || "-8%"); plate.appendChild(dl); plate.appendChild(doodle(r.d)); pic.appendChild(plate); if (r.liked) pic.appendChild(el("span", "liked", "맛있었어요"));
+      inn.appendChild(pic);
+      var b = el("div", "rp-body");
+      var hd = el("div"); hd.appendChild(el("h3", "rp-title", r.title));
+      var total = r.steps.reduce(function (a, s) { return a + s.sec; }, 0);
+      hd.appendChild(el("p", "rp-meta", "1인분 · " + fmt(total).replace("약 ", "약 ") + " · " + SRC)); b.appendChild(hd);
+      b.appendChild(ingList(r, function () { renderPage(false); }));
+      var s2 = el("div"); s2.appendChild(el("h4", null, "조리법")); var ol = el("ol", "steps");
+      r.steps.forEach(function (x) { var li = el("li"); var sp = el("span", null, x.t + " "); sp.appendChild(el("small", null, fmt(x.sec))); li.appendChild(sp); ol.appendChild(li); });
+      s2.appendChild(ol); b.appendChild(s2);
+      var a = el("div", "acts");
+      var lk = el("button", "like"); lk.type = "button"; lk.setAttribute("aria-pressed", r.liked ? "true" : "false"); lk.setAttribute("aria-label", r.title + " 맛있었어요");
+      lk.appendChild(heart()); lk.appendChild(document.createTextNode("맛있었어요"));
+      lk.addEventListener("click", function () { r.liked = !r.liked; renderPage(false); });
+      var go = el("button", "go", "요리 모드로 만들기"); go.type = "button";
+      go.addEventListener("click", function () {
+        if (window.WM) WM.track("demo_cook", { recipe: r.id });
+        st.cook = { rid: r.id, i: -1 }; selectTab(2, true);
+      });
+      a.appendChild(lk); a.appendChild(go); b.appendChild(a);
+      inn.appendChild(b); wrapE.appendChild(inn); box.appendChild(wrapE);
+    }
+    document.getElementById("demo-prev").addEventListener("click", function () { st.page--; renderPage(true); });
+    document.getElementById("demo-next").addEventListener("click", function () { st.page++; renderPage(true); });
+    document.getElementById("demo-liked-only").addEventListener("click", function () {
+      st.likedOnly = !st.likedOnly; this.setAttribute("aria-pressed", st.likedOnly ? "true" : "false"); st.page = 0; renderPage(true);
+    });
+    var pageBox = document.getElementById("demo-page"), sx = null;
+    pageBox.addEventListener("touchstart", function (e) { sx = e.touches[0].clientX; }, { passive: true });
+    pageBox.addEventListener("touchend", function (e) {
+      if (sx == null) return; var dx = e.changedTouches[0].clientX - sx; sx = null;
+      var list = book();
+      if (dx < -50 && st.page < list.length - 1) { st.page++; renderPage(true); }
+      else if (dx > 50 && st.page > 0) { st.page--; renderPage(true); }
+    });
+
+    // 03 천천히 만들기
+    function renderCook() {
+      var box = document.getElementById("demo-cook"); box.textContent = "";
+      if (!st.cook) {
+        var m = el("div", "empty-msg"); m.appendChild(document.createTextNode("02에서 오늘의 한 장을 골라 '요리 모드로 만들기'를 눌러 보세요."));
+        var bt = el("button", "pill", "레시피북 펼치기"); bt.type = "button"; bt.style.marginTop = "12px"; bt.style.display = "flex";
+        bt.addEventListener("click", function () { selectTab(1, true); }); m.appendChild(bt); box.appendChild(m); return;
+      }
+      var r = findR(st.cook.rid), i = st.cook.i, n = r.steps.length;
+      var c = el("div", "cook");
+      var top = el("div", "cook-top"); top.appendChild(el("p", "cook-title", r.title));
+      top.appendChild(el("span", "eb", i < 0 ? "준비" : i >= n ? "완성" : "요리 모드 · " + (i + 1) + " / " + n)); c.appendChild(top);
+      var bar = el("div", "bar"); var f = el("span"); f.style.width = (Math.max(0, Math.min(i + 1, n)) / n * 100) + "%"; bar.appendChild(f); c.appendChild(bar);
+      if (i < 0) {
+        // 준비: 재료와 장보기
+        var pic0 = el("div", "cook-pic"); pic0.appendChild(doodle(r.d)); c.appendChild(pic0);
+        var det = document.createElement("details"); det.className = "prep"; det.open = true;
+        var sm = document.createElement("summary"); sm.textContent = "준비할 재료 " + r.ings.length + "가지"; det.appendChild(sm);
+        det.appendChild(ingList(r, function () { renderCook(); }, true));
+        var oc = el("button", "add-all", "장바구니 열기"); oc.type = "button"; oc.style.marginBottom = "8px";
+        oc.addEventListener("click", function () { selectTab(3, true); }); det.appendChild(oc);
+        c.appendChild(det);
+        var go0 = el("button", "next", "시작하기"); go0.type = "button"; go0.style.width = "100%";
+        go0.addEventListener("click", function () { st.cook.i = 0; renderCook(); focusIn(".next"); }); c.appendChild(go0);
+      } else if (i >= n) {
+        var dc = el("div", "done-card"); var big = doodle(r.d); big.setAttribute("class", "doodle big"); dc.appendChild(big);
+        dc.appendChild(el("p", "cook-title", "한 끼 완성"));
+        dc.appendChild(el("p", "note", "맛있었다면 레시피북에 표시해 두세요. 다음에 다시 찾기 쉬워요."));
+        var lk = el("button", "like"); lk.type = "button"; lk.setAttribute("aria-pressed", r.liked ? "true" : "false");
+        lk.appendChild(heart()); lk.appendChild(document.createTextNode("맛있었어요"));
+        lk.addEventListener("click", function () { r.liked = !r.liked; lk.setAttribute("aria-pressed", r.liked ? "true" : "false"); });
+        dc.appendChild(lk);
+        var back = el("button", "pill", "레시피북으로 돌아가기"); back.type = "button";
+        back.addEventListener("click", function () { selectTab(1, true); }); dc.appendChild(back);
+        c.appendChild(dc);
+      } else {
+        var s = r.steps[i];
+        var pic = el("div", "cook-pic"); pic.appendChild(doodle(s.ic));
+        var tm = el("span", "cook-time"); var cl = svgEl("svg", { viewBox: "0 0 24 24", "aria-hidden": "true" }); cl.appendChild(svgEl("use", { href: "#i-clock" }));
+        tm.appendChild(cl); tm.appendChild(document.createTextNode(fmt(s.sec))); pic.appendChild(tm); c.appendChild(pic);
+        var p = el("p", "cook-step"); p.appendChild(el("b", null, (i + 1) + "단계")); p.appendChild(document.createTextNode(s.t)); p.setAttribute("aria-live", "polite"); c.appendChild(p);
+        var a = el("div", "acts");
+        var pv = el("button", "ghost", "이전"); pv.type = "button"; pv.disabled = i === 0;
+        pv.addEventListener("click", function () { st.cook.i--; renderCook(); focusIn(st.cook.i === 0 ? ".next" : ".ghost"); });
+        var nx = el("button", "next", i === n - 1 ? "다 만들었어요" : "다음"); nx.type = "button";
+        nx.addEventListener("click", function () { st.cook.i++; renderCook(); focusIn(st.cook.i >= n ? ".like" : ".next"); });
+        a.appendChild(pv); a.appendChild(nx); c.appendChild(a);
+      }
+      box.appendChild(c);
+    }
+    // 재료 담기 · 장바구니
+    function inCart(rid, ing) { return st.cart.some(function (c) { return c.rid === rid && c.ing === ing; }); }
+    function addCart(rid, ing) { if (!inCart(rid, ing)) st.cart.push({ rid: rid, ing: ing, fresh: true }); }
+    function removeCart(rid, ing) { st.cart = st.cart.filter(function (c) { return !(c.rid === rid && c.ing === ing); }); }
+    function updateCount(bump) {
+      var n = st.cart.length;
+      document.getElementById("demo-tcount").textContent = n ? String(n) : "";
+      document.getElementById("demo-bar-count").textContent = String(n);
+      if (bump && !reduce) ["tab-3", "demo-open-cart"].forEach(function (id) { var t = document.getElementById(id); t.classList.remove("bump"); void t.offsetWidth; t.classList.add("bump"); });
+    }
+    function ingList(r, rerender, bare) {
+      var wrap = el("div");
+      var hr = el("div", "h4row"); if (!bare) hr.appendChild(el("h4", null, "재료"));
+      var all = el("button", "add-all", "모두 담기"); all.type = "button";
+      all.addEventListener("click", function () { r.ings.forEach(function (n) { addCart(r.id, n); }); updateCount(true); rerender(); });
+      hr.appendChild(all); wrap.appendChild(hr);
+      var ul = el("ul", "ing-list");
+      r.ings.forEach(function (n) {
+        var li = el("li", "ing-row"); li.appendChild(el("span", null, n));
+        var bt = el("button", "ing-add"); bt.type = "button";
+        function paint() { var on = inCart(r.id, n); bt.setAttribute("aria-pressed", on ? "true" : "false"); bt.setAttribute("aria-label", n + (on ? " 장바구니에서 빼기" : " 장바구니에 담기")); bt.textContent = on ? "담았어요" : "+ 담기"; }
+        bt.addEventListener("click", function () { if (inCart(r.id, n)) { removeCart(r.id, n); updateCount(false); } else { addCart(r.id, n); updateCount(true); } paint(); });
+        paint(); li.appendChild(bt); ul.appendChild(li);
+      });
+      wrap.appendChild(ul); return wrap;
+    }
+    function renderCart() {
+      var has = st.cart.length > 0;
+      document.getElementById("demo-cart-empty").hidden = has;
+      document.getElementById("demo-cart-wrap").hidden = !has;
+      if (!has) return;
+      var bi = document.getElementById("basket-items"); bi.textContent = "";
+      st.cart.slice(-10).forEach(function (c, k) {
+        var t = el("span", "bitem" + (c.fresh && !reduce ? " drop" : ""), c.ing.replace(/\s[0-9].*$/, ""));
+        t.style.setProperty("--r", ((k * 37) % 13 - 6) + "deg"); if (c.fresh && !reduce) t.style.animationDelay = (k % 4) * 60 + "ms";
+        bi.appendChild(t);
+      });
+      document.getElementById("basket-total").textContent = "재료 " + st.cart.length + "개 담김";
+      document.getElementById("demo-cart-count").textContent = st.cart.length + "개";
+      var box = document.getElementById("demo-cart"); box.textContent = "";
+      var order = []; st.cart.forEach(function (c) { if (order.indexOf(c.rid) < 0) order.push(c.rid); });
+      order.forEach(function (rid) {
+        var r = findR(rid); var g = el("div", "cart-group"); g.appendChild(el("h5", null, r.title));
+        st.cart.filter(function (c) { return c.rid === rid; }).forEach(function (c) {
+          var row = el("div", "cart-item"); var gr = el("span", "grow"); gr.appendChild(el("b", null, c.ing)); row.appendChild(gr);
+          var q = encodeURIComponent(c.ing.replace(/\s[0-9].*$/, ""));
+          var buy = el("span", "buy");
+          var a1 = el("a", "shop", "쿠팡"); a1.href = "https://www.coupang.com/np/search?q=" + q; a1.target = "_blank"; a1.rel = "noopener"; a1.setAttribute("aria-label", c.ing + " 쿠팡에서 찾기");
+          var a2 = el("a", "shop", "컬리"); a2.href = "https://www.kurly.com/search?sword=" + q; a2.target = "_blank"; a2.rel = "noopener"; a2.setAttribute("aria-label", c.ing + " 컬리에서 찾기");
+          buy.appendChild(a1); buy.appendChild(el("span", "sep", "")); buy.appendChild(a2); row.appendChild(buy);
+          var rm = el("button", "rm", "×"); rm.type = "button"; rm.setAttribute("aria-label", c.ing + " 빼기");
+          rm.addEventListener("click", function () { removeCart(c.rid, c.ing); updateCount(false); renderCart(); });
+          row.appendChild(rm); g.appendChild(row);
+        });
+        box.appendChild(g);
+      });
+      st.cart.forEach(function (c) { c.fresh = false; });
+    }
+    document.getElementById("demo-open-cart").addEventListener("click", function () {
+      selectTab(3, true); document.getElementById("wm-demo").scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+    });
+    document.getElementById("demo-go-book").addEventListener("click", function () { selectTab(1, true); });
+
+    function focusIn(sel) { var n = document.querySelector("#demo-cook " + sel); if (n) n.focus({ preventScroll: true }); }
+
+    renderShares(); renderToc(); updateCount(false);
+  })();
+</script>
+
+  </body>
+</html>
