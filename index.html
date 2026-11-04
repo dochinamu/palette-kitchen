@@ -4,13 +4,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>나를 위한 한 끼, 나만의 레시피북 | 팔레트키친</title>
-    <meta name="description" content="어디서 본 레시피든 공유하면 레시피 한 장으로 정리돼요. 오늘은 그중 먹고 싶은 메뉴를 골라 천천히 만들어 보세요." />
+    <meta name="description" content="어디서 본 레시피든 담아 두고, 먹고 싶을 때 꺼내 보세요." />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="팔레트키친" />
     <meta property="og:locale" content="ko_KR" />
     <meta property="og:url" content="https://palette-kitchen.netlify.app/" />
     <meta property="og:title" content="나를 위한 한 끼, 나만의 레시피북" />
-    <meta property="og:description" content="어디서 본 레시피든 공유하면 레시피 한 장으로 정리돼요. 오늘은 그중 먹고 싶은 메뉴를 골라 천천히 만들어 보세요." />
+    <meta property="og:description" content="어디서 본 레시피든 담아 두고, 먹고 싶을 때 꺼내 보세요." />
     <meta property="og:image" content="https://palette-kitchen.netlify.app/img/og-image.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
@@ -374,9 +374,10 @@
     .section { padding-block: 120px; }
     .t1 { font-size: 62px; } .t2 { font-size: 46px; }
     body { font-size: 18px; }
-    .hero { grid-template-columns: minmax(0,1fr) minmax(0,1.05fr); gap: 56px; text-align: left; justify-items: stretch; align-items: center; padding-top: 48px; }
+    .hero { grid-template-columns: minmax(0,.85fr) minmax(0,1.15fr); gap: 48px; text-align: left; justify-items: stretch; align-items: center; padding-top: 48px; }
     .hero-copy { align-items: flex-start; }
     .book { justify-self: end; transform: rotate(1.5deg); }
+    .hero-demo { justify-self: end; }
     .story { grid-template-columns: minmax(0,.8fr) minmax(0,1.2fr); gap: 64px; align-items: start; }
     .story-head { position: sticky; top: 48px; }
     .demo { padding: 40px; margin-top: 64px; }
@@ -387,6 +388,249 @@
     html { scroll-behavior: auto; }
     *, *::before, *::after { transition: none !important; animation: none !important; }
   }
+
+  /* 히어로 예시: 유튜브 영상 → 내 레시피북에 담긴 레시피 (기존 책 그림 자리, 아래 데모와 같은 레시피 카드 모양) */
+  .hero-demo { width: 100%; max-width: 620px; text-align: left; }
+  .hero-demo .demo { margin-top: 0; }
+  .cbook { background: var(--sheet); border-radius: 12px; padding: 18px 14px 16px; box-shadow: 0 1px 0 rgba(0,0,0,.05), 0 16px 36px rgba(60,45,20,.13); display: grid; gap: 12px; }
+  .demo-hint { font-size: 21px; line-height: 1.35; text-align: center; color: var(--ink); }
+  .add-box { display: grid; gap: 8px; }
+  .add-row { display: flex; align-items: center; gap: 8px; min-height: 52px; padding: 6px 6px 6px 10px; border: 2px solid var(--green); border-radius: 999px; background: #fff; }
+  .add-src { flex: none; padding: 2px 9px; border-radius: 999px; background: #f3efe4; font-size: 12px; font-weight: 600; color: var(--ink-soft); }
+  .add-url { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; color: var(--ink); }
+  .add-btn { flex: none; height: 40px; padding: 0 18px; border: 0; border-radius: 999px; background: var(--green); color: var(--sheet); font-weight: 700; font-size: 15px; cursor: pointer; }
+  .add-btn:hover { background: var(--green-hover); }
+  .add-btn[disabled] { opacity: .7; cursor: progress; }
+  .add-ex { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+  .ex-chip { min-height: 32px; padding: 0 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--sheet); color: var(--ink-soft); font-size: 13px; cursor: pointer; }
+  .ex-chip[aria-pressed="true"] { border-color: var(--green); color: var(--green); font-weight: 600; }
+  .ex-chip:disabled { opacity: .55; cursor: default; }
+  .book-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; padding-top: 4px; border-top: 1px dashed var(--line); }
+  .book-head b { font-family: var(--f-display); font-size: 17px; padding-top: 8px; }
+  .book-head .filters { padding-top: 8px; }
+  .filters { display: flex; gap: 6px; }
+  .filters .chip { min-height: 34px; padding: 0 12px; font-size: 13px; }
+  .rgrid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; }
+  .rcard { width: 100%; display: grid; padding: 0; border: 0; border-radius: 8px; overflow: hidden; background: #fff; text-align: left; cursor: pointer; box-shadow: 0 1px 0 rgba(0,0,0,.05), 0 6px 14px rgba(60,45,20,.1); }
+  .rtile, .rv-pic { position: relative; display: grid; place-items: center; width: 100%; aspect-ratio: 4/3; overflow: hidden; }
+  .rtile svg.doodle, .rv-pic svg.doodle { width: 58%; height: auto; }
+  .rtile img, .rv-pic img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .rcard b { display: block; padding: 9px 10px 0; font-family: var(--f-display); font-size: 15px; line-height: 1.3; }
+  .rcard small { display: block; padding: 1px 10px 10px; font-size: 12px; color: var(--ink-soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .rheart { position: absolute; top: 7px; right: 7px; z-index: 1; width: 26px; height: 26px; border-radius: 50%; background: var(--sheet); color: var(--tomato); display: grid; place-items: center; }
+  .rheart svg { width: 14px; height: 14px; }
+  .rheart svg path { fill: var(--tomato); }
+  .rnew { position: absolute; left: 7px; top: 7px; z-index: 1; padding: 1px 10px; border-radius: 999px; background: var(--tomato); color: #fff; font-family: var(--f-hand); font-weight: 700; font-size: 15px; transform: rotate(-4deg); }
+  .rcard.is-new { box-shadow: 0 0 0 2px var(--tomato), 0 6px 14px rgba(60,45,20,.12); animation: qpop .45s ease both; }
+  .rview { display: grid; gap: 8px; }
+  .rview .rpage-in { grid-template-columns: minmax(0,1fr); }
+  .rview .rp-body { gap: 12px; padding: 16px; }
+  .rview .rp-title { font-size: 22px; }
+  .rview .steps li { font-size: 14px; }
+  .rview .like { justify-self: start; }
+  .rv-link { position: absolute; right: 8px; bottom: 8px; z-index: 1; padding: 2px 10px; border-radius: 999px; background: rgba(40,30,25,.75); color: #fff; font-size: 12px; text-decoration: none; }
+  .demo-cta .sbtn-main { width: 100%; max-width: none; }
+  @media (min-width: 560px) { .rgrid { grid-template-columns: repeat(3, minmax(0,1fr)); } }
+  @media (max-width: 1099px) { #wm-hero.demo-used #cta_primary { display: none; } }
+  /* 무드보드(크레용 그림 · 손글씨 레시피 노트 · 마스킹테이프 카드)에 맞춘 데모 */
+  .cbook { position: relative; border-radius: 4px; padding: 26px 16px 18px 40px; background:
+      linear-gradient(90deg, transparent 0 26px, rgba(224,83,58,.35) 26px 27px, transparent 27px),
+      repeating-linear-gradient(180deg, var(--sheet) 0 35px, #ece5d3 35px 36px);
+    box-shadow: 0 1px 0 rgba(0,0,0,.05), 0 18px 40px rgba(60,45,20,.16); }
+  .cbook::before, .cbook::after { content: ""; position: absolute; top: -10px; width: 74px; height: 22px; background: rgba(246,231,168,.85);
+    clip-path: polygon(0 8%, 8% 0, 16% 10%, 26% 2%, 38% 9%, 50% 1%, 62% 8%, 74% 0, 86% 9%, 100% 4%, 100% 92%, 90% 100%, 78% 91%, 64% 99%, 50% 92%, 36% 100%, 22% 92%, 10% 100%, 0 94%); }
+  .cbook::before { left: 22px; transform: rotate(-5deg); }
+  .cbook::after { right: 22px; transform: rotate(4deg); background: rgba(242,201,194,.85); }
+  .demo-hint { font-size: 22px; text-align: left; }
+  .add-row { border: 1.5px solid var(--ink); border-radius: 6px; background: #fff; box-shadow: 3px 3px 0 var(--butter); padding: 6px 6px 6px 8px; }
+  .add-src { font-family: var(--f-hand); font-weight: 700; font-size: 15px; background: var(--butter); color: var(--ink); border-radius: 3px; transform: rotate(-3deg); }
+  .add-btn { border-radius: 4px; box-shadow: 2px 2px 0 var(--ink); }
+  .add-btn:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 var(--ink); }
+  .add-ex { justify-content: flex-start; }
+  .ex-chip { border: 0; border-radius: 3px; font-family: var(--f-hand); font-weight: 700; font-size: 16px; color: var(--ink); box-shadow: 1px 1px 0 rgba(0,0,0,.1); }
+  .ex-chip:nth-child(1) { background: var(--pink); transform: rotate(-2deg); }
+  .ex-chip:nth-child(2) { background: var(--butter); transform: rotate(1.5deg); }
+  .ex-chip:nth-child(3) { background: #cfe0bd; transform: rotate(-1deg); }
+  .ex-chip[aria-pressed="true"] { outline: 2px solid var(--ink); outline-offset: 1px; color: var(--ink); }
+  .book-head { border-top: 0; }
+  .book-head b { font-family: var(--f-hand); font-size: 24px; font-weight: 700; background: linear-gradient(transparent 62%, rgba(243,226,166,.9) 62%); }
+  .filters .chip { border-radius: 3px; font-family: var(--f-hand); font-weight: 700; font-size: 15px; border-width: 1.5px; }
+  .rgrid { gap: 18px 14px; padding: 8px 2px 4px; }
+  .rgrid li { position: relative; }
+  .rgrid li::before { content: ""; position: absolute; z-index: 2; top: -8px; left: 50%; width: 52px; height: 16px; margin-left: -26px; background: rgba(246,231,168,.85); transform: rotate(-4deg);
+    clip-path: polygon(0 8%, 10% 0, 22% 10%, 36% 2%, 50% 9%, 64% 1%, 78% 8%, 90% 0, 100% 6%, 100% 92%, 88% 100%, 74% 91%, 60% 99%, 46% 92%, 32% 100%, 18% 92%, 0 96%); }
+  .rgrid li:nth-child(even)::before { transform: rotate(5deg); background: rgba(242,201,194,.85); }
+  .rcard { padding: 8px 8px 4px; border-radius: 2px; background: #fff; box-shadow: 0 2px 8px rgba(60,45,20,.16); transform: rotate(-1.5deg); transition: transform .2s; }
+  .rgrid li:nth-child(even) .rcard { transform: rotate(1.8deg); }
+  .rgrid li:nth-child(3n) .rcard { transform: rotate(-.6deg); }
+  .rcard:hover { transform: rotate(0) translateY(-2px); }
+  .rtile { aspect-ratio: 1/1; border-radius: 1px; }
+  .rtile img, .rv-pic img { filter: sepia(.18) saturate(.9) contrast(1.06) brightness(1.03); } /* 필름 사진 느낌 */
+  .rtile::after { content: ""; position: absolute; inset: 0; box-shadow: inset 0 0 28px rgba(70,45,20,.28); pointer-events: none; }
+  .rcard b { padding: 8px 2px 0; font-family: var(--f-hand); font-size: 18px; font-weight: 700; text-align: center; }
+  .rcard small { padding: 0 2px 6px; text-align: center; }
+  .rcard.is-new { box-shadow: 0 2px 8px rgba(60,45,20,.16); }
+  .rnew { font-size: 16px; }
+  .rmore { display: block; padding: 0 2px 8px; text-align: center; font-size: 13px; color: var(--green); font-weight: 700; }
+  .rcard small { padding-bottom: 2px; }
+  .rcard.is-new { animation: qpop .45s ease both, nudge 1.6s ease .6s 2; }
+  @keyframes nudge { 0%, 100% { transform: rotate(-1.5deg); } 20% { transform: rotate(-1.5deg) translateY(-5px); } 40% { transform: rotate(-1.5deg); } }
+  /* 가독성: 손글씨는 '방금 담음' 도장에만, 줄 노트 선은 빼고, 휴대폰에서 칸이 넘치지 않게 */
+  .cbook { background: linear-gradient(90deg, transparent 0 22px, rgba(224,83,58,.3) 22px 23px, transparent 23px), var(--sheet); padding: 24px 14px 16px 34px; min-width: 0; }
+  .cbook > * { min-width: 0; }
+  .demo-hint { font-family: var(--f-body); font-weight: 700; font-size: 18px; line-height: 1.45; }
+  .add-cap { font-size: 13px; color: var(--ink-soft); margin: 0 0 -2px; }
+  .add-row { max-width: 100%; min-width: 0; box-shadow: 2px 2px 0 var(--butter); }
+  .add-src { font-family: var(--f-body); font-size: 12px; transform: none; }
+  .add-url { font-size: 13px; }
+  .add-btn { padding: 0 16px; }
+  .add-ex::before { content: "다른 예시"; align-self: center; font-size: 12px; color: var(--ink-soft); margin-right: 2px; }
+  .ex-chip { font-family: var(--f-body); font-weight: 600; font-size: 13px; transform: none !important; min-height: 32px; }
+  .book-head b { font-family: var(--f-display); font-size: 19px; }
+  .filters .chip { font-family: var(--f-body); font-weight: 600; font-size: 13px; }
+  .rcard b { font-family: var(--f-body); font-size: 14px; line-height: 1.35; }
+  .rstar { position: absolute; bottom: 7px; right: 7px; z-index: 1; padding: 1px 8px; border-radius: 999px; background: var(--sheet); color: var(--tomato); font-size: 12px; font-weight: 700; }
+  .rate { display: flex; align-items: center; gap: 2px; }
+  .rate-l { font-size: 13px; color: var(--ink-soft); margin-right: 6px; }
+  .star { width: 36px; height: 36px; padding: 0; border: 0; background: none; font-size: 24px; line-height: 1; color: #ddd3c2; cursor: pointer; }
+  .star.on { color: var(--tomato); }
+  .memo { display: grid; gap: 4px; }
+  .memo textarea { width: 100%; box-sizing: border-box; padding: 8px 10px; border: 1px solid var(--line); border-radius: 4px; background: #fff; font: inherit; font-size: 14px; line-height: 1.5; resize: vertical; }
+  .memo textarea:focus { outline: 2px solid var(--green); outline-offset: 1px; }
+  /* 답답함 줄이기: 겹겹이 틀(노트 상자·깅엄 테두리·색종이 칩)을 걷어내고, 꾸밈은 폴라로이드 카드 한 곳에만 */
+  .hero-demo .cbook { background: none; box-shadow: none; padding: 0; gap: 14px; }
+  .cbook::before, .cbook::after { display: none; }
+  .demo-hint { font-size: 17px; }
+  .add-row { min-height: 56px; border: 1.5px solid var(--green); border-radius: 14px; box-shadow: 0 6px 18px rgba(60,45,20,.08); padding: 6px 6px 6px 14px; }
+  .add-src { background: none; padding: 0; color: var(--green); font-weight: 700; font-size: 13px; border-radius: 0; }
+  .add-btn { border-radius: 10px; box-shadow: none; height: 44px; }
+  .add-btn:active { transform: none; box-shadow: none; }
+  .add-ex { gap: 6px; }
+  .ex-chip { background: none !important; border: 1px solid var(--line); border-radius: 999px; box-shadow: none; color: var(--ink-soft); font-weight: 500; }
+  .ex-chip[aria-pressed="true"] { outline: 0; border-color: var(--green); color: var(--green); font-weight: 700; }
+  .book-head { margin-top: 10px; padding-top: 0; }
+  .book-head b { background: none; padding-top: 0; font-size: 18px; }
+  .book-head .filters { padding-top: 0; }
+  .filters .chip { min-height: 32px; border: 1px solid var(--line); border-radius: 999px; background: none; color: var(--ink-soft); font-weight: 500; }
+  .filters .chip[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--sheet); }
+  .rgrid { gap: 22px 14px; padding: 10px 0 0; }
+  .rcard { transform: rotate(-1deg); }
+  .rgrid li:nth-child(even) .rcard { transform: rotate(1deg); }
+  .rgrid li:nth-child(3n) .rcard { transform: rotate(-.5deg); }
+  @keyframes nudge { 0%, 100% { transform: rotate(-1deg); } 20% { transform: rotate(-1deg) translateY(-5px); } 40% { transform: rotate(-1deg); } }
+  .rview .rpage { background: none; padding: 0; box-shadow: none; border-radius: 0; }
+  .rview .rpage-in { border-radius: 10px; box-shadow: 0 6px 20px rgba(60,45,20,.12); }
+  .rview .rv-pic { aspect-ratio: 4/3; }
+  .demo-cta { margin-top: 6px; }
+  .pains { display: grid; gap: 14px; }
+  .pain { position: relative; display: grid; grid-template-columns: 56px minmax(0,1fr); column-gap: 14px; align-items: center; padding: 18px 18px; background: var(--sheet); border-radius: 6px; box-shadow: 0 1px 0 rgba(0,0,0,.05), 0 8px 20px rgba(60,45,20,.08); }
+  .pain > svg { grid-row: span 2; width: 52px; height: 52px; padding: 11px; box-sizing: border-box; border-radius: 50%; background: var(--pink); color: var(--ink); }
+  .pain:nth-child(2) > svg { background: var(--butter); }
+  .pain:nth-child(3) > svg { background: #cfe0bd; color: var(--tomato); }
+  .pain b { font-family: var(--f-display); font-size: 17px; line-height: 1.35; }
+  .pain p { font-size: 14px; color: var(--ink-soft); line-height: 1.5; margin-top: 2px; }
+  .final-photos { display: flex; gap: 0; margin-top: 18px; padding-left: 6px; }
+  .final-photos span { width: 31%; max-width: 130px; aspect-ratio: 1/1; padding: 6px 6px 18px; background: #fff; box-shadow: 0 4px 12px rgba(60,45,20,.16); margin-left: -6px; }
+  .final-photos span:nth-child(1) { transform: rotate(-5deg); }
+  .final-photos span:nth-child(2) { transform: rotate(3deg) translateY(6px); z-index: 1; }
+  .final-photos span:nth-child(3) { transform: rotate(-2deg); }
+  .final-photos img { width: 100%; height: 100%; object-fit: cover; filter: sepia(.18) saturate(.9) contrast(1.06); }
+  /* 담기 버튼: 처음 한 번만 부드럽게 두 번 빛나고 멈춰요 (누르기 전까지, 움직임 줄이기 설정이면 없음) */
+  .add-btn.hint { animation: addglow 1.4s ease-out 1.2s 2; }
+  @keyframes addglow { 0% { box-shadow: 0 0 0 0 rgba(86,112,74,.55); } 70% { box-shadow: 0 0 0 12px rgba(86,112,74,0); } 100% { box-shadow: 0 0 0 0 rgba(86,112,74,0); } }
+  @media (prefers-reduced-motion: reduce) { .add-btn.hint { animation: none; } }
+  @media (max-width: 420px) { .cbook { padding-left: 28px; } .cbook::before { left: 14px; } .rgrid { gap: 16px 10px; } }
+
+  @media (min-width: 1100px) { .hero { align-items: start; } .hero-copy { position: sticky; top: 40px; padding-top: 40px; } }
+  .hero-demo .rpage-in { grid-template-columns: minmax(0,1fr); } /* 히어로 칸이 좁아 레시피 장은 위아래로 */
+  .hero-demo .rp-pic { min-height: 150px; }
+  @media (min-width: 1100px) { .hero { align-items: start; } .hero-copy { position: sticky; top: 40px; padding-top: 40px; } }
+  .share { position: relative; background: var(--sheet); padding: 12px 12px 14px; border-radius: 6px; box-shadow: 0 1px 0 rgba(0,0,0,.05), 0 14px 32px rgba(60,45,20,.14); transform: rotate(-1.2deg); display: grid; gap: 10px; }
+  .share .tape { top: -12px; }
+  .yt-thumb { position: relative; display: grid; place-items: center; aspect-ratio: 16/9; border-radius: 4px; overflow: hidden; background: #f6f1e4; }
+  .yt-thumb .doodle { width: 40%; height: auto; }
+  .yt-thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; } /* 유튜브 공식 섬네일(i.ytimg.com), 못 불러오면 그림이 보임 */
+  .yt-play { position: absolute; left: 10px; bottom: 10px; width: 40px; height: 28px; border-radius: 8px; background: rgba(40,30,25,.75); }
+  .yt-play::after { content: ""; position: absolute; left: 50%; top: 50%; margin: -6px 0 0 -4px; border-left: 11px solid #fff; border-top: 6px solid transparent; border-bottom: 6px solid transparent; }
+  .yt-title { font-size: 15px; font-weight: 600; line-height: 1.45; padding: 0 2px; }
+  @keyframes qpop { from { opacity: 0; transform: translateY(10px) scale(.98); } to { opacity: 1; transform: none; } }
+  /* 휴대폰·태블릿: 제목 → 설명 → 예시 → 신청 버튼 순서 */
+  @media (max-width: 1099px) {
+    .hero { gap: 18px; }
+    .hero-copy { display: contents; }
+    #wm-hero-title { order: 1; }
+    #wm-hero-sub { order: 2; }
+    .hero-demo { order: 3; margin: 14px 0 6px; }
+    #cta_primary { order: 4; }
+  }
+  /* 히어로 데모: 휴대폰 속 앱 화면 (설명 문구 없이, 앱 안의 버튼·시트·알림으로만) */
+  .hero-demo { max-width: 400px; justify-self: center; }
+  .phone { position: relative; width: 100%; max-width: 380px; margin: 0 auto; padding: 10px; box-sizing: border-box; border-radius: 46px; background: #2b2420; box-shadow: inset 0 0 0 1.5px #4d423b, 0 28px 60px rgba(60,45,20,.24), 0 6px 16px rgba(60,45,20,.12); }
+  .ph-screen { position: relative; overflow: hidden; display: flex; flex-direction: column; min-height: 500px; padding-bottom: 92px; border-radius: 36px; background: var(--paper); }
+  .ph-status { display: flex; align-items: center; justify-content: space-between; height: 44px; padding: 0 28px; font-size: 13px; font-weight: 700; color: var(--ink); }
+  .ph-status i { width: 92px; height: 26px; border-radius: 999px; background: #2b2420; }
+  .ph-bat { width: 24px; height: 11px; border: 1.5px solid var(--ink); border-radius: 3px; box-sizing: border-box; background: linear-gradient(90deg, var(--ink) 70%, transparent 70%) 1px 1px / calc(100% - 2px) calc(100% - 2px) no-repeat; }
+  .ph-bar { padding: 8px 18px 6px; min-height: 48px; }
+  .ph-home { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+  .ph-home b { font-family: var(--f-display); font-size: 22px; line-height: 1.2; }
+  .ph-home b small { margin-left: 4px; font-family: var(--f-body); font-size: 13px; font-weight: 600; color: var(--ink-soft); }
+  .phone .filters { gap: 4px; }
+  .phone .filters .chip { min-height: 30px; padding: 0 11px; font-size: 12px; }
+  .ph-back { min-height: 40px; padding: 0; border: 0; background: none; font: inherit; font-size: 15px; font-weight: 700; color: var(--ink); cursor: pointer; }
+  #demo-page { flex: 1; padding: 6px 18px 0; min-width: 0; }
+  .phone .rgrid { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 22px 14px; padding-top: 14px; }
+  .phone .rcard small { padding-bottom: 8px; }
+  .fab { position: absolute; right: 18px; bottom: 20px; z-index: 3; display: inline-flex; align-items: center; gap: 6px; height: 54px; padding: 0 22px 0 18px; border: 0; border-radius: 999px; background: var(--green); color: #fff; font: inherit; font-size: 16px; font-weight: 700; box-shadow: 0 10px 22px rgba(60,80,40,.32); cursor: pointer; }
+  .fab span { font-size: 24px; font-weight: 400; line-height: 1; margin-top: -2px; }
+  .fab:hover { background: var(--green-hover); }
+  .fab.hint { animation: addglow 1.4s ease-out 1.2s 2; }
+  .ph-dim { position: absolute; inset: 0; z-index: 4; background: rgba(43,36,32,.32); opacity: 0; pointer-events: none; transition: opacity .2s; }
+  .ph-sheet { position: absolute; left: 0; right: 0; bottom: 0; z-index: 5; padding: 10px 18px 24px; background: var(--sheet); border-radius: 24px 24px 0 0; box-shadow: 0 -12px 30px rgba(43,36,32,.16); transform: translateY(105%); visibility: hidden; transition: transform .3s cubic-bezier(.2,.8,.2,1), visibility 0s .3s; }
+  .ph-screen.sheet-open .ph-dim { opacity: 1; pointer-events: auto; }
+  .ph-screen.sheet-open .ph-sheet { transform: none; visibility: visible; transition: transform .3s cubic-bezier(.2,.8,.2,1); }
+  .sheet-grab { width: 40px; height: 5px; margin: 0 auto 12px; border-radius: 5px; background: #e2d9c7; }
+  .sheet-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+  .sheet-head b { font-family: var(--f-display); font-size: 19px; }
+  .sheet-x { min-height: 36px; padding: 0 2px; border: 0; background: none; font: inherit; font-size: 14px; color: var(--ink-soft); cursor: pointer; }
+  .src-list { list-style: none; margin: 0; padding: 0; }
+  .src { width: 100%; display: grid; grid-template-columns: 48px minmax(0,1fr) auto; align-items: center; gap: 12px; padding: 10px 0; border: 0; border-top: 1px solid #efe7d6; background: none; font: inherit; color: inherit; text-align: left; cursor: pointer; }
+  .src-list li:first-child .src { border-top: 0; }
+  .src-pic { position: relative; display: grid; place-items: center; width: 48px; height: 48px; border-radius: 12px; overflow: hidden; }
+  .src-pic svg.doodle { width: 72%; height: auto; }
+  .src-pic img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .src-t { display: grid; min-width: 0; line-height: 1.35; }
+  .src-t b { font-size: 15px; }
+  .src-t small { font-size: 12px; color: var(--ink-soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .src-go { padding: 7px 14px; border-radius: 999px; background: var(--green); color: #fff; font-size: 13px; font-weight: 700; white-space: nowrap; }
+  .src:hover .src-go { background: var(--green-hover); }
+  .src.busy .src-go { background: #ece4d2; color: var(--ink); }
+  .src[disabled] { cursor: default; }
+  .src[disabled] .src-pic, .src[disabled] .src-t { opacity: .5; }
+  .src[disabled] .src-go { background: none; color: var(--ink-soft); padding-right: 0; }
+  .ph-toast { position: absolute; left: 50%; bottom: 88px; z-index: 6; max-width: calc(100% - 36px); margin: 0; padding: 10px 16px; box-sizing: border-box; border-radius: 999px; background: rgba(43,36,32,.92); color: #fff; font-size: 13px; font-weight: 600; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: 0; transform: translate(-50%, 8px); pointer-events: none; transition: opacity .2s, transform .2s; }
+  .ph-toast.show { opacity: 1; transform: translate(-50%, 0); }
+  .phone .rview { display: grid; gap: 0; padding-bottom: 18px; }
+  .phone .rv-pic { aspect-ratio: 4/3; border-radius: 16px; }
+  .phone .rp-body { padding: 16px 2px 0; gap: 16px; background: none; }
+  .phone .rp-title { font-size: 22px; }
+  .phone .rp-body h4 { margin: 0 0 8px; }
+  .shop { margin-top: 10px; min-height: 38px; padding: 0 14px; border: 1.5px solid var(--green); border-radius: 999px; background: none; font: inherit; font-size: 13px; font-weight: 700; color: var(--green); cursor: pointer; }
+  .shop:hover { background: rgba(86,112,74,.08); }
+  .shop-note { margin: 8px 0 0; padding: 8px 12px; border-radius: 10px; background: #f3efe4; font-size: 13px; color: var(--ink); }
+  .hero-demo .demo-cta { max-width: 380px; margin: 18px auto 0; }
+  @media (max-width: 420px) { .phone { padding: 7px; border-radius: 40px; } .ph-screen { border-radius: 33px; min-height: 490px; } #demo-page { padding-left: 14px; padding-right: 14px; } .phone .rgrid { gap: 20px 10px; } }
+  @media (min-width: 1100px) { .hero-demo { justify-self: center; } }
+  @media (prefers-reduced-motion: reduce) { .fab.hint { animation: none; } }
+  /* 레시피를 펼쳤을 때: 담기 버튼 자리 여백은 빼고, 위 '‹ 내 레시피북' 줄은 내려도 따라오게 */
+  .ph-screen { overflow: clip; }
+  .ph-screen.is-recipe { padding-bottom: 8px; }
+  .ph-screen.is-recipe .ph-bar { position: sticky; top: 0; z-index: 2; background: var(--paper); box-shadow: 0 1px 0 #ece4d2; }
+  .ph-back2 { justify-self: stretch; min-height: 46px; border: 1px solid var(--line); border-radius: 999px; background: var(--sheet); font: inherit; font-size: 14px; font-weight: 700; color: var(--ink); cursor: pointer; }
+  /* 필터는 제목 아래 한 줄로 */
+  .ph-home { display: grid; justify-content: stretch; gap: 10px; }
+  /* 처음엔 '+ 레시피 담기'만 또렷하게: 나머지는 흐리게, 처음 담으면 풀려요 */
+  .ph-screen.ph-first .ph-home, .ph-screen.ph-first #demo-page { opacity: .35; pointer-events: none; transition: opacity .3s; }
+  .ph-home, #demo-page { transition: opacity .3s; }
 </style>
   </head>
   <body>
@@ -509,152 +753,74 @@
     <div class="wrap">
       <nav class="nav" aria-label="페이지 안 이동">
         <span class="brand">팔레트키친</span>
-        <div class="navlinks"><a href="#wm-how">사용법</a><a href="#wm-faq">자주 묻는 질문</a></div>
+        <div class="navlinks"><a href="#wm-demo">써 보기</a><a href="#wm-faq">자주 묻는 질문</a></div>
       </nav>
       <div class="hero">
         <div class="hero-copy">
           <h1 id="wm-hero-title" class="disp t1" aria-label="나를 위한 한 끼, 나만의 레시피북">나를 위한 한 끼,<br>나만의 <span aria-hidden="true"><span class="cut">레</span><span class="cut">시</span><span class="cut">피</span><span class="cut">북</span></span></h1>
-          <p id="wm-hero-sub" class="lead">어디서 본 레시피든 공유하면 레시피 한 장으로 정리돼요. 오늘은 그중 먹고 싶은 메뉴를 골라 천천히 만들어 보세요.</p>
-          <button id="cta_primary" type="button" class="sbtn-main">먼저 만나 보기</button>
+          <p id="wm-hero-sub" class="lead">어디서 본 레시피든 담아 두고,<br>먹고 싶을 때 꺼내 보세요.</p>
+          <button id="cta_primary" type="button" class="sbtn-main">출시되면 내 레시피북 만들기</button>
         </div>
-        <div class="book gingham-red" aria-hidden="true">
-          <span class="ribbon"></span>
-          <div class="tabs-edge"><span style="background:var(--pink)">밥</span><span style="background:var(--butter)">국</span><span style="background:#cfe0bd">반찬</span><span style="background:#e9d3b8">간식</span></div>
-          <span class="button-deco" style="left:-10px;top:30%;--bc:#cfe0bd"></span>
-          <span class="button-deco" style="left:-8px;top:44%;--bc:var(--butter)"></span>
-          <div class="book-in">
-            <div class="bpage left">
-              <div class="plate" style="--dy:-14%">
-                <svg class="doily" viewBox="0 0 100 100" aria-hidden="true"><use href="#d-doily"/></svg>
-                <svg class="doodle" viewBox="0 0 100 100"><use href="#d-tomegg"/></svg>
+        <div class="hero-demo">
+          <div id="wm-demo" class="phone" data-step="레시피북" aria-label="팔레트키친 미리 써 보기">
+            <div class="ph-screen ph-first">
+              <div class="ph-status" aria-hidden="true"><span>9:41</span><i></i><span class="ph-bat"></span></div>
+              <div class="ph-bar">
+                <button type="button" class="ph-back" id="ph-back" hidden>‹ 내 레시피북</button>
+                <div class="ph-home" id="ph-home" inert>
+                  <b id="book-title">내 레시피북 <small id="book-count">2개</small></b>
+                  <div class="filters" role="group" aria-label="레시피북 보기">
+                    <button type="button" class="chip" id="demo-all" aria-pressed="true">전체</button>
+                    <button type="button" class="chip" id="demo-liked-only" aria-pressed="false">★4 이상</button>
+                  </div>
+                </div>
               </div>
-              <span class="cap">오늘의 메뉴</span>
-            </div>
-            <div class="bpage right">
-              <h3>토마토 달걀볶음</h3>
-              <p class="serv">1인분 · 15분</p>
-              <ul><li>1. 달걀을 부드럽게 익혀요</li><li>2. 토마토를 볶아요</li><li>3. 달걀을 넣고 간해요</li></ul>
+              <div id="demo-page" aria-live="polite" inert></div>
+              <button id="wm-quick-add" type="button" class="fab hint" aria-expanded="false" aria-controls="add-box"><span aria-hidden="true">+</span>레시피 담기</button>
+              <div class="ph-dim" id="ph-dim"></div>
+              <div class="ph-sheet" id="add-box" role="dialog" aria-label="레시피 담기" inert>
+                <div class="sheet-grab" aria-hidden="true"></div>
+                <div class="sheet-head"><b>어디서 본 레시피인가요?</b><button type="button" class="sheet-x" id="sheet-x">닫기</button></div>
+                <ul class="src-list" id="add-ex"></ul>
+              </div>
+              <p class="ph-toast" id="demo-hint" role="status" aria-live="polite"></p>
             </div>
           </div>
-          <svg class="doodle fl a" viewBox="0 0 100 100"><use href="#d-carrot"/></svg>
-          <svg class="doodle fl b" viewBox="0 0 100 100"><use href="#d-burst"/></svg>
+          <div class="demo-cta" id="demo-cta" hidden>
+            <button type="button" id="cta_demo" class="sbtn-main">출시되면 내 레시피북 만들기</button>
+          </div>
         </div>
       </div>
     </div>
   </section>
+
+
 
   <!-- 2. 공감 -->
   <section id="wm-story" class="section" aria-labelledby="wm-story-title">
     <div class="wrap story">
       <div class="story-head" data-reveal>
-        <h2 id="wm-story-title" class="disp t2">혼자 먹는 밥도,<br>제대로 차려 먹고 싶을 때</h2>
+        <h2 id="wm-story-title" class="disp t2">저장은 했는데,<br>어디 뒀더라?</h2>
       </div>
       <div data-reveal>
-        <ul class="story-page sheet">
-          <li>퇴근하고 오면 결국 배달 앱부터 열게 돼요.</li>
-          <li>저장해 둔 레시피는 많은데, 막상 만들려고 하면 어디 있는지 안 보여요.</li>
-          <li>요리하면서 보기엔 영상을 몇 번이고 돌려 봐야 해서 불편해요.</li>
-          <li>혼자 먹으니까 대충 때우는 날이 늘어요.</li>
-          <li>매일 저녁 메뉴를 고르는 게 생각보다 힘들어요.</li>
-          <li>요리가 즐거움이 아니라 숙제처럼 느껴질 때가 있어요.</li>
-        </ul>
-        <p class="closing"><span class="tape"></span>오늘은 메뉴 하나만 골라 보세요. 나를 위해 차린 한 끼는 생각보다 근사해요.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- 3. 이용 방법 + 예시 -->
-  <section id="wm-how" class="section" aria-labelledby="wm-how-title">
-    <div class="wrap">
-      <div class="how-head" data-reveal><h2 id="wm-how-title" class="disp t2">이용 방법</h2></div>
-      <ol class="chapters">
-        <li class="chapter" data-reveal>
-          <svg class="doodle" viewBox="0 0 100 100" aria-hidden="true"><use href="#d-book"/></svg>
-          <span class="no">1</span>
-          <h3>레시피 담기</h3>
-          <p>어디에서든 마음에 드는 레시피를 보면 공유하세요. 재료와 순서가 정리된 레시피 한 장이 레시피북에 추가돼요.</p>
-        </li>
-        <li class="chapter" data-reveal>
-          <svg class="doodle" viewBox="0 0 100 100" aria-hidden="true"><use href="#d-tomegg"/></svg>
-          <span class="no">2</span>
-          <h3>오늘의 메뉴 고르기</h3>
-          <p>레시피북을 넘기며 오늘 먹고 싶은 걸 골라요. 맛있었던 레시피에 표시해 두면 다음에 다시 찾기 쉬워요.</p>
-        </li>
-        <li class="chapter" data-reveal>
-          <svg class="doodle" viewBox="0 0 200 150" aria-hidden="true"><use href="#d-basket"/></svg>
-          <span class="no">3</span>
-          <h3>재료 장보기</h3>
-          <p>고른 레시피에서 필요한 재료만 장바구니에 담아요. 담은 재료는 레시피별로 정리되고, 쿠팡이나 컬리에서 바로 살 수 있어요.</p>
-        </li>
-        <li class="chapter" data-reveal>
-          <svg class="doodle" viewBox="0 0 100 100" aria-hidden="true"><use href="#s-pan"/></svg>
-          <span class="no">4</span>
-          <h3>천천히 만들기</h3>
-          <p>요리 모드에서 단계마다 그림과 걸리는 시간을 보며 차근차근 만들어요.</p>
-        </li>
-      </ol>
-
-      <div id="wm-demo" class="demo" data-reveal aria-label="예시 데모">
-        <div class="tabs" role="tablist" aria-label="예시 단계">
-          <button class="tab" role="tab" id="tab-0" aria-controls="panel-0" aria-selected="false" tabindex="-1"><span>01</span>레시피 담기</button>
-          <button class="tab" role="tab" id="tab-1" aria-controls="panel-1" aria-selected="true"><span>02</span>레시피북 넘겨 보기</button>
-          <button class="tab" role="tab" id="tab-3" aria-controls="panel-3" aria-selected="false" tabindex="-1"><span>03</span>장바구니<b class="tcount" id="demo-tcount" aria-label="장바구니 재료 수"></b></button>
-        </div>
-
-        <div id="panel-0" class="panel" role="tabpanel" aria-labelledby="tab-0" hidden>
-          <div class="grid2">
-            <div class="box">
-              <div class="box-h"><b>다른 앱에서 본 레시피</b></div>
-              <ul id="demo-shares"></ul>
-            </div>
-            <div class="box">
-              <div class="box-h"><b>내 레시피북</b><span class="count" id="demo-book-count"></span></div>
-              <p class="toc-h hand">목차</p>
-              <ol class="toc" id="demo-toc" aria-live="polite"></ol>
-            </div>
+        <div class="pains">
+          <div class="pain">
+            <svg class="doodle" viewBox="0 0 100 100" aria-hidden="true"><use href="#d-book"/></svg>
+            <b>레시피가 앱마다 흩어져 있어요</b>
+            <p>인스타 저장, 유튜브 나중에 보기, 블로그 북마크…</p>
+          </div>
+          <div class="pain">
+            <svg class="pain-ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-clock"/></svg>
+            <b>영상은 몇 번이고 돌려 봐야 해요</b>
+            <p>재료랑 순서만 보고 싶은데, 멈추고 되감기를 반복해요.</p>
+          </div>
+          <div class="pain">
+            <svg class="pain-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.4a4.3 4.3 0 0 1 7.5 2.9c0 5.6-7.5 10.2-7.5 10.2z" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+            <b>맛있었던 것도 다시 찾아야 해요</b>
+            <p>또 해 먹고 싶은데, 어디 있었는지 처음부터 찾아요.</p>
           </div>
         </div>
-
-        <div id="panel-1" class="panel" role="tabpanel" aria-labelledby="tab-1">
-          <div class="viewer">
-            <div class="viewer-bar">
-              <button class="chip" id="demo-liked-only" aria-pressed="false">맛있었던 것만</button>
-              <div class="pager">
-                <button class="arrow" id="demo-prev" aria-label="이전 장">‹</button>
-                <span class="pageno" id="demo-pageno" aria-live="polite"></span>
-                <button class="arrow" id="demo-next" aria-label="다음 장">›</button>
-              </div>
-            </div>
-            <div id="demo-page"></div>
-          </div>
-          <div id="demo-cook" hidden></div>
-          <div class="cart-bar">
-            <button type="button" class="cart-open" id="demo-open-cart">
-              <svg class="doodle" viewBox="0 0 200 150" aria-hidden="true"><use href="#d-basket"/></svg>
-              장바구니 열기 <b id="demo-bar-count">0</b>
-            </button>
-          </div>
-        </div>
-
-        <div id="panel-3" class="panel" role="tabpanel" aria-labelledby="tab-3" hidden>
-          <div class="cart-back"><button type="button" class="backlink" id="demo-cart-back"></button></div>
-          <div id="demo-cart-empty" class="empty-msg">
-            레시피북에서 재료를 담으면 여기 장바구니에 모여요.
-          </div>
-          <div id="demo-cart-wrap" class="grid2" hidden>
-            <div class="box basket-box">
-              <div class="basket-stage" aria-hidden="true">
-                <div class="basket-items" id="basket-items"></div>
-                <svg class="doodle basket" viewBox="0 0 200 150" preserveAspectRatio="xMidYMax meet"><use href="#d-basket"/></svg>
-              </div>
-              <p class="basket-total hand" id="basket-total"></p>
-            </div>
-            <div class="box">
-              <div class="box-h"><b>장 볼 재료</b><span class="count" id="demo-cart-count"></span></div>
-              <div id="demo-cart" aria-live="polite"></div>
-            </div>
-          </div>
-        </div>
+        <p class="closing"><span class="tape"></span>먹고 싶을 때, 내 레시피북만 열면 돼요.</p>
       </div>
     </div>
   </section>
@@ -665,20 +831,20 @@
       <div data-reveal><h2 id="wm-faq-title" class="disp t2">자주 묻는 질문</h2></div>
       <div class="faqbox" data-reveal>
         <details>
-          <summary>요리를 잘 못해도 괜찮을까요?<span class="pm" aria-hidden="true"><span class="p">+</span><span class="m">−</span></span></summary>
-          <p>네. 요리 모드에서 한 단계씩 그림과 시간을 보며 따라 할 수 있어요.</p>
-        </details>
-        <details>
           <summary>어디서 본 레시피든 담을 수 있나요?<span class="pm" aria-hidden="true"><span class="p">+</span><span class="m">−</span></span></summary>
-          <p>네. 보던 앱에서 공유 버튼을 누르거나 캡처를 올리면 바로 담겨요. 담긴 레시피는 재료와 순서로 보기 좋게 정리돼요.</p>
+          <p>네. 유튜브·인스타그램·블로그 링크는 공유 버튼으로, 캡처한 사진이나 메모장·카톡에 적어 둔 글은 그대로 올리면 담겨요.</p>
         </details>
         <details>
-          <summary>레시피북은 어떻게 보이나요?<span class="pm" aria-hidden="true"><span class="p">+</span><span class="m">−</span></span></summary>
-          <p>담은 레시피가 한 장씩 넘겨 보는 책처럼 모여요. 맛있었던 레시피는 따로 모아 볼 수 있어요.</p>
+          <summary>영상 레시피도 재료와 순서로 정리되나요?<span class="pm" aria-hidden="true"><span class="p">+</span><span class="m">−</span></span></summary>
+          <p>네. 영상 속 재료와 순서를 정리해 드려요. 정리가 어려운 영상도 있어서, 결과는 직접 고칠 수 있게 할게요.</p>
         </details>
         <details>
-          <summary>장보기도 같이 할 수 있나요?<span class="pm" aria-hidden="true"><span class="p">+</span><span class="m">−</span></span></summary>
-          <p>네. 메뉴를 고르면 필요한 재료가 한눈에 정리되고, 바로 살 수 있는 곳으로 이어져요.</p>
+          <summary>원래 게시물이 지워지면 레시피도 사라지나요?<span class="pm" aria-hidden="true"><span class="p">+</span><span class="m">−</span></span></summary>
+          <p>아니요. 담을 때 정리해 둔 재료와 순서, 내 별점과 메모는 레시피북에 그대로 남아요.</p>
+        </details>
+        <details>
+          <summary>언제부터 쓸 수 있나요?<span class="pm" aria-hidden="true"><span class="p">+</span><span class="m">−</span></span></summary>
+          <p>12월 초 출시 예정이에요. 이메일을 남겨 주시면 열리는 날 가장 먼저 알려 드릴게요.</p>
         </details>
       </div>
     </div>
@@ -688,8 +854,13 @@
   <section id="wm-final" class="section" aria-labelledby="wm-final-title">
     <div class="wrap final">
       <div class="final-copy" data-reveal>
-        <h2 id="wm-final-title" class="disp t2">지금 출시를 준비하고 있어요</h2>
-        <p class="lead">이메일을 남겨 주시면 출시 소식을 가장 먼저 보내 드릴게요.</p>
+        <h2 id="wm-final-title" class="disp t2">출시되면 내 레시피북을<br>가장 먼저 만들어 드릴게요</h2>
+        <p class="lead">12월 초 출시 예정이에요. 이메일을 남겨 주시면 가장 먼저 알려 드릴게요.</p>
+        <div class="final-photos" aria-hidden="true">
+          <span><img src="img/demo-mango.jpg" alt="" loading="lazy"></span>
+          <span><img src="https://i.ytimg.com/vi/30tydX9GUf8/hqdefault.jpg" alt="" loading="lazy" onerror="this.parentNode.remove()"></span>
+          <span><img src="img/demo-crumble.jpg" alt="" loading="lazy"></span>
+        </div>
       </div>
       <div class="final-card sheet" data-reveal>
         <span class="tape"></span>
@@ -713,12 +884,12 @@
             </details>
           </div>
           <p id="wm-consent-error" class="error" role="alert" hidden>개인정보 수집·이용에 동의해 주세요.</p>
-          <button id="submit" type="button" class="sbtn-main">출시 알림 신청</button>
+          <button id="submit" type="button" class="sbtn-main">내 레시피북 신청하기</button>
           <p id="wm-email-note" class="note">이메일은 출시 소식을 보내는 데만 써요. 원하지 않으면 언제든 수신을 그만둘 수 있어요.</p>
         </div>
         <div data-wm-state="done" hidden>
           <h3 id="wm-done-title" class="done-title" tabindex="-1">신청이 완료됐어요</h3>
-          <p style="margin-top:10px">지금 출시를 준비하고 있어요. 출시되면 남겨 주신 주소로 가장 먼저 알려 드릴게요.</p>
+          <p style="margin-top:10px">12월 초 출시 예정이에요. 출시되면 남겨 주신 주소로 가장 먼저 알려 드릴게요.</p>
           <div class="survey">
             <div role="group" aria-labelledby="wm-q-cook">
               <p id="wm-q-cook" class="q">일주일에 집에서 몇 번 요리하세요?</p>
@@ -769,20 +940,47 @@
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.7/axios.min.js"></script>
+<script>
+  // 기록하지 않는 경우: (1) 내 테스트 — 컴퓨터에서 연 파일(file://), localhost, Netlify 미리보기 주소(…--palette-kitchen),
+  // 주소 끝에 ?me=1을 붙여 한 번 연 브라우저(?me=0으로 해제)  (2) 봇 — 자동 브라우저, 크롤러·링크 미리보기, 서버 시간대(UTC)
+  // 아래 IP 검사(Meta·Google·AWS)에서 봇으로 판정돼도 기록하지 않아요. 화면은 그대로 동작해요
+  (function () {
+    var q = new URLSearchParams(location.search), me = false;
+    try { if (q.get("me") === "1") localStorage.setItem("pk_me", "1"); if (q.get("me") === "0") localStorage.removeItem("pk_me"); me = localStorage.getItem("pk_me") === "1"; } catch (e) {}
+    var test = location.protocol === "file:" || /^(localhost|127\.0\.0\.1)$/.test(location.hostname) || location.hostname.indexOf("--") > 0 || me;
+    var ua = navigator.userAgent || "";
+    var bot = !!navigator.webdriver || /bot|crawl|spider|slurp|preview|facebookexternalhit|meta-externalagent|headless|lighthouse|inspectiontool|python|curl|wget|axios\/|node-fetch|go-http|okhttp|java\/|yeti|daum|kakaotalk-scrap|whatsapp/i.test(ua);
+    try { var tz = Intl.DateTimeFormat().resolvedOptions().timeZone; if (tz === "UTC" || tz === "Etc/UTC") bot = true; } catch (e) {}
+    window.PK_TEST = test; window.PK_BOT = bot; window.PK_SKIP_LOG = test || bot;
+    function isLog(u) { return String(u && u.url || u).indexOf("script.google.com/macros") >= 0; }
+    if (window.axios) { var g = axios.get; axios.get = function (u) { return isLog(u) && window.PK_SKIP_LOG ? Promise.resolve({ data: { success: true } }) : g.apply(axios, arguments); }; }
+    if (window.fetch) { var f = window.fetch; window.fetch = function (u) { return isLog(u) && window.PK_SKIP_LOG ? Promise.resolve(new Response("")) : f.apply(window, arguments); }; }
+    if (!test) return;
+    document.addEventListener("DOMContentLoaded", function () {
+      var b = document.createElement("div"); b.textContent = "테스트 모드 · 기록 안 함";
+      b.style.cssText = "position:fixed;left:8px;bottom:8px;z-index:9999;padding:3px 10px;border-radius:999px;background:#3a2e28;color:#fff;font:12px/1.6 sans-serif;opacity:.8;pointer-events:none";
+      document.body.appendChild(b);
+    });
+  })();
+</script>
 
 <!-- 기록: 방문(visitors) · 이메일(tab_final) · 이벤트(events). 1인 가구 버전 전용 Apps Script -->
 <script>
   var ip = "null";
-  function getIP(json) { try { ip = json.ip; } catch (e) { ip = "unknown"; } }
+  function getIP(json) {
+    try { ip = json.ip; } catch (e) { ip = "unknown"; }
+    // 지금까지 시트에 찍힌 봇 IP 대역: Meta(2a03:2880), Google(66.249), AWS(3. · 52. · 54. · 43.204 · 15.164)
+    if (/^(2a03:2880:|66\.249\.|3\.|52\.|54\.|43\.204\.|15\.164\.)/i.test(String(ip))) { window.PK_BOT = true; window.PK_SKIP_LOG = true; }
+  }
 </script>
 <script src="https://jsonip.com?format=jsonp&callback=getIP"></script>
 <script>
   (function () {
     var ENDPOINT = "https://script.google.com/macros/s/AKfycbz8hiNyjkaRp_bEMT2UL7NVXMQz113k8etJ5exzwi8c-Lq3vYLkNOkT3nr5Cm7iFbo95w/exec";
     var params = new URLSearchParams(location.search);
-    var WM = { endpoint: ENDPOINT, layout: "solo", hero: "a", utm: params.get("utm") || params.get("utm_source"), utm_source: params.get("utm_source") || params.get("utm"), utm_campaign: params.get("utm_campaign") };
+    var WM = { endpoint: ENDPOINT, utm: params.get("utm") || params.get("utm_source") || "" };
     WM.track = function (name, props) {
-      var payload = Object.assign({ event: name, layout_variant: WM.layout, headline_variant: WM.hero, utm: WM.utm, utm_source: WM.utm_source, utm_campaign: WM.utm_campaign }, props || {});
+      var payload = Object.assign({ event: name, utm: WM.utm }, props || {});
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push(payload);
       try {
@@ -817,9 +1015,36 @@
   $(function () {
     var addr = window.WM.endpoint;
     var DEFAULT_ERROR = "이메일 주소를 다시 확인해 주세요.";
-    var data = JSON.stringify({ id: getUVfromCookie(), landingUrl: window.location.href, ip: ip, referer: document.referrer, time_stamp: getTimeStamp(), utm: utm, device: mobile });
-    axios.get(addr + "?action=insert&table=visitors&data=" + encodeURIComponent(data)).catch(function () {});
-    WM.track("page_view");
+    // visitors = 사람(쿠키 id)당 한 줄. 2초 넘게 보거나 스크롤·터치하면 그때 기록해요(바로 나간 링크 미리보기·봇은 안 남게)
+    // 머문 시간(seconds, 누적)·최대 스크롤(max_scroll)·데모로 담은 수(demo_add)·신청(signup)·방문 횟수(visits)는 같은 줄에 갱신
+    var PK = window.PK = { counted: false, ready: null, uid: getUVfromCookie() };
+    var known = false, visits = 1;
+    try { known = localStorage.getItem("pk_row") === PK.uid; visits = (parseInt(localStorage.getItem("pk_visits"), 10) || 0) + 1; localStorage.setItem("pk_visits", String(visits)); } catch (e) {}
+    function upURL(obj) { return addr + "?action=update&table=visitors&id=" + encodeURIComponent(PK.uid) + "&data=" + encodeURIComponent(JSON.stringify(obj)); }
+    function countVisit() {
+      if (PK.counted || window.PK_BOT) return;
+      PK.counted = true;
+      if (known) {
+        PK.ready = axios.get(upURL({ visits: visits, last_seen: getTimeStamp() })).catch(function () {});
+      } else {
+        var row = { id: PK.uid, time_stamp: getTimeStamp(), utm: utm || "", referer: document.referrer, device: mobile, ip: ip, landingUrl: window.location.href,
+          seconds: 0, max_scroll: 0, demo_add: 0, signup: "", visits: visits, last_seen: getTimeStamp(), ver: "v3" }; // v3 = 11/4 휴대폰 데모·기록 정리 이후
+        PK.ready = axios.get(addr + "?action=insert&table=visitors&data=" + encodeURIComponent(JSON.stringify(row)))
+          .then(function () { try { localStorage.setItem("pk_row", PK.uid); } catch (e) {} }).catch(function () {});
+      }
+    }
+    PK.update = function (obj) { // 기록된 뒤에 같은 줄 갱신 (순서 보장)
+      countVisit(); if (!PK.ready) return;
+      PK.ready = PK.ready.then(function () { return axios.get(upURL(obj)).catch(function () {}); });
+    };
+    PK.updateNow = function (obj) { // 페이지를 떠날 때: 기다리지 않고 바로 보냄
+      if (!PK.counted || window.PK_SKIP_LOG) return;
+      try { fetch(upURL(obj), { mode: "no-cors", keepalive: true }); } catch (e) {}
+    };
+    var armT = null;
+    function arm() { if (!armT && document.visibilityState === "visible") armT = setTimeout(countVisit, 2000); }
+    arm(); document.addEventListener("visibilitychange", arm);
+    ["scroll", "pointerdown", "keydown", "touchstart"].forEach(function (ev) { window.addEventListener(ev, countVisit, { once: true, passive: true }); });
 
     $("#cta_primary").on("click", function () { WM.track("hero_cta_click", { position: "hero" }); });
 
@@ -842,7 +1067,7 @@
       axios.get(addr + "?action=insert&table=tab_final&data=" + encodeURIComponent(finalData))
         .then(function () {
           $btn.removeAttr("aria-busy");
-          WM.track("waitlist_submit");
+          WM.track("waitlist_submit"); PK.update({ signup: "Y" });
           WM.showState("done");
           $("#submit-email").val(""); $("#submit-advice").val("");
         })
@@ -878,7 +1103,6 @@
       // 기타를 해제하면 적어 둔 내용도 지운다
       if (q === "save_where" && $("#wm-save-etc").prop("hidden") && lastEtc) { $("#wm-save-etc").val(""); lastEtc = ""; ans.save_where_etc = ""; }
       axios.get(addr + "?action=update&table=tab_final&id=" + encodeURIComponent(window.WM.submitId || getUVfromCookie()) + "&data=" + encodeURIComponent(JSON.stringify(ans))).catch(function () {});
-      WM.track("survey_answer", ans);
       $(".wm-q-thanks").prop("hidden", false);
     });
     // 기타 칸에 적은 내용은 입력을 마치면(칸을 벗어나거나 Enter) 같은 줄의 save_where_etc 열에 저장
@@ -886,7 +1110,6 @@
       var v = $.trim($(this).val()); if (v === lastEtc) return; lastEtc = v;
       var ans = { save_where_etc: v };
       axios.get(addr + "?action=update&table=tab_final&id=" + encodeURIComponent(window.WM.submitId || getUVfromCookie()) + "&data=" + encodeURIComponent(JSON.stringify(ans))).catch(function () {});
-      WM.track("survey_answer", ans);
     }).on("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); $(this).trigger("change").trigger("blur"); } });
   });
 </script>
@@ -909,296 +1132,179 @@
       setTimeout(function () { document.getElementById("submit-email").focus({ preventScroll: true }); }, reduce ? 0 : 500);
     });
 
-    // 가상의 1인분 레시피
-    var SRC = "@example_recipe";
-    function S(t, sec, ic) { return { t: t, sec: sec, ic: "s-" + ic }; }
-    var R = [
-      { id: "tomegg", dy: "-14%", title: "토마토 달걀볶음", d: "d-tomegg", kind: "mine", liked: true, color: "#d9483d",
-        ings: ["토마토 1개", "달걀 2개", "대파 조금", "소금"],
-        steps: [S("달걀을 풀어 소금 한 꼬집을 넣어요.", 60, "mix"), S("팬에 달걀을 부드럽게 익혀 덜어 둬요.", 90, "pan"), S("토마토를 한입 크기로 썰어요.", 60, "cut"), S("토마토를 즙이 나올 때까지 볶아요.", 180, "pan"), S("달걀과 대파를 넣고 한 번 더 볶아 담아요.", 60, "plate")] },
-      { id: "tofu", dy: "-4%", title: "두부 스테이크", d: "d-tofu", kind: "mine", liked: false, color: "#c9a27c",
-        ings: ["두부 반 모", "다진 고기 50g", "달걀 1개", "간장"],
-        steps: [S("두부를 면포로 감싸 물기를 꼭 짜요.", 60, "squeeze"), S("다진 고기, 달걀을 넣고 고루 섞어요.", 120, "mix"), S("손바닥만 하게 두 개로 빚어요.", 120, "shape"), S("약불에서 앞뒤로 노릇하게 구워요.", 420, "pan"), S("간장을 살짝 둘러 접시에 담아요.", 60, "plate")] },
-      { id: "kimchirice", dy: "-12%", title: "참치 김치볶음밥", d: "d-bowl", kind: "share", src: "영상 링크", liked: false, color: "#7f9a6c",
-        ings: ["밥 한 공기", "김치 반 컵", "참치 반 캔", "달걀 1개"],
-        steps: [S("김치를 잘게 썰어요.", 60, "cut"), S("팬에 김치를 먼저 볶아요.", 180, "pan"), S("참치와 밥을 넣고 고루 볶아요.", 180, "pan"), S("달걀 프라이를 따로 부쳐요.", 120, "pan"), S("볶음밥 위에 달걀을 올려요.", 30, "plate")] },
-      { id: "eggrice", dy: "-14%", title: "버터 간장 계란밥", d: "d-eggrice", kind: "share", src: "캡처", liked: false, color: "#e5a96b",
-        ings: ["밥 한 공기", "달걀 1개", "버터 한 조각", "간장"],
-        steps: [S("따뜻한 밥을 그릇에 담아요.", 30, "plate"), S("달걀 프라이를 반숙으로 부쳐요.", 150, "pan"), S("밥 위에 버터를 올려 녹여요.", 30, "plate"), S("달걀을 얹고 간장을 둘러요.", 30, "plate"), S("노른자를 터뜨려 비벼 먹어요.", 30, "mix")] },
-      { id: "stew", dy: "-12%", title: "애호박 된장찌개", d: "d-stew", kind: "mine", liked: false, color: "#d98c86",
-        ings: ["애호박 1/3개", "두부 1/4모", "된장 1큰술", "대파"],
-        steps: [S("애호박과 두부를 깍둑 썰어요.", 120, "cut"), S("냄비에 물을 붓고 된장을 풀어요.", 60, "mix"), S("물이 끓으면 애호박을 넣어요.", 300, "boil"), S("두부를 넣고 한소끔 끓여요.", 180, "pot"), S("대파를 올려 마무리해요.", 30, "pot")] },
-    ];
-    var st = { mine: [], page: 0, likedOnly: false, cook: null, cart: [] };
-    function findR(id) { return R.find(function (r) { return r.id === id; }); }
-    function book() { return R.filter(function (r) { return r.kind === "mine" && (!st.likedOnly || r.liked); }); }
-    function fmt(sec) { return sec < 60 ? "약 " + sec + "초" : "약 " + Math.round(sec / 60) + "분"; }
+    // 히어로 데모: 휴대폰 속 내 레시피북. '+ 레시피 담기'로 링크·사진·글 어디서 본 레시피든 담으면 카드가 되고, 카드를 누르면 정리된 레시피
     function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
     function svgEl(tag, attrs) { var n = document.createElementNS("http://www.w3.org/2000/svg", tag); Object.keys(attrs).forEach(function (k) { n.setAttribute(k, attrs[k]); }); return n; }
     function doodle(id) { var s = svgEl("svg", { viewBox: "0 0 100 100", "class": "doodle", "aria-hidden": "true" }); s.appendChild(svgEl("use", { href: "#" + id })); return s; }
-    function heart() { var s = svgEl("svg", { viewBox: "0 0 24 24", "aria-hidden": "true" }); s.appendChild(svgEl("path", { d: "M12 20.5s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.4a4.3 4.3 0 0 1 7.5 2.9c0 5.6-7.5 10.2-7.5 10.2z", fill: "none", stroke: "currentColor", "stroke-width": 2 })); return s; }
-
-    // 탭
-    // tabs[k]는 panel-k와 짝, 화면 순서(키보드 이동)는 tabOrder를 따라요
-    // 탭 id 숫자 = 패널 번호 (0 담기, 1 레시피북·요리 모드, 3 장바구니)
-    var tabIds = Array.prototype.slice.call(document.querySelectorAll("#wm-demo .tab")).map(function (t) { return +t.id.replace("tab-", ""); });
-    function selectTab(i, focus) {
-      tabIds.forEach(function (k) { var t = document.getElementById("tab-" + k), on = k === i; t.setAttribute("aria-selected", on ? "true" : "false"); t.tabIndex = on ? 0 : -1; document.getElementById("panel-" + k).hidden = !on; });
-      if (focus) document.getElementById("tab-" + i).focus();
-      if (i === 1) renderBook();
-      if (i === 3) renderCart();
+    var R = [
+      { id: "eggrice", title: "버터 간장 계란밥", d: "d-eggrice", color: "#e5a96b", lab: "캡처한 사진", from: "캡처한 사진", serv: "1인분", rating: 5, mine: true,
+        ings: ["밥 한 공기", "달걀 1개", "버터 한 조각", "간장"], steps: ["따뜻한 밥에 버터를 올려 녹여요", "달걀 프라이를 반숙으로 부쳐요", "달걀을 얹고 간장을 둘러 비벼요"] },
+      { id: "tofu", title: "두부 스테이크", d: "d-tofu", color: "#c9a27c", lab: "인스타그램", from: "인스타그램", serv: "1인분", rating: 0, mine: true,
+        ings: ["두부 반 모", "다진 고기 50g", "달걀 1개", "간장"], steps: ["두부 물기를 꼭 짜요", "다진 고기, 달걀과 고루 섞어요", "손바닥만 하게 빚어 약불에 노릇하게 구워요", "간장을 살짝 둘러 담아요"] },
+      { id: "mango", title: "망고 파스타", d: "d-pasta", color: "#f2b544", lab: "인스타그램", pre: "instagram.com/p/DZ65hmkxgur", from: "인스타그램", serv: "2인분", rating: 0, mine: false,
+        link: "https://www.instagram.com/p/DZ65hmkxgur/", thumb: "img/demo-mango.jpg",
+        ings: ["망고 1.5개", "링귀니면", "올리브오일", "화이트 발사믹 조금", "소금·말돈 소금·후추"], steps: ["망고 반쪽은 얇게 썰고, 나머지는 소금·물과 함께 곱게 갈아요", "망고 퓨레를 냉장고에서 15분 이상 차갑게 식혀요", "링귀니를 삶아 1분 뜸 들인 뒤 찬물에 헹궈요", "퓨레에 면, 올리브오일, 소금, 화이트 발사믹을 넣고 버무려요", "망고 슬라이스를 올리고 올리브오일, 말돈 소금, 후추로 마무리해요"] },
+      { id: "tomegg", title: "토마토 달걀볶음", d: "d-tomegg", color: "#d9483d", lab: "유튜브", pre: "youtu.be/30tydX9GUf8", from: "@youtube 우리의식탁 W TABLE", serv: "2인분", rating: 0, mine: false,
+        thumb: "https://i.ytimg.com/vi/30tydX9GUf8/hqdefault.jpg", link: "https://youtu.be/30tydX9GUf8",
+        ings: ["토마토 2개", "달걀 3개", "양파 1/4개", "대파 1/4대", "마늘 2톨", "굴소스·간장·설탕"], steps: ["토마토를 데쳐 껍질을 벗기고 8등분해요", "채소를 썰고, 달걀은 소금·물전분을 넣어 풀어요", "달걀을 부드럽게 볶아 덜어 둬요", "채소를 볶다가 토마토와 양념을 넣어요", "달걀을 다시 넣고 섞어 간을 맞춰요"] },
+      { id: "crumble", title: "블루베리 크림치즈 크럼블", d: "d-burst", color: "#8a7bb8", lab: "블로그", pre: "blog.naver.com/rouvre1225", from: "블로그", serv: "1판", rating: 0, mine: false,
+        link: "https://blog.naver.com/rouvre1225/224450772492", thumb: "img/demo-crumble.jpg",
+        ings: ["아몬드가루 320g", "녹인 버터 100g", "땅콩버터 60g", "라이트 크림치즈 400g", "전분가루 40g", "스테비아 80g", "달걀노른자 2개", "냉동 블루베리"], steps: ["아몬드가루, 녹인 버터, 스테비아, 땅콩버터를 섞어 크럼블을 만들어요", "유산지 깐 틀에 크럼블을 꾹꾹 눌러 담아요", "크림치즈, 전분가루, 스테비아, 노른자를 섞어 필링을 만들어요", "시트 위에 필링과 냉동 블루베리를 올려요", "남은 크럼블을 뿌리고 에어프라이어 170도에서 25분 구워요", "1~2시간 식혀서 먹어요"] },
+      { id: "stew", title: "애호박 된장찌개", d: "d-stew", color: "#d98c86", lab: "캡처한 사진", pre: "사진첩에 저장한 레시피 캡처", from: "캡처한 사진", serv: "1인분", rating: 0, mine: false,
+        ings: ["애호박 1/3개", "두부 1/4모", "된장 1큰술", "대파"], steps: ["애호박과 두부를 깍둑 썰어요", "물에 된장을 풀어 끓여요", "애호박, 두부를 넣고 한소끔 끓여요", "대파를 올려 마무리해요"] },
+      { id: "tuna", title: "참치마요 덮밥", d: "d-bowl", color: "#e9a04f", lab: "적어 둔 글", pre: "“밥 위에 참치 한 캔, 마요 두 숟갈…”", from: "적어 둔 글", serv: "1인분", rating: 0, mine: false,
+        ings: ["밥 한 공기", "참치 1캔", "마요네즈 2큰술", "간장 1작은술", "김가루·쪽파"], steps: ["참치 기름을 꼭 빼요", "참치에 마요네즈와 간장을 섞어요", "밥 위에 올리고 김가루와 쪽파를 뿌려요"] }
+    ];
+    var st = { order: ["eggrice", "tofu"], open: null, likedOnly: false, justAdded: null, busy: false };
+    function findR(id) { return R.find(function (r) { return r.id === id; }); }
+    var demo = document.getElementById("wm-demo"), scr = demo.querySelector(".ph-screen"), fab = document.getElementById("wm-quick-add"), sheet = document.getElementById("add-box");
+    var toastT;
+    function toast(t) { var n = document.getElementById("demo-hint"); n.textContent = t; n.classList.add("show"); clearTimeout(toastT); toastT = setTimeout(function () { n.classList.remove("show"); }, 2600); }
+    function tileFor(r, cls) {
+      var t = el("span", cls); t.style.background = r.color + "26"; t.appendChild(doodle(r.d));
+      if (r.thumb) { var im = el("img"); im.src = r.thumb; im.alt = ""; im.loading = "lazy"; im.onerror = function () { im.remove(); }; t.appendChild(im); }
+      return t;
     }
-    tabIds.forEach(function (k) {
-      var t = document.getElementById("tab-" + k);
-      t.addEventListener("click", function () { selectTab(k); });
-      t.addEventListener("keydown", function (e) {
-        if (e.key === "ArrowRight" || e.key === "ArrowLeft") { e.preventDefault(); var pos = tabIds.indexOf(k); selectTab(tabIds[(pos + (e.key === "ArrowRight" ? 1 : tabIds.length - 1)) % tabIds.length], true); }
-      });
-    });
-    // 02 안에서 레시피 장 ↔ 요리 모드 전환
-    function renderBook() {
-      var cooking = !!(st.cook && st.cookOn);
-      document.querySelector("#panel-1 .viewer").hidden = cooking;
-      document.getElementById("demo-cook").hidden = !cooking;
-      if (cooking) renderCook(); else renderPage(false);
+    function openSheet(on) {
+      var was = scr.classList.contains("sheet-open");
+      scr.classList.toggle("sheet-open", on); sheet.inert = !on;
+      fab.setAttribute("aria-expanded", on ? "true" : "false");
+      demo.dataset.step = on ? "담기" : (st.open ? "레시피 보기" : "레시피북");
+      if (on) { renderSheet(); var f = sheet.querySelector(".src:not([disabled])"); if (f) f.focus({ preventScroll: true }); }
+      else if (was && !fab.hidden) fab.focus({ preventScroll: true });
     }
-    function showTop() { var d = document.getElementById("wm-demo"); if (d.getBoundingClientRect().top < 0) d.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" }); }
-    function startCook(r) { st.cook = { rid: r.id, i: -1 }; st.cookOn = true; selectTab(1); showTop(); focusIn(".next"); }
-    function leaveCook(reset) { st.cookOn = false; if (reset) st.cook = null; selectTab(1); showTop(); }
-
-    // 01 레시피 담기
-    function renderShares() {
-      var ul = document.getElementById("demo-shares"); ul.textContent = "";
-      R.filter(function (r) { return r.src; }).forEach(function (r) {
-        var li = el("li", "row");
-        var t = el("span", "tile"); t.appendChild(doodle(r.d)); li.appendChild(t);
-        var g = el("span", "grow"); g.appendChild(el("span", "src", r.src)); g.appendChild(el("b", null, r.title)); li.appendChild(g);
-        var done = r.kind === "mine";
-        var b = el("button", "pill" + (done ? " is-done" : ""), done ? "추가됐어요" : "공유하기"); b.type = "button";
-        if (done) b.disabled = true;
-        b.addEventListener("click", function () { r.kind = "mine"; renderShares(); renderToc(r.id); });
+    function renderSheet() {
+      var ul = document.getElementById("add-ex"); ul.textContent = "";
+      R.filter(function (r) { return r.pre; }).forEach(function (r) {
+        var li = el("li"); var b = el("button", "src"); b.type = "button"; b.disabled = r.mine;
+        b.setAttribute("aria-label", r.lab + (r.mine ? " · 담김" : " 담기"));
+        b.appendChild(tileFor(r, "src-pic"));
+        var t = el("span", "src-t"); t.appendChild(el("b", null, r.lab)); t.appendChild(el("small", null, r.pre)); b.appendChild(t);
+        b.appendChild(el("span", "src-go", r.mine ? "담김 ✓" : "담기"));
+        b.addEventListener("click", function () { add(r, b); });
         li.appendChild(b); ul.appendChild(li);
       });
     }
-    function renderToc(newId) {
-      var ol = document.getElementById("demo-toc"); ol.textContent = "";
-      var mine = R.filter(function (r) { return r.kind === "mine"; });
-      document.getElementById("demo-book-count").textContent = mine.length + "장";
-      mine.forEach(function (r, i) {
-        var li = el("li", r.id === newId && !reduce ? "fade-in" : null);
-        var b = el("button", "toc-item"); b.type = "button"; b.setAttribute("aria-label", r.title + " 펼쳐 보기");
-        b.appendChild(el("span", "toc-t", r.title)); b.appendChild(el("span", "toc-dots")); b.appendChild(el("span", "toc-p", "p." + (i + 1)));
-        b.addEventListener("click", function () {
-          st.likedOnly = false; document.getElementById("demo-liked-only").setAttribute("aria-pressed", "false");
-          st.page = i; st.cookOn = false; selectTab(1, true);
-        });
-        li.appendChild(b); ol.appendChild(li);
-      });
+    function add(r, b) {
+      if (r.mine || st.busy) return; st.busy = true;
+      b.classList.add("busy"); b.querySelector(".src-go").textContent = "정리 중…";
+      setTimeout(function () {
+        scr.classList.remove("ph-first"); document.getElementById("ph-home").inert = false; document.getElementById("demo-page").inert = false;
+        st.busy = false; r.mine = true; st.order.unshift(r.id); st.justAdded = r.id; st.open = null; st.likedOnly = false; syncFilter();
+        openSheet(false); renderBook();
+        toast("담았어요 · 재료와 순서로 정리했어요");
+        document.getElementById("demo-cta").hidden = false;
+        document.getElementById("wm-hero").classList.add("demo-used");
+        if (window.WM) WM.track("demo_add", { recipe: r.id });
+        if (window.PK) PK.update({ demo_add: st.order.length - 2 });
+      }, reduce ? 0 : 800);
     }
-
-    // 02 레시피북 넘겨 보기
-    function renderPage(turn) {
-      var list = book(); var box = document.getElementById("demo-page"); box.textContent = "";
-      var prev = document.getElementById("demo-prev"), next = document.getElementById("demo-next");
-      if (!list.length) {
-        box.appendChild(el("p", "empty-msg", "아직 맛있었다고 표시한 레시피가 없어요. 레시피 아래 하트를 눌러 보세요."));
-        document.getElementById("demo-pageno").textContent = "0 / 0"; prev.disabled = next.disabled = true; return;
-      }
-      if (st.page > list.length - 1) st.page = list.length - 1;
-      if (st.page < 0) st.page = 0;
-      var r = list[st.page];
-      document.getElementById("demo-pageno").textContent = (st.page + 1) + " / " + list.length;
-      prev.disabled = st.page === 0; next.disabled = st.page === list.length - 1;
-      var wrapE = el("div", "rpage"); var inn = el("div", "rpage-in" + (turn && !reduce ? " turn" : ""));
-      var pic = el("div", "rp-pic"); var dl = svgEl("svg", { viewBox: "0 0 100 100", "class": "doily", "aria-hidden": "true" }); dl.appendChild(svgEl("use", { href: "#d-doily" })); var plate = el("div", "plate"); plate.style.setProperty("--dy", r.dy || "-8%"); plate.appendChild(dl); plate.appendChild(doodle(r.d)); pic.appendChild(plate); if (r.liked) pic.appendChild(el("span", "liked", "맛있었어요"));
-      inn.appendChild(pic);
+    function renderBook() {
+      var box = document.getElementById("demo-page"); box.textContent = "";
+      var opened = !!st.open;
+      document.getElementById("ph-back").hidden = !opened;
+      document.getElementById("ph-home").hidden = opened;
+      fab.hidden = opened; scr.classList.toggle("is-recipe", opened);
+      document.getElementById("book-count").textContent = st.order.length + "개";
+      if (opened) { demo.dataset.step = "레시피 보기"; return renderRecipe(box, findR(st.open)); }
+      demo.dataset.step = "레시피북";
+      var list = st.order.map(findR).filter(function (r) { return !st.likedOnly || r.rating >= 4; });
+      if (!list.length) { box.appendChild(el("p", "empty-msg", "아직 별점 4개 이상인 레시피가 없어요.")); return; }
+      var ul = el("ul", "rgrid");
+      list.forEach(function (r) {
+        var li = el("li"); var c = el("button", "rcard" + (r.id === st.justAdded ? " is-new" : "")); c.type = "button";
+        c.setAttribute("aria-label", r.title + " 펼쳐 보기");
+        var t = tileFor(r, "rtile");
+        if (r.rating) t.appendChild(el("span", "rstar", "★ " + r.rating));
+        if (r.id === st.justAdded) t.appendChild(el("span", "rnew", "방금 담음"));
+        c.appendChild(t); c.appendChild(el("b", null, r.title)); c.appendChild(el("small", null, r.lab));
+        c.addEventListener("click", function () { if (st.justAdded === r.id) st.justAdded = null; st.open = r.id; renderBook(); keepInView(); });
+        li.appendChild(c); ul.appendChild(li);
+      });
+      box.appendChild(ul);
+    }
+    function renderRecipe(box, r) {
+      var v = el("div", "rview");
+      var pic = tileFor(r, "rv-pic");
+      if (r.link) { var a = el("a", "rv-link", "원본 보기"); a.href = r.link; a.target = "_blank"; a.rel = "noopener"; pic.appendChild(a); }
+      v.appendChild(pic);
       var b = el("div", "rp-body");
-      var hd = el("div"); hd.appendChild(el("h3", "rp-title", r.title));
-      var total = r.steps.reduce(function (a, s) { return a + s.sec; }, 0);
-      hd.appendChild(el("p", "rp-meta", "1인분 · " + fmt(total).replace("약 ", "약 ") + " · " + SRC)); b.appendChild(hd);
-      b.appendChild(ingList(r, function () { renderPage(false); }));
-      var s2 = el("div"); s2.appendChild(el("h4", null, "조리법")); var ol = el("ol", "steps");
-      r.steps.forEach(function (x) { var li = el("li"); var sp = el("span", null, x.t + " "); sp.appendChild(el("small", null, fmt(x.sec))); li.appendChild(sp); ol.appendChild(li); });
-      s2.appendChild(ol); b.appendChild(s2);
-      var a = el("div", "acts");
-      var lk = el("button", "like"); lk.type = "button"; lk.setAttribute("aria-pressed", r.liked ? "true" : "false"); lk.setAttribute("aria-label", r.title + " 맛있었어요");
-      lk.appendChild(heart()); lk.appendChild(document.createTextNode("맛있었어요"));
-      lk.addEventListener("click", function () { r.liked = !r.liked; renderPage(false); });
-      var go = el("button", "go", "요리 모드로 만들기"); go.type = "button";
-      go.addEventListener("click", function () {
-        if (window.WM) WM.track("demo_cook", { recipe: r.id });
-        startCook(r);
-      });
-      a.appendChild(lk); a.appendChild(go); b.appendChild(a);
-      inn.appendChild(b); wrapE.appendChild(inn); box.appendChild(wrapE);
+      var hd = el("div"); hd.appendChild(el("h3", "rp-title", r.title)); hd.appendChild(el("p", "rp-meta", r.serv + " · " + r.from)); b.appendChild(hd);
+      var s1 = el("div"); s1.appendChild(el("h4", null, "재료")); var ig = el("ul", "ings"); r.ings.forEach(function (x) { ig.appendChild(el("li", null, x)); }); s1.appendChild(ig);
+      var sh = el("button", "shop", "없는 재료 장보기 목록에 담기"); sh.type = "button";
+      var shn = el("p", "shop-note", "장보기는 출시 후에 열 예정이에요"); shn.setAttribute("role", "status"); shn.hidden = true;
+      sh.addEventListener("click", function () { shn.hidden = false; if (window.WM) WM.track("demo_shop", { recipe: r.id }); });
+      s1.appendChild(sh); s1.appendChild(shn); b.appendChild(s1);
+      var s2 = el("div"); s2.appendChild(el("h4", null, "순서")); var ol = el("ol", "steps"); r.steps.forEach(function (x) { ol.appendChild(el("li", null, x)); }); s2.appendChild(ol); b.appendChild(s2);
+      var rate = el("div", "rate"); rate.appendChild(el("span", "rate-l", "내 별점"));
+      for (var k = 1; k <= 5; k++) (function (k) {
+        var sb = el("button", "star" + (k <= r.rating ? " on" : ""), "★"); sb.type = "button"; sb.setAttribute("aria-label", "별 " + k + "개");
+        sb.addEventListener("click", function () { r.rating = r.rating === k ? 0 : k; Array.prototype.forEach.call(rate.querySelectorAll(".star"), function (x, i) { x.classList.toggle("on", i < r.rating); }); });
+        rate.appendChild(sb);
+      })(k);
+      b.appendChild(rate);
+      var mm = el("label", "memo"); mm.appendChild(el("span", "rate-l", "내 메모"));
+      var ta = el("textarea"); ta.rows = 2; ta.placeholder = "예: 소금은 반만, 다음엔 바질 추가"; ta.value = r.memo || "";
+      ta.addEventListener("input", function () { r.memo = ta.value; });
+      mm.appendChild(ta); b.appendChild(mm);
+      var bk = el("button", "ph-back2", "‹ 내 레시피북으로"); bk.type = "button";
+      bk.addEventListener("click", function () { st.open = null; renderBook(); keepInView(); });
+      b.appendChild(bk);
+      v.appendChild(b); box.appendChild(v);
     }
-    document.getElementById("demo-prev").addEventListener("click", function () { st.page--; renderPage(true); });
-    document.getElementById("demo-next").addEventListener("click", function () { st.page++; renderPage(true); });
-    document.getElementById("demo-liked-only").addEventListener("click", function () {
-      st.likedOnly = !st.likedOnly; this.setAttribute("aria-pressed", st.likedOnly ? "true" : "false"); st.page = 0; renderPage(true);
+    function keepInView() { if (demo.getBoundingClientRect().top < 0) demo.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" }); }
+    fab.addEventListener("click", function () { fab.classList.remove("hint"); openSheet(true); });
+    document.getElementById("ph-dim").addEventListener("click", function () { openSheet(false); });
+    document.getElementById("sheet-x").addEventListener("click", function () { openSheet(false); });
+    demo.addEventListener("keydown", function (e) { if (e.key === "Escape" && scr.classList.contains("sheet-open")) openSheet(false); });
+    document.getElementById("ph-back").addEventListener("click", function () { st.open = null; renderBook(); keepInView(); });
+    function syncFilter() {
+      document.getElementById("demo-all").setAttribute("aria-pressed", st.likedOnly ? "false" : "true");
+      document.getElementById("demo-liked-only").setAttribute("aria-pressed", st.likedOnly ? "true" : "false");
+    }
+    function setFilter(liked) { st.likedOnly = liked; st.open = null; syncFilter(); renderBook(); }
+    document.getElementById("demo-all").addEventListener("click", function () { setFilter(false); });
+    document.getElementById("demo-liked-only").addEventListener("click", function () { setFilter(true); });
+    document.getElementById("cta_demo").addEventListener("click", function () {
+      if (window.WM) WM.track("hero_cta_click", { position: "demo" });
+      document.getElementById("wm-final").scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+      setTimeout(function () { document.getElementById("submit-email").focus({ preventScroll: true }); }, reduce ? 0 : 500);
     });
-    var pageBox = document.getElementById("demo-page"), sx = null;
-    pageBox.addEventListener("touchstart", function (e) { sx = e.touches[0].clientX; }, { passive: true });
-    pageBox.addEventListener("touchend", function (e) {
-      if (sx == null) return; var dx = e.changedTouches[0].clientX - sx; sx = null;
-      var list = book();
-      if (dx < -50 && st.page < list.length - 1) { st.page++; renderPage(true); }
-      else if (dx > 50 && st.page > 0) { st.page--; renderPage(true); }
-    });
-
-    // 천천히 만들기 (02 안의 요리 모드)
-    function renderCook() {
-      var box = document.getElementById("demo-cook"); box.textContent = "";
-      if (!st.cook) return;
-      var r = findR(st.cook.rid), i = st.cook.i, n = r.steps.length;
-      var c = el("div", "cook");
-      var bk = el("button", "backlink", "‹ 레시피 장으로"); bk.type = "button";
-      bk.addEventListener("click", function () { leaveCook(false); }); c.appendChild(bk);
-      var top = el("div", "cook-top"); top.appendChild(el("p", "cook-title", r.title));
-      top.appendChild(el("span", "eb", i < 0 ? "준비" : i >= n ? "완성" : "요리 모드 · " + (i + 1) + " / " + n)); c.appendChild(top);
-      var bar = el("div", "bar"); var f = el("span"); f.style.width = (Math.max(0, Math.min(i + 1, n)) / n * 100) + "%"; bar.appendChild(f); c.appendChild(bar);
-      if (i < 0) {
-        // 준비: 재료와 장보기
-        var pic0 = el("div", "cook-pic"); pic0.appendChild(doodle(r.d)); c.appendChild(pic0);
-        var det = document.createElement("details"); det.className = "prep"; det.open = true;
-        var sm = document.createElement("summary"); sm.textContent = "준비할 재료 " + r.ings.length + "가지"; det.appendChild(sm);
-        det.appendChild(ingList(r, function () { renderCook(); }, true));
-        var oc = el("button", "add-all", "장바구니 열기"); oc.type = "button"; oc.style.marginBottom = "8px";
-        oc.addEventListener("click", function () { selectTab(3, true); }); det.appendChild(oc);
-        c.appendChild(det);
-        var go0 = el("button", "next", "시작하기"); go0.type = "button"; go0.style.width = "100%";
-        go0.addEventListener("click", function () { st.cook.i = 0; renderCook(); focusIn(".next"); }); c.appendChild(go0);
-      } else if (i >= n) {
-        var dc = el("div", "done-card"); var big = doodle(r.d); big.setAttribute("class", "doodle big"); dc.appendChild(big);
-        dc.appendChild(el("p", "cook-title", "한 끼 완성"));
-        dc.appendChild(el("p", "note", "맛있었다면 레시피북에 표시해 두세요. 다음에 다시 찾기 쉬워요."));
-        var lk = el("button", "like"); lk.type = "button"; lk.setAttribute("aria-pressed", r.liked ? "true" : "false");
-        lk.appendChild(heart()); lk.appendChild(document.createTextNode("맛있었어요"));
-        lk.addEventListener("click", function () { r.liked = !r.liked; lk.setAttribute("aria-pressed", r.liked ? "true" : "false"); });
-        dc.appendChild(lk);
-        var back = el("button", "pill", "레시피북으로 돌아가기"); back.type = "button";
-        back.addEventListener("click", function () { leaveCook(true); }); dc.appendChild(back);
-        c.appendChild(dc);
-      } else {
-        var s = r.steps[i];
-        var pic = el("div", "cook-pic"); pic.appendChild(doodle(s.ic));
-        var tm = el("span", "cook-time"); var cl = svgEl("svg", { viewBox: "0 0 24 24", "aria-hidden": "true" }); cl.appendChild(svgEl("use", { href: "#i-clock" }));
-        tm.appendChild(cl); tm.appendChild(document.createTextNode(fmt(s.sec))); pic.appendChild(tm); c.appendChild(pic);
-        var p = el("p", "cook-step"); p.appendChild(el("b", null, (i + 1) + "단계")); p.appendChild(document.createTextNode(s.t)); p.setAttribute("aria-live", "polite"); c.appendChild(p);
-        var a = el("div", "acts");
-        var pv = el("button", "ghost", "이전"); pv.type = "button"; pv.disabled = i === 0;
-        pv.addEventListener("click", function () { st.cook.i--; renderCook(); focusIn(st.cook.i === 0 ? ".next" : ".ghost"); });
-        var nx = el("button", "next", i === n - 1 ? "다 만들었어요" : "다음"); nx.type = "button";
-        nx.addEventListener("click", function () { st.cook.i++; renderCook(); focusIn(st.cook.i >= n ? ".like" : ".next"); });
-        a.appendChild(pv); a.appendChild(nx); c.appendChild(a);
-      }
-      box.appendChild(c);
-    }
-    // 재료 담기 · 장바구니
-    function inCart(rid, ing) { return st.cart.some(function (c) { return c.rid === rid && c.ing === ing; }); }
-    function addCart(rid, ing) { if (!inCart(rid, ing)) st.cart.push({ rid: rid, ing: ing, fresh: true }); }
-    function removeCart(rid, ing) { st.cart = st.cart.filter(function (c) { return !(c.rid === rid && c.ing === ing); }); }
-    function updateCount(bump) {
-      var n = st.cart.length;
-      document.getElementById("demo-tcount").textContent = n ? String(n) : "";
-      document.getElementById("demo-bar-count").textContent = String(n);
-      if (bump && !reduce) ["tab-3", "demo-open-cart"].forEach(function (id) { var t = document.getElementById(id); t.classList.remove("bump"); void t.offsetWidth; t.classList.add("bump"); });
-    }
-    function ingList(r, rerender, bare) {
-      var wrap = el("div");
-      var hr = el("div", "h4row"); if (!bare) hr.appendChild(el("h4", null, "재료"));
-      var all = el("button", "add-all", "모두 담기"); all.type = "button";
-      all.addEventListener("click", function () { r.ings.forEach(function (n) { addCart(r.id, n); }); updateCount(true); rerender(); });
-      hr.appendChild(all); wrap.appendChild(hr);
-      var ul = el("ul", "ing-list");
-      r.ings.forEach(function (n) {
-        var li = el("li", "ing-row"); li.appendChild(el("span", null, n));
-        var bt = el("button", "ing-add"); bt.type = "button";
-        function paint() { var on = inCart(r.id, n); bt.setAttribute("aria-pressed", on ? "true" : "false"); bt.setAttribute("aria-label", n + (on ? " 장바구니에서 빼기" : " 장바구니에 담기")); bt.textContent = on ? "담았어요" : "+ 담기"; }
-        bt.addEventListener("click", function () { if (inCart(r.id, n)) { removeCart(r.id, n); updateCount(false); } else { addCart(r.id, n); updateCount(true); } paint(); });
-        paint(); li.appendChild(bt); ul.appendChild(li);
-      });
-      wrap.appendChild(ul); return wrap;
-    }
-    function renderCart() {
-      var cb = document.getElementById("demo-cart-back");
-      cb.textContent = st.cook && st.cookOn ? "‹ 요리 모드로 돌아가기" : "‹ 레시피북으로 돌아가기";
-      var has = st.cart.length > 0;
-      document.getElementById("demo-cart-empty").hidden = has;
-      document.getElementById("demo-cart-wrap").hidden = !has;
-      if (!has) return;
-      var bi = document.getElementById("basket-items"); bi.textContent = "";
-      st.cart.slice(-10).forEach(function (c, k) {
-        var t = el("span", "bitem" + (c.fresh && !reduce ? " drop" : ""), c.ing.replace(/\s[0-9].*$/, ""));
-        t.style.setProperty("--r", ((k * 37) % 13 - 6) + "deg"); if (c.fresh && !reduce) t.style.animationDelay = (k % 4) * 60 + "ms";
-        bi.appendChild(t);
-      });
-      document.getElementById("basket-total").textContent = "재료 " + st.cart.length + "개 담김";
-      document.getElementById("demo-cart-count").textContent = st.cart.length + "개";
-      var box = document.getElementById("demo-cart"); box.textContent = "";
-      var order = []; st.cart.forEach(function (c) { if (order.indexOf(c.rid) < 0) order.push(c.rid); });
-      order.forEach(function (rid) {
-        var r = findR(rid); var g = el("div", "cart-group"); g.appendChild(el("h5", null, r.title));
-        st.cart.filter(function (c) { return c.rid === rid; }).forEach(function (c) {
-          var row = el("div", "cart-item"); var gr = el("span", "grow"); gr.appendChild(el("b", null, c.ing)); row.appendChild(gr);
-          var q = encodeURIComponent(c.ing.replace(/\s[0-9].*$/, ""));
-          var buy = el("span", "buy");
-          var a1 = el("a", "shop", "쿠팡"); a1.href = "https://www.coupang.com/np/search?q=" + q; a1.target = "_blank"; a1.rel = "noopener"; a1.setAttribute("aria-label", c.ing + " 쿠팡에서 찾기");
-          var a2 = el("a", "shop", "컬리"); a2.href = "https://www.kurly.com/search?sword=" + q; a2.target = "_blank"; a2.rel = "noopener"; a2.setAttribute("aria-label", c.ing + " 컬리에서 찾기");
-          buy.appendChild(a1); buy.appendChild(el("span", "sep", "")); buy.appendChild(a2); row.appendChild(buy);
-          var rm = el("button", "rm", "×"); rm.type = "button"; rm.setAttribute("aria-label", c.ing + " 빼기");
-          rm.addEventListener("click", function () { removeCart(c.rid, c.ing); updateCount(false); renderCart(); });
-          row.appendChild(rm); g.appendChild(row);
-        });
-        box.appendChild(g);
-      });
-      st.cart.forEach(function (c) { c.fresh = false; });
-    }
-    document.getElementById("demo-open-cart").addEventListener("click", function () {
-      selectTab(3, true); document.getElementById("wm-demo").scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
-    });
-    document.getElementById("demo-cart-back").addEventListener("click", function () { selectTab(1, true); showTop(); });
-
-    function focusIn(sel) { var n = document.querySelector("#demo-cook " + sel); if (n) n.focus({ preventScroll: true }); }
 
     // 데모 안의 버튼 클릭 → Apps Script의 demo_pick 시트 (방문자 id, 시각, 단계, 버튼)
-    function tabName(t) {
-      var c = t.cloneNode(true); var b = c.querySelector(".tcount"); if (b) b.remove();
-      var n = c.querySelector("span"); var num = n ? n.textContent.trim() : ""; if (n) n.remove();
-      return (num ? num + " " : "") + c.textContent.replace(/\s+/g, " ").trim();
-    }
     document.getElementById("wm-demo").addEventListener("click", function (e) {
       if (!e.isTrusted || !window.WM || !window.axios) return;
       var btn = e.target.closest("button, a");
       if (!btn || !this.contains(btn)) return;
-      var tab = btn.closest(".tab"), panel = btn.closest(".panel");
-      var stepTab = tab || (panel && document.getElementById(panel.getAttribute("aria-labelledby")));
       var label = (btn.getAttribute("aria-label") || btn.textContent || "").replace(/\s+/g, " ").trim();
       var row = {
         id: typeof getUVfromCookie === "function" ? getUVfromCookie() : "",
         time_stamp: typeof getTimeStamp === "function" ? getTimeStamp() : new Date().toISOString(),
-        step: tab ? "탭 이동" : (stepTab ? tabName(stepTab) : "") + (btn.closest("#demo-cook") ? " · 요리 모드" : ""),
-        button: tab ? tabName(tab) : label,
+        step: this.dataset.step || "",
+        button: label,
         utm: WM.utm || ""
       };
       try { axios.get(WM.endpoint + "?action=insert&table=demo_pick&data=" + encodeURIComponent(JSON.stringify(row))).catch(function () {}); } catch (err) {}
     }, true); // 캡처 단계: 버튼이 다시 그려지기 전에, 누르기 전 상태로 기록
 
-    // 머문 시간 → dwell 시트. 화면을 떠날 때(탭 전환·앱 전환·닫기)마다 그때까지 실제로 본 시간을 한 줄씩 기록
+    // 머문 시간·스크롤 → visitors의 내 줄(seconds·max_scroll)에. 화면을 떠날 때(탭 전환·앱 전환·닫기)마다 갱신, 다시 온 방문은 누적
+    // 페이지를 절반(50%) 넘게 내리면 events에 scroll_50을 한 번만 남겨요
     (function () {
-      var visit = Math.random().toString(36).slice(2, 8); // 한 번의 방문을 구분 (같은 visit의 가장 큰 seconds가 그 방문의 머문 시간)
-      var shown = document.visibilityState === "visible" ? Date.now() : 0, total = 0, maxScroll = 0, sent = -1;
+      var baseSec = 0, baseScroll = 0;
+      try { baseSec = parseInt(localStorage.getItem("pk_sec"), 10) || 0; baseScroll = parseInt(localStorage.getItem("pk_scroll"), 10) || 0; } catch (e) {}
+      var shown = document.visibilityState === "visible" ? Date.now() : 0, total = 0, maxScroll = 0, sent = -1, half = false;
       window.addEventListener("scroll", function () {
         var h = document.documentElement.scrollHeight - window.innerHeight;
         if (h > 0) maxScroll = Math.max(maxScroll, Math.min(100, Math.round(window.scrollY / h * 100)));
+        if (!half && maxScroll >= 50) { half = true; if (window.WM) WM.track("scroll_50"); }
       }, { passive: true });
       function flush() {
         if (shown) { total += Date.now() - shown; shown = 0; }
-        var sec = Math.round(total / 1000);
-        if (sec === sent) return;
+        var sec = baseSec + Math.round(total / 1000), sc = Math.max(baseScroll, maxScroll);
+        try { localStorage.setItem("pk_sec", String(sec)); localStorage.setItem("pk_scroll", String(sc)); } catch (e) {}
+        if (sec === sent || !window.PK) return;
         sent = sec;
-        var row = { id: getUVfromCookie(), visit: visit, time_stamp: getTimeStamp(), seconds: sec, max_scroll: maxScroll, utm: WM.utm || "" };
-        try { fetch(WM.endpoint + "?action=insert&table=dwell&data=" + encodeURIComponent(JSON.stringify(row)), { mode: "no-cors", keepalive: true }); } catch (e) {}
+        PK.updateNow({ seconds: sec, max_scroll: sc, last_seen: getTimeStamp() });
       }
       document.addEventListener("visibilitychange", function () {
         if (document.visibilityState === "hidden") flush(); else shown = Date.now();
@@ -1206,7 +1312,7 @@
       window.addEventListener("pagehide", flush);
     })();
 
-    renderShares(); renderToc(); updateCount(false); selectTab(1);
+    renderSheet(); renderBook();
   })();
 </script>
 
