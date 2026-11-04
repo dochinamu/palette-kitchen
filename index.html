@@ -1184,6 +1184,28 @@
       try { axios.get(WM.endpoint + "?action=insert&table=demo_pick&data=" + encodeURIComponent(JSON.stringify(row))).catch(function () {}); } catch (err) {}
     }, true); // 캡처 단계: 버튼이 다시 그려지기 전에, 누르기 전 상태로 기록
 
+    // 머문 시간 → dwell 시트. 화면을 떠날 때(탭 전환·앱 전환·닫기)마다 그때까지 실제로 본 시간을 한 줄씩 기록
+    (function () {
+      var visit = Math.random().toString(36).slice(2, 8); // 한 번의 방문을 구분 (같은 visit의 가장 큰 seconds가 그 방문의 머문 시간)
+      var shown = document.visibilityState === "visible" ? Date.now() : 0, total = 0, maxScroll = 0, sent = -1;
+      window.addEventListener("scroll", function () {
+        var h = document.documentElement.scrollHeight - window.innerHeight;
+        if (h > 0) maxScroll = Math.max(maxScroll, Math.min(100, Math.round(window.scrollY / h * 100)));
+      }, { passive: true });
+      function flush() {
+        if (shown) { total += Date.now() - shown; shown = 0; }
+        var sec = Math.round(total / 1000);
+        if (sec === sent) return;
+        sent = sec;
+        var row = { id: getUVfromCookie(), visit: visit, time_stamp: getTimeStamp(), seconds: sec, max_scroll: maxScroll, utm: WM.utm || "" };
+        try { fetch(WM.endpoint + "?action=insert&table=dwell&data=" + encodeURIComponent(JSON.stringify(row)), { mode: "no-cors", keepalive: true }); } catch (e) {}
+      }
+      document.addEventListener("visibilitychange", function () {
+        if (document.visibilityState === "hidden") flush(); else shown = Date.now();
+      });
+      window.addEventListener("pagehide", flush);
+    })();
+
     renderShares(); renderToc(); updateCount(false); selectTab(1);
   })();
 </script>
