@@ -638,6 +638,10 @@
   .fab-tip::after { content: ""; position: absolute; left: 50%; bottom: -6px; width: 12px; height: 12px; margin-left: -6px; background: inherit; border-radius: 2px; transform: rotate(45deg); }
   @keyframes tipbob { 50% { transform: translateY(-4px); } }
   @media (prefers-reduced-motion: reduce) { .ph-screen.ph-first:not(.sheet-open) .fab-tip { animation: none; } }
+  .card-tip { position: absolute; top: 100%; left: 0; z-index: 3; margin: 10px 0 0; padding: 8px 14px; border-radius: 12px; background: var(--ink); color: #fff; font-size: 14px; font-weight: 700; line-height: 1.3; white-space: nowrap; pointer-events: none; animation: tipbob 1.4s ease-in-out infinite; }
+  .card-tip::after { content: ""; position: absolute; left: 44px; top: -6px; width: 12px; height: 12px; background: inherit; border-radius: 2px; transform: rotate(45deg); }
+  .ph-screen.sheet-open .card-tip { display: none; }
+  @media (prefers-reduced-motion: reduce) { .card-tip { animation: none; } }
 </style>
   </head>
   <body>
@@ -1038,7 +1042,7 @@
         PK.ready = axios.get(upURL({ visits: visits, last_seen: getTimeStamp() })).catch(function () {});
       } else {
         var row = { id: PK.uid, time_stamp: getTimeStamp(), utm: utm || "", referer: document.referrer, device: mobile, ip: ip, landingUrl: window.location.href,
-          seconds: 0, max_scroll: 0, demo_add: 0, signup: "", visits: visits, last_seen: getTimeStamp(), ver: "v4" }; // v3 = 11/4 휴대폰 데모·기록 정리 이후, v4 = 11/5 담기 버튼 가운데·말풍선
+          seconds: 0, max_scroll: 0, demo_add: 0, signup: "", visits: visits, last_seen: getTimeStamp(), ver: "v5" }; // v3 = 11/4 휴대폰 데모·기록 정리 이후, v4 = 11/5 담기 버튼 가운데·말풍선, v5 = 11/5 담은 뒤 레시피 카드 말풍선
         PK.ready = axios.get(addr + "?action=insert&table=visitors&data=" + encodeURIComponent(JSON.stringify(row)))
           .then(function () { try { localStorage.setItem("pk_row", PK.uid); } catch (e) {} }).catch(function () {});
       }
@@ -1165,7 +1169,7 @@
       { id: "tuna", title: "참치마요 덮밥", d: "d-bowl", color: "#e9a04f", lab: "적어 둔 글", pre: "“밥 위에 참치 한 캔, 마요 두 숟갈…”", from: "적어 둔 글", serv: "1인분", rating: 0, mine: false,
         ings: ["밥 한 공기", "참치 1캔", "마요네즈 2큰술", "간장 1작은술", "김가루·쪽파"], steps: ["참치 기름을 꼭 빼요", "참치에 마요네즈와 간장을 섞어요", "밥 위에 올리고 김가루와 쪽파를 뿌려요"] }
     ];
-    var st = { order: ["eggrice", "tofu"], open: null, likedOnly: false, justAdded: null, busy: false };
+    var st = { order: ["eggrice", "tofu"], open: null, likedOnly: false, justAdded: null, busy: false, opened: false };
     function findR(id) { return R.find(function (r) { return r.id === id; }); }
     var demo = document.getElementById("wm-demo"), scr = demo.querySelector(".ph-screen"), fab = document.getElementById("wm-quick-add"), sheet = document.getElementById("add-box");
     var toastT;
@@ -1228,8 +1232,10 @@
         if (r.rating) t.appendChild(el("span", "rstar", "★ " + r.rating));
         if (r.id === st.justAdded) t.appendChild(el("span", "rnew", "방금 담음"));
         c.appendChild(t); c.appendChild(el("b", null, r.title)); c.appendChild(el("small", null, r.lab));
-        c.addEventListener("click", function () { if (st.justAdded === r.id) st.justAdded = null; st.open = r.id; renderBook(); keepInView(); });
-        li.appendChild(c); ul.appendChild(li);
+        c.addEventListener("click", function () { if (st.justAdded === r.id) st.justAdded = null; st.opened = true; st.open = r.id; renderBook(); keepInView(); });
+        li.appendChild(c);
+        if (r.id === st.justAdded && !st.opened) { var tip = el("p", "card-tip", "방금 담은 레시피를 눌러 보세요!"); tip.setAttribute("aria-hidden", "true"); li.appendChild(tip); }
+        ul.appendChild(li);
       });
       box.appendChild(ul);
     }
