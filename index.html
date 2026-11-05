@@ -631,6 +631,13 @@
   /* 처음엔 '+ 레시피 담기'만 또렷하게: 나머지는 흐리게, 처음 담으면 풀려요 */
   .ph-screen.ph-first .ph-home, .ph-screen.ph-first #demo-page { opacity: .35; pointer-events: none; transition: opacity .3s; }
   .ph-home, #demo-page { transition: opacity .3s; }
+  /* 처음 담기 전: 첫 화면에 보이도록 버튼을 가운데로, 그 위에 말풍선. 처음 담으면 오른쪽 아래로 돌아가요 */
+  .ph-screen.ph-first .fab { top: 232px; bottom: auto; left: 0; right: 0; width: fit-content; margin-inline: auto; }
+  .fab-tip { display: none; }
+  .ph-screen.ph-first:not(.sheet-open) .fab-tip { display: block; position: absolute; top: 180px; left: 0; right: 0; z-index: 3; width: fit-content; margin: 0 auto; padding: 8px 14px; border-radius: 12px; background: var(--ink); color: #fff; font-size: 14px; font-weight: 700; line-height: 1.3; white-space: nowrap; pointer-events: none; animation: tipbob 1.4s ease-in-out infinite; }
+  .fab-tip::after { content: ""; position: absolute; left: 50%; bottom: -6px; width: 12px; height: 12px; margin-left: -6px; background: inherit; border-radius: 2px; transform: rotate(45deg); }
+  @keyframes tipbob { 50% { transform: translateY(-4px); } }
+  @media (prefers-reduced-motion: reduce) { .ph-screen.ph-first:not(.sheet-open) .fab-tip { animation: none; } }
 </style>
   </head>
   <body>
@@ -777,6 +784,7 @@
               </div>
               <div id="demo-page" aria-live="polite" inert></div>
               <button id="wm-quick-add" type="button" class="fab hint" aria-expanded="false" aria-controls="add-box"><span aria-hidden="true">+</span>레시피 담기</button>
+              <p class="fab-tip" aria-hidden="true">눌러서 담아 보세요!</p>
               <div class="ph-dim" id="ph-dim"></div>
               <div class="ph-sheet" id="add-box" role="dialog" aria-label="레시피 담기" inert>
                 <div class="sheet-grab" aria-hidden="true"></div>
@@ -955,8 +963,8 @@
     function isLog(u) { return String(u && u.url || u).indexOf("script.google.com/macros") >= 0; }
     if (window.axios) { var g = axios.get; axios.get = function (u) { return isLog(u) && window.PK_SKIP_LOG ? Promise.resolve({ data: { success: true } }) : g.apply(axios, arguments); }; }
     if (window.fetch) { var f = window.fetch; window.fetch = function (u) { return isLog(u) && window.PK_SKIP_LOG ? Promise.resolve(new Response("")) : f.apply(window, arguments); }; }
-    if (!test) return;
     document.addEventListener("DOMContentLoaded", function () {
+      if (!window.PK_TEST) return; // 내 IP로 판정된 경우도 여기서 배지가 떠요
       var b = document.createElement("div"); b.textContent = "테스트 모드 · 기록 안 함";
       b.style.cssText = "position:fixed;left:8px;bottom:8px;z-index:9999;padding:3px 10px;border-radius:999px;background:#3a2e28;color:#fff;font:12px/1.6 sans-serif;opacity:.8;pointer-events:none";
       document.body.appendChild(b);
@@ -971,6 +979,8 @@
     try { ip = json.ip; } catch (e) { ip = "unknown"; }
     // 지금까지 시트에 찍힌 봇 IP 대역: Meta(2a03:2880), Google(66.249), AWS(3. · 52. · 54. · 43.204 · 15.164)
     if (/^(2a03:2880:|66\.249\.|3\.|52\.|54\.|43\.204\.|15\.164\.)/i.test(String(ip))) { window.PK_BOT = true; window.PK_SKIP_LOG = true; }
+    // 내 IP(집·학교 등)는 테스트로 보고 기록하지 않아요
+    if (["121.131.16.200"].indexOf(String(ip)) >= 0) { window.PK_TEST = true; window.PK_SKIP_LOG = true; }
   }
 </script>
 <script src="https://jsonip.com?format=jsonp&callback=getIP"></script>
@@ -1028,7 +1038,7 @@
         PK.ready = axios.get(upURL({ visits: visits, last_seen: getTimeStamp() })).catch(function () {});
       } else {
         var row = { id: PK.uid, time_stamp: getTimeStamp(), utm: utm || "", referer: document.referrer, device: mobile, ip: ip, landingUrl: window.location.href,
-          seconds: 0, max_scroll: 0, demo_add: 0, signup: "", visits: visits, last_seen: getTimeStamp(), ver: "v3" }; // v3 = 11/4 휴대폰 데모·기록 정리 이후
+          seconds: 0, max_scroll: 0, demo_add: 0, signup: "", visits: visits, last_seen: getTimeStamp(), ver: "v4" }; // v3 = 11/4 휴대폰 데모·기록 정리 이후, v4 = 11/5 담기 버튼 가운데·말풍선
         PK.ready = axios.get(addr + "?action=insert&table=visitors&data=" + encodeURIComponent(JSON.stringify(row)))
           .then(function () { try { localStorage.setItem("pk_row", PK.uid); } catch (e) {} }).catch(function () {});
       }
