@@ -688,7 +688,11 @@
     .pol { width: 200px; height: 200px; padding: 10px 10px 30px; }
     .scene b { font-size: 21px; } .scene p { font-size: 16px; }
   }
-  /* FAQ 끝 제안 카드 */
+  /* 신청 칸 옆 약속 목록 */
+  .final-perks { margin: 16px 0 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+  .final-perks li { position: relative; padding-left: 24px; font-size: 16px; line-height: 1.5; }
+  .final-perks li::before { content: "✓"; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+  /* (안 씀) FAQ 끝 제안 카드 */
   .faq-offer { position: relative; display: grid; gap: 12px; margin-top: 22px; padding: 26px 22px 22px; background: var(--butter); border-radius: 6px; transform: rotate(-.6deg); }
   .faq-offer b { font-family: var(--f-display); font-size: 19px; line-height: 1.4; }
   .faq-offer ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
@@ -929,14 +933,6 @@
       <div data-reveal>
       <div class="faqbox">
         <details>
-          <summary>결국 앱만 하나 늘고, 안 쓰게 되지 않을까요?<span class="pm" aria-hidden="true"><span class="p">+</span><span class="m">−</span></span></summary>
-          <p>담기는 보던 앱에서 공유 버튼 한 번이면 끝나요. 따로 정리할 필요 없이, ‘오늘 뭐 먹지?’ 할 때만 열면 돼요.</p>
-        </details>
-        <details>
-          <summary>이미 저장해 둔 게 너무 많은데, 다 옮겨야 하나요?<span class="pm" aria-hidden="true"><span class="p">+</span><span class="m">−</span></span></summary>
-          <p>아니요. 한꺼번에 옮길 필요 없어요. 다음에 해 먹고 싶은 것부터 하나씩 담아도 충분해요.</p>
-        </details>
-        <details>
           <summary>어디서 본 레시피든 담을 수 있나요?<span class="pm" aria-hidden="true"><span class="p">+</span><span class="m">−</span></span></summary>
           <p>네. 유튜브·인스타그램·블로그 링크는 공유 버튼으로, 캡처한 사진이나 메모장·카톡에 적어 둔 글은 그대로 올리면 담겨요.</p>
         </details>
@@ -961,16 +957,6 @@
           <p>12월 초 출시 예정이에요.</p>
         </details>
       </div>
-      <div class="faq-offer">
-        <span class="tape"></span>
-        <b>출시 알림만 먼저 받아 보세요</b>
-        <ul>
-          <li>결제 정보는 필요 없어요</li>
-          <li>12월 초 출시 소식만 한 번 보내 드려요</li>
-          <li>먼저 신청한 분은 유료 기능이 생겨도 3개월 동안 무료로 써요</li>
-        </ul>
-        <button id="cta_faq" type="button" class="sbtn-main">내 레시피북 신청하기</button>
-      </div>
       </div>
     </div>
   </section>
@@ -980,7 +966,12 @@
     <div class="wrap final">
       <div class="final-copy" data-reveal>
         <h2 id="wm-final-title" class="disp t2">출시되면 내 레시피북을<br>가장 먼저 만들어 드릴게요</h2>
-        <p class="lead">12월 초 출시 예정이에요. 먼저 신청한 분은 유료 기능이 생겨도 3개월 동안 무료로 써요.</p>
+        <p class="lead">12월 초 출시 예정이에요.</p>
+        <ul class="final-perks">
+          <li>결제 정보는 필요 없어요</li>
+          <li>출시 소식만 한 번 보내 드려요</li>
+          <li>먼저 신청한 분은 유료 기능이 생겨도 3개월 동안 무료로 써요</li>
+        </ul>
       </div>
       <div class="final-card sheet" data-reveal>
         <span class="tape"></span>
@@ -1150,7 +1141,7 @@
         PK.ready = axios.get(upURL({ visits: visits, last_seen: getTimeStamp() })).catch(function () {});
       } else {
         var row = { id: PK.uid, time_stamp: getTimeStamp(), utm: utm || "", referer: document.referrer, device: mobile, ip: ip, landingUrl: window.location.href,
-          seconds: 0, max_scroll: 0, demo_add: 0, signup: "", visits: visits, last_seen: getTimeStamp(), ver: "v7" }; // v6 = 11/13 문제→범인→해결→그 뒤 순서로 재구성, 메인 버튼은 데모로; v7 = 11/13 FAQ를 망설임 해소 + 마지막 제안(사전 신청 혜택)으로; v3 = 11/4 휴대폰 데모·기록 정리 이후, v4 = 11/5 담기 버튼 가운데·말풍선, v5 = 11/5 담은 뒤 레시피 카드 말풍선
+          seconds: 0, max_scroll: 0, demo_add: 0, signup: "", visits: visits, last_seen: getTimeStamp(), ver: "v7" }; // v6 = 11/13 문제→범인→해결→그 뒤 순서로 재구성, 메인 버튼은 데모로; v7 = 11/13 FAQ 정리, 신청 칸에 사전 신청 혜택; v3 = 11/4 휴대폰 데모·기록 정리 이후, v4 = 11/5 담기 버튼 가운데·말풍선, v5 = 11/5 담은 뒤 레시피 카드 말풍선
         PK.ready = axios.get(addr + "?action=insert&table=visitors&data=" + encodeURIComponent(JSON.stringify(row)))
           .then(function () { try { localStorage.setItem("pk_row", PK.uid); } catch (e) {} }).catch(function () {});
       }
@@ -1247,13 +1238,6 @@
       document.querySelectorAll(".chapters").forEach(function (g) { Array.prototype.forEach.call(g.children, function (c, i) { c.style.transitionDelay = (i * 90) + "ms"; }); });
       requestAnimationFrame(function () { document.documentElement.classList.add("reveal-on"); });
     }
-
-    // FAQ 끝의 제안 버튼 → 신청 칸 (v7)
-    document.getElementById("cta_faq").addEventListener("click", function () {
-      if (window.WM) WM.track("hero_cta_click", { position: "faq" });
-      document.getElementById("wm-final").scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
-      setTimeout(function () { document.getElementById("submit-email").focus({ preventScroll: true }); }, reduce ? 0 : 500);
-    });
 
     // 메인 버튼: 신청부터 하라고 하지 않고, 먼저 데모로 (v6)
     document.getElementById("cta_primary").addEventListener("click", function () {
