@@ -3,14 +3,14 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>되감기 없이 따라 하는 쇼츠 레시피 | 팔레트키친</title>
-    <meta name="description" content="쇼츠로 본 레시피, 링크만 붙이면 재료와 순서로 정리돼요." />
+    <title>저장한 레시피를 한곳에 | 팔레트키친</title>
+    <meta name="description" content="어디서 본 레시피든 담아 두고, 먹고 싶을 때 꺼내 보세요." />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="팔레트키친" />
     <meta property="og:locale" content="ko_KR" />
     <meta property="og:url" content="https://palette-kitchen.netlify.app/" />
-    <meta property="og:title" content="되감기 없이 따라 하는 쇼츠 레시피" />
-    <meta property="og:description" content="쇼츠로 본 레시피, 링크만 붙이면 재료와 순서로 정리돼요." />
+    <meta property="og:title" content="저장한 레시피를 한곳에, 팔레트키친" />
+    <meta property="og:description" content="어디서 본 레시피든 담아 두고, 먹고 싶을 때 꺼내 보세요." />
     <meta property="og:image" content="https://palette-kitchen.netlify.app/img/og-image.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
@@ -683,7 +683,7 @@
   .scene p { margin-top: 4px; font-size: 14px; line-height: 1.55; color: var(--ink-soft); }
   .after-close { max-width: 520px; margin: 36px auto 0; text-align: center; }
   @media (min-width: 1100px) {
-    .scenes { grid-template-columns: repeat(2, minmax(0,1fr)); max-width: 640px; gap: 40px; margin-top: 56px; }
+    .scenes { grid-template-columns: repeat(3, minmax(0,1fr)); max-width: none; gap: 40px; margin-top: 56px; }
     .scene { grid-template-columns: minmax(0,1fr); justify-items: center; text-align: center; gap: 22px; }
     .pol { width: 200px; height: 200px; padding: 10px 10px 30px; }
     .scene b { font-size: 21px; } .scene p { font-size: 16px; }
@@ -826,16 +826,16 @@
       </nav>
       <div class="hero">
         <div class="hero-copy">
-          <p class="eyebrow">쇼츠로 본 레시피, 링크 하나로 내 레시피북에</p>
-          <h1 id="wm-hero-title" class="disp t1">쇼츠로 본 레시피,<br>또 되감으며 따라 해요?</h1>
-          <p id="wm-hero-sub" class="lead">링크만 붙이면<br>재료와 순서가 한 장으로 정리돼요.</p>
-          <button id="cta_primary" type="button" class="sbtn-main">링크 붙여 보기</button>
+          <p class="eyebrow">저장한 레시피를 한곳에, 팔레트키친</p>
+          <h1 id="wm-hero-title" class="disp t1">새로운 거 먹고 싶은데,<br>집밥은 또 그 메뉴</h1>
+          <p id="wm-hero-sub" class="lead">저장해 둔 레시피는 많은데,<br>앱마다 흩어져 있어요.</p>
+          <button id="cta_primary" type="button" class="sbtn-main">내 레시피북 미리 써 보기</button>
         </div>
         <div class="saves" aria-hidden="true">
-          <span class="sv sv1"><img src="img/demo-mango.jpg" alt=""><span><b>인스타 릴스 저장됨</b><small>망고 파스타</small></span></span>
-          <span class="sv sv2"><img src="https://i.ytimg.com/vi/30tydX9GUf8/hqdefault.jpg" alt="" onerror="this.style.visibility='hidden'"><span><b>유튜브 쇼츠 저장됨</b><small>토마토 달걀볶음</small></span></span>
-          <span class="sv sv3"><span class="sv-ic"><svg class="doodle" viewBox="0 0 100 100"><use href="#d-tofu"/></svg></span><span><b>유튜브 쇼츠 좋아요</b><small>두부 스테이크</small></span></span>
-          <span class="sv sv4"><span class="sv-ic"><svg class="doodle" viewBox="0 0 100 100"><use href="#d-eggrice"/></svg></span><span><b>쇼츠 화면 캡처</b><small>버터 간장 계란밥</small></span></span>
+          <span class="sv sv1"><img src="img/demo-mango.jpg" alt=""><span><b>인스타그램 저장됨</b><small>망고 파스타</small></span></span>
+          <span class="sv sv2"><img src="https://i.ytimg.com/vi/30tydX9GUf8/hqdefault.jpg" alt="" onerror="this.style.visibility='hidden'"><span><b>나중에 볼 동영상</b><small>토마토 달걀볶음</small></span></span>
+          <span class="sv sv3"><img src="img/demo-crumble.jpg" alt=""><span><b>블로그 북마크</b><small>블루베리 크럼블</small></span></span>
+          <span class="sv sv4"><span class="sv-ic"><svg class="doodle" viewBox="0 0 100 100"><use href="#d-eggrice"/></svg></span><span><b>사진첩 캡처</b><small>버터 간장 계란밥</small></span></span>
         </div>
       </div>
     </div>
@@ -845,23 +845,27 @@
   <section id="wm-story" class="section" aria-labelledby="wm-story-title">
     <div class="wrap story">
       <div class="story-head" data-reveal>
-        <h2 id="wm-story-title" class="disp t2">보는 건 1분인데,<br>따라 하기는 어려워요</h2>
-        <p class="lead" style="margin-top:14px">레시피가<br>영상 속에만 있기 때문이에요.</p>
+        <h2 id="wm-story-title" class="disp t2">저장은 쉬운데,<br>다시 꺼내 보기는 어려워요</h2>
       </div>
       <div data-reveal>
         <div class="pains">
           <div class="pain">
+            <svg class="doodle" viewBox="0 0 100 100" aria-hidden="true"><use href="#d-book"/></svg>
+            <b>저장함이 앱마다 따로 있어요</b>
+            <p>인스타, 유튜브, 블로그, 사진첩. 뭘 저장했는지 한눈에 볼 곳이 없어요.</p>
+          </div>
+          <div class="pain">
             <svg class="pain-ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15 15l5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-            <b>스쳐 본 쇼츠는 다시 찾기 어려워요</b>
-            <p>피드에서 넘겨 본 영상은 어디서 봤는지도 기억나지 않아요.</p>
+            <b>저장 안 한 레시피는 다시 찾기 어려워요</b>
+            <p>피드에서 넘겨 본 영상과 게시물은 어디서 봤는지 기억나지 않아요.</p>
           </div>
           <div class="pain">
             <svg class="pain-ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-clock"/></svg>
-            <b>찾아도 재료와 순서를 보려면 영상을 다시 봐야 해요</b>
-            <p>손에 양념 묻은 채로 멈추고 되감기를 반복해요.</p>
+            <b>영상 레시피는 다시 봐야 해요</b>
+            <p>재료와 순서를 보려면 멈추고 되감기를 반복해요.</p>
           </div>
         </div>
-        <p class="closing"><span class="tape"></span>그래서 저장만 하고<br>결국 안 만들게 돼요.</p>
+        <p class="closing"><span class="tape"></span>그래서 메뉴를 고를 때는<br>저장해 둔 레시피가 떠오르지 않아요.</p>
       </div>
     </div>
   </section>
@@ -870,8 +874,8 @@
   <section id="wm-solve" class="section" aria-labelledby="wm-solve-title">
     <div class="wrap solve">
       <div class="solve-copy" data-reveal>
-        <h2 id="wm-solve-title" class="disp t2">링크만 붙이면<br>팔레트키친이 정리해 둘게요</h2>
-        <p class="lead">쇼츠든 릴스든 링크를 담으면 재료와 순서만 남은<br>한 장짜리 레시피가 돼요. 직접 담아 보세요.</p>
+        <h2 id="wm-solve-title" class="disp t2">팔레트키친이<br>한곳에 모아 정리해 둘게요</h2>
+        <p class="lead">링크든 사진이든 담으면 재료와 순서로 정리돼<br>내 레시피북에 모여요. 직접 담아 보세요.</p>
       </div>
         <div class="hero-demo">
           <div id="wm-demo" class="phone" data-step="레시피북" aria-label="팔레트키친 미리 써 보기">
@@ -893,7 +897,7 @@
               <div class="ph-dim" id="ph-dim"></div>
               <div class="ph-sheet" id="add-box" role="dialog" aria-label="레시피 담기" inert>
                 <div class="sheet-grab" aria-hidden="true"></div>
-                <div class="sheet-head"><b>담을 레시피를 골라 보세요</b><button type="button" class="sheet-x" id="sheet-x">닫기</button></div>
+                <div class="sheet-head"><b>어디서 본 레시피인가요?</b><button type="button" class="sheet-x" id="sheet-x">닫기</button></div>
                 <ul class="src-list" id="add-ex"></ul>
               </div>
               <p class="ph-toast" id="demo-hint" role="status" aria-live="polite"></p>
@@ -910,13 +914,14 @@
   <section id="wm-after" class="section" aria-labelledby="wm-after-title">
     <div class="wrap">
       <div class="after-head" data-reveal>
-        <h2 id="wm-after-title" class="disp t2">이제 되감기 없이,<br>레시피만 보고 따라 해요</h2>
+        <h2 id="wm-after-title" class="disp t2">먹고 싶을 때,<br>내 레시피북을 넘겨 보세요</h2>
       </div>
       <ul class="scenes" data-reveal>
-        <li class="scene"><span class="pol"><img src="img/demo-mango.jpg" alt="" loading="lazy"></span><span><b>망고 파스타</b><p>장 보기 전에 재료만 한눈에 확인해요.</p></span></li>
+        <li class="scene"><span class="pol"><img src="img/demo-mango.jpg" alt="" loading="lazy"></span><span><b>망고 파스타</b><p>재료만 한눈에 보고 장을 봐요.</p></span></li>
         <li class="scene"><span class="pol"><img src="https://i.ytimg.com/vi/30tydX9GUf8/hqdefault.jpg" alt="" loading="lazy" onerror="this.style.visibility='hidden'"></span><span><b>토마토 달걀볶음</b><p>영상을 멈추지 않고 순서대로 따라 해요.</p></span></li>
+        <li class="scene"><span class="pol"><img src="img/demo-crumble.jpg" alt="" loading="lazy"></span><span><b>블루베리 크럼블</b><p>메모해 둔 대로 이번 주말에 구워 봐요.</p></span></li>
       </ul>
-      <p class="closing after-close" data-reveal><span class="tape"></span>쇼츠로 본 레시피가<br>오늘 저녁이 돼요.</p>
+      <p class="closing after-close" data-reveal><span class="tape"></span>저장만 하던 레시피가<br>오늘 저녁이 돼요.</p>
     </div>
   </section>
 
@@ -927,8 +932,8 @@
       <div data-reveal>
       <div class="faqbox">
         <details>
-          <summary>어떤 영상이든 담을 수 있나요?<span class="pm" aria-hidden="true"><span class="p">+</span><span class="m">−</span></span></summary>
-          <p>네. 유튜브 쇼츠, 인스타 릴스, 틱톡 링크는 공유 버튼으로 담고, 영상 화면을 캡처한 사진도 그대로 올리면 담겨요.</p>
+          <summary>어디서 본 레시피든 담을 수 있나요?<span class="pm" aria-hidden="true"><span class="p">+</span><span class="m">−</span></span></summary>
+          <p>네. 유튜브, 인스타그램, 틱톡, 블로그 링크는 공유 버튼으로 담고, 캡처한 사진이나 메모해 둔 글은 그대로 올리면 돼요.</p>
         </details>
         <details>
           <summary>영상 레시피도 제대로 정리되나요?<span class="pm" aria-hidden="true"><span class="p">+</span><span class="m">−</span></span></summary>
@@ -1253,12 +1258,12 @@
       { id: "mango", title: "망고 파스타", d: "d-pasta", color: "#f2b544", lab: "인스타그램", pre: "instagram.com/p/DZ65hmkxgur", from: "인스타그램", serv: "2인분", rating: 0, mine: false,
         link: "https://www.instagram.com/p/DZ65hmkxgur/", thumb: "img/demo-mango.jpg",
         ings: ["망고 1.5개", "링귀니면", "올리브오일", "화이트 발사믹 조금", "소금·말돈 소금·후추"], steps: ["망고 반쪽은 얇게 썰고, 나머지는 소금·물과 함께 곱게 갈아요", "망고 퓨레를 냉장고에서 15분 이상 차갑게 식혀요", "링귀니를 삶아 1분 뜸 들인 뒤 찬물에 헹궈요", "퓨레에 면, 올리브오일, 소금, 화이트 발사믹을 넣고 버무려요", "망고 슬라이스를 올리고 올리브오일, 말돈 소금, 후추로 마무리해요"] },
-      { id: "crumble", title: "블루베리 크림치즈 크럼블", d: "d-burst", color: "#8a7bb8", lab: "블로그", from: "블로그", serv: "1판", rating: 0, mine: false,
+      { id: "crumble", title: "블루베리 크림치즈 크럼블", d: "d-burst", color: "#8a7bb8", lab: "블로그", pre: "blog.naver.com/rouvre1225", from: "블로그", serv: "1판", rating: 0, mine: false,
         link: "https://blog.naver.com/rouvre1225/224450772492", thumb: "img/demo-crumble.jpg",
         ings: ["아몬드가루 320g", "녹인 버터 100g", "땅콩버터 60g", "라이트 크림치즈 400g", "전분가루 40g", "스테비아 80g", "달걀노른자 2개", "냉동 블루베리"], steps: ["아몬드가루, 녹인 버터, 스테비아, 땅콩버터를 섞어 크럼블을 만들어요", "유산지 깐 틀에 크럼블을 꾹꾹 눌러 담아요", "크림치즈, 전분가루, 스테비아, 노른자를 섞어 필링을 만들어요", "시트 위에 필링과 냉동 블루베리를 올려요", "남은 크럼블을 뿌리고 에어프라이어 170도에서 25분 구워요", "1~2시간 식혀서 먹어요"] },
-      { id: "stew", title: "애호박 된장찌개", d: "d-stew", color: "#d98c86", lab: "캡처한 화면", pre: "쇼츠 화면을 캡처한 사진", from: "캡처한 사진", serv: "1인분", rating: 0, mine: false,
+      { id: "stew", title: "애호박 된장찌개", d: "d-stew", color: "#d98c86", lab: "캡처한 사진", pre: "사진첩에 저장한 레시피 캡처", from: "캡처한 사진", serv: "1인분", rating: 0, mine: false,
         ings: ["애호박 1/3개", "두부 1/4모", "된장 1큰술", "대파"], steps: ["애호박과 두부를 깍둑 썰어요", "물에 된장을 풀어 끓여요", "애호박, 두부를 넣고 한소끔 끓여요", "대파를 올려 마무리해요"] },
-      { id: "tuna", title: "참치마요 덮밥", d: "d-bowl", color: "#e9a04f", lab: "적어 둔 글", from: "적어 둔 글", serv: "1인분", rating: 0, mine: false,
+      { id: "tuna", title: "참치마요 덮밥", d: "d-bowl", color: "#e9a04f", lab: "적어 둔 글", pre: "“밥 위에 참치 한 캔, 마요 두 숟갈…”", from: "적어 둔 글", serv: "1인분", rating: 0, mine: false,
         ings: ["밥 한 공기", "참치 1캔", "마요네즈 2큰술", "간장 1작은술", "김가루·쪽파"], steps: ["참치 기름을 꼭 빼요", "참치에 마요네즈와 간장을 섞어요", "밥 위에 올리고 김가루와 쪽파를 뿌려요"] }
     ];
     var st = { order: ["eggrice", "tofu"], open: null, likedOnly: false, justAdded: null, busy: false, opened: false };
