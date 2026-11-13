@@ -969,7 +969,7 @@
         <ul class="final-perks">
           <li>이메일만 남기면 돼요</li>
           <li>출시 소식은 딱 한 번만 보내요</li>
-          <li>먼저 신청하면 유료 기능도 3개월 무료예요</li>
+          <li>먼저 신청하면 Pro 플랜 3개월 이용권을 드려요</li>
         </ul>
       </div>
       <div class="final-card sheet" data-reveal>
@@ -1140,7 +1140,7 @@
         PK.ready = axios.get(upURL({ visits: visits, last_seen: getTimeStamp() })).catch(function () {});
       } else {
         var row = { id: PK.uid, time_stamp: getTimeStamp(), utm: utm || "", referer: document.referrer, device: mobile, ip: ip, landingUrl: window.location.href,
-          seconds: 0, max_scroll: 0, demo_add: 0, signup: "", visits: visits, last_seen: getTimeStamp(), ver: "v7" }; // v6 = 11/13 문제→범인→해결→그 뒤 순서로 재구성, 메인 버튼은 데모로; v7 = 11/13 FAQ 정리, 신청 칸에 사전 신청 혜택; v3 = 11/4 휴대폰 데모·기록 정리 이후, v4 = 11/5 담기 버튼 가운데·말풍선, v5 = 11/5 담은 뒤 레시피 카드 말풍선
+          seconds: 0, max_scroll: 0, demo_add: 0, signup: "", visits: visits, last_seen: getTimeStamp(), ver: "v6" }; // v6(최종) = 11/13 히어로 질림·흩어진 레시피, 문제 카드 3장, Pro 플랜 혜택. 아래 v6·v7 메모는 배포 전 초안; v6 = 11/13 문제→범인→해결→그 뒤 순서로 재구성, 메인 버튼은 데모로; v7 = 11/13 FAQ 정리, 신청 칸에 사전 신청 혜택; v3 = 11/4 휴대폰 데모·기록 정리 이후, v4 = 11/5 담기 버튼 가운데·말풍선, v5 = 11/5 담은 뒤 레시피 카드 말풍선
         PK.ready = axios.get(addr + "?action=insert&table=visitors&data=" + encodeURIComponent(JSON.stringify(row)))
           .then(function () { try { localStorage.setItem("pk_row", PK.uid); } catch (e) {} }).catch(function () {});
       }
